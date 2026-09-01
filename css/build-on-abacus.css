@@ -1,20 +1,5 @@
 /* Build on the Abacus — exercise styles */
 
-/* Abacus grid layout */
-.stage:has(.abacus-wrap){
-  display:grid;
-  grid-template-columns:1fr 14rem;
-  grid-template-rows:auto minmax(0,1fr);
-  column-gap:1.2rem;
-  align-items:center; justify-items:center;
-}
-.stage:has(.abacus-wrap) > .readout,
-.stage:has(.abacus-wrap) > .target-row{ grid-column:1; grid-row:1; }
-.stage:has(.abacus-wrap) > .abacus-wrap{
-  grid-column:1; grid-row:2;
-  align-self:stretch; justify-self:stretch; min-height:0;
-}
-
 /* Target number display */
 .target-row{ display:flex; align-items:stretch; justify-content:center; gap:.6rem; }
 .target-row .target,
@@ -27,17 +12,6 @@
 .target-row .lbl{ font-size:.4rem; letter-spacing:.04em; }
 .target-row .target .num{ font-size:1.3rem; line-height:1.05; letter-spacing:.08em; color:#C2410C; }
 .target-row .built .num{ font-size:1rem; line-height:1.05; letter-spacing:.08em; color:var(--accent); }
-
-/* Answer rail */
-.answer-rail{
-  grid-column:2; grid-row:1 / -1;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:.4rem; width:100%;
-}
-.answer-rail > *{ width:100%; margin-top:0; }
-.answer-rail .entry,
-.answer-rail .name-input{ width:100%; max-width:none; }
-.answer-rail .btn{ width:auto; }
 
 /* Name input */
 .name-input{

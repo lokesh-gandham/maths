@@ -200,6 +200,32 @@ a.btn.ghost{ color:#8B5A2B; }
   flex:1 1 auto; min-height:0; gap:0;
   width:100%;
 }
+
+/* Abacus grid layout — rods left, answer right */
+.stage:has(.abacus-wrap){
+  display:grid;
+  grid-template-columns:1fr 14rem;
+  grid-template-rows:auto minmax(0,1fr);
+  column-gap:1.2rem;
+  align-items:center; justify-items:center;
+}
+.stage:has(.abacus-wrap) > .readout,
+.stage:has(.abacus-wrap) > .target-row{ grid-column:1; grid-row:1; }
+.stage:has(.abacus-wrap) > .abacus-wrap{
+  grid-column:1; grid-row:2;
+  align-self:stretch; justify-self:stretch; min-height:0;
+}
+
+/* Answer rail — right side */
+.answer-rail{
+  grid-column:2; grid-row:1 / -1;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:.4rem; width:100%;
+}
+.answer-rail > *{ width:100%; margin-top:0; }
+.answer-rail .entry,
+.answer-rail .name-input{ width:100%; max-width:none; }
+.answer-rail .btn{ width:auto; }
 .abacus{
   display:flex; align-items:flex-end; justify-content:stretch;
   gap:0;
