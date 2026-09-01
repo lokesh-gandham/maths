@@ -8,13 +8,13 @@
 :root{
   font-size:30px;
 
-  --bg:#F4F1FC;          /* single pastel background */
+  --bg:#FFF7ED;          /* pastel orange background */
   --card:#FFFFFF;
   --ink:#1A1A2E;         /* the ONLY text colour */
 
   --accent:#0D9488;      /* teal */
-  --accent-soft:#CCFBF1;
-  --accent-line:#99F6E4;
+  --accent-soft:#FFF3E0;
+  --accent-line:#FFCC80;
 
   --warm:#F59E0B;        /* highlight inside activities */
   --warm-soft:#FEF3C7;
@@ -24,7 +24,7 @@
   --bad:#F2545B;
   --bad-soft:#FFE6E7;
 
-  --line:#E7E3F5;
+  --line:#E8E0D8;
   --radius:.6rem;
 }
 @media (min-width:1600px){ :root{ font-size:40px; } }

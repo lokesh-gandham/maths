@@ -17,7 +17,7 @@
   display:flex; align-items:center; justify-content:center; gap:1.2rem; flex-wrap:wrap;
   text-align:center;
 }
-.hero-text{ flex:1 1 16rem; }
+.hero-text{ flex:1 1 16rem; padding-left:5rem; }
 .eyebrow{
   display:inline-block; font-size:.7rem;
   margin-bottom:.35rem;
@@ -69,7 +69,7 @@
 }
 .preview svg{ width:100%; height:100%; }
 
-.card-body{ padding:.75rem .8rem .6rem; flex:1 1 auto; }
+.card-body{ padding:.75rem .8rem .6rem; flex:1 1 auto; display:flex; flex-direction:column; }
 .card-top{ display:flex; align-items:flex-start; gap:.45rem; }
 .qnum{
   flex:none; display:grid; place-items:center;
@@ -79,29 +79,20 @@
 .card h3{ font-size:.82rem; line-height:1.25; }
 .card p{ font-size:.75rem; line-height:1.4; margin-top:.4rem; }
 
-.card-foot{
-  display:flex; align-items:center; justify-content:space-between; gap:.5rem;
-  padding:.5rem .8rem .7rem;
+.card-play{
+  display:flex; justify-content:center; margin-top:auto; padding:.7rem 1.5rem 0;
 }
-.meta{ display:flex; align-items:center; gap:.35rem; flex-wrap:wrap; }
-.pill{
-  font-size:.6rem;
-  background:var(--bg); border-radius:.3rem; padding:.22rem .45rem; white-space:nowrap;
-}
-.pill.q{ background:var(--warm-soft); }
-
-.play{
-  flex:none; display:grid; place-items:center;
-  width:1.7rem; height:1.7rem; border-radius:50%;
-  border:0; background:var(--accent);
+.play.big{
+  display:inline-flex; align-items:center; justify-content:center; gap:.3rem;
+  width:100%; padding:.55rem .9rem; border-radius:.5rem;
+  border:0; background:var(--accent); color:#fff; font-size:.7rem;
   transition:opacity .16s ease, transform .16s ease;
 }
-.play svg{ width:.62rem; height:.62rem; fill:#fff; margin-left:.06rem; }
-.play:hover{ transform:scale(1.07); }
-.play:active{ transform:scale(.94); }
-.play:focus-visible{ outline:.06rem solid var(--accent); outline-offset:.14rem; }
-/* activities that are not built yet read as waiting, not broken */
-.play[data-ready="0"]{ background:var(--accent-line); }
+.play.big svg{ width:.75rem; height:.75rem; fill:#fff; margin-left:0; }
+.play.big:hover{ transform:scale(1.07); }
+.play.big:active{ transform:scale(.94); }
+.play.big:focus-visible{ outline:.06rem solid var(--accent); outline-offset:.14rem; }
+.play.big[data-ready="0"]{ background:var(--accent-line); }
 
 /* ---------- TOAST ---------- */
 .toast{
@@ -131,7 +122,7 @@
 
   <main id="sections"></main>
 
-  <p class="foot">Chapter 1 &middot; Numbers &middot; Pages 13 to 37</p>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -448,7 +439,7 @@ const SECTIONS = [
   }
 ];
 
-const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.14v13.72c0 .78.86 1.25 1.52.84l10.78-6.86a1 1 0 0 0 0-1.68L9.52 4.3A1 1 0 0 0 8 5.14z"/></svg>';
+const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.14v13.72c0 .78.86 1.25 1.52.84l10.78-6.86a1 1 0 0 0 0-1.68L9.52 4.3A1 1 0 0 0 8 5.14z"/></svg> Play';
 
 const root = document.getElementById('sections');
 let total = 0, questions = 0;
@@ -466,15 +457,11 @@ SECTIONS.forEach(sec => {
             <h3>${it.title}</h3>
           </div>
           <p>${it.desc}</p>
-        </div>
-        <div class="card-foot">
-          <div class="meta">
-            <span class="pill q">${it.n} ${it.n===1?'question':'questions'}</span>
-            ${it.tags.map(t=>`<span class="pill">${t}</span>`).join('')}
+          <div class="card-play">
+            <button class="play big" data-id="${it.id}" data-ready="${it.ready ? 1 : 0}"
+                    data-title="${sec.code} · Q${it.q}"
+                    aria-label="Play ${sec.code} question ${it.q}: ${label}">${PLAY}</button>
           </div>
-          <button class="play" data-id="${it.id}" data-ready="${it.ready ? 1 : 0}"
-                  data-title="${sec.code} · Q${it.q}"
-                  aria-label="Play ${sec.code} question ${it.q}: ${label}">${PLAY}</button>
         </div>
       </article>`;
   }).join('');

@@ -30,7 +30,11 @@
     <p class="hint" id="q-hint"></p>
     <div class="stage" id="q-stage"></div>
     <div class="feedback" id="q-feed"></div>
-    <div class="actions"><button class="btn" id="q-primary">Check</button></div>
+    <div class="actions">
+      <button class="btn prev-btn" id="q-prev" disabled>← Prev</button>
+      <button class="btn check-btn" id="q-primary">Check</button>
+      <button class="btn next-btn" id="q-next">Next →</button>
+    </div>
   </section>
 
   <section class="qcard result" id="q-result">
@@ -55,15 +59,26 @@ function readQ(counts){
   const answer = counts.join('');
   let field;
   return {
-    prompt: 'How many beads are on the abacus? Write the number.',
+    prompt: `How many beads are on the abacus? Write the number.`,
     hint: 'Read the rods from the left: thousands, hundreds, tens, ones.',
     render(stage, ready){
       Quiz.abacus(stage, NAMES, { counts, editable:false });
-      field = Quiz.entry(stage, { placeholder:'0000', onInput:v => v && ready() });
+
+      const wrap = document.createElement('div');
+      wrap.className = 'inline-answer';
+      wrap.innerHTML = `
+        <label>Your Answer</label>
+        <input type="text" inputmode="numeric" class="entry" placeholder="0000" autocomplete="off">
+      `;
+      stage.appendChild(wrap);
+      field = wrap.querySelector('.entry');
+      field.addEventListener('input', () => field.value.trim() && ready());
+      setTimeout(() => field.focus(), 30);
     },
     check(){
       const ok = +field.value() === +answer;
-      field.mark(ok);
+      field.classList.add(ok ? 'right' : 'wrong');
+      field.disabled = true;
       const spell = counts.map((c,i)=>`${c} ${NAMES[i]}`).join(' + ');
       return { ok,
         msg: ok ? `Yes — ${spell} makes ${+answer}.`

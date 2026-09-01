@@ -7,16 +7,21 @@
    exactly, and stays inside the 30px / 40px band on the laptop
    and monitor sizes the index page is tuned for.
    ============================================================ */
-:root{ font-size: clamp(13px, min(calc(100vh / 28), calc(100vw / 26)), 40px); }
+/* 30px on laptops, 40px on monitors — the same scale as the index page.
+   The height term only kicks in on unusually short windows, so the game
+   still never scrolls. */
+:root{ font-size: min(30px, calc(100vh / 21)); }
+@media (min-width:1600px){ :root{ font-size: min(40px, calc(100vh / 21)); } }
 @supports (height:100dvh){
-  :root{ font-size: clamp(13px, min(calc(100dvh / 28), calc(100vw / 26)), 40px); }
+  :root{ font-size: min(30px, calc(100dvh / 21)); }
+  @media (min-width:1600px){ :root{ font-size: min(40px, calc(100dvh / 21)); } }
 }
 
 html,body{ height:100%; }
 body{ overflow:hidden; }
 
 .shell{
-  width:94vw; max-width:38rem; margin:0 auto;
+  width:94vw; max-width:none; margin:0 auto;
   height:100vh; height:100dvh;
   display:flex; flex-direction:column;
   padding:.5rem 0 .6rem;
@@ -24,9 +29,7 @@ body{ overflow:hidden; }
 
 /* ---------- TOP BAR ---------- */
 .bar{
-  display:flex; align-items:center; gap:.7rem;
-  background:var(--card); border:1px solid var(--line);
-  border-radius:.7rem; padding:.65rem .8rem;
+  display:none;
 }
 .back{
   flex:none; display:grid; place-items:center;
@@ -42,34 +45,86 @@ body{ overflow:hidden; }
   color:var(--accent); border-radius:.35rem; padding:.28rem .55rem; white-space:nowrap;
 }
 
-.track{ height:.22rem; background:var(--line); border-radius:999px; margin-top:.7rem; overflow:hidden; }
+.track{ display:none; }
 .track span{ display:block; height:100%; width:0; background:var(--accent); border-radius:999px; transition:width .35s ease; }
 
-/* ---------- QUESTION CARD ---------- */
+/* ---------- QUESTION AREA ----------
+   No white card — the game sits straight on the page background so it
+   uses the whole screen. */
 .qcard{
-  background:var(--card); border:1px solid var(--line);
-  border-radius:.8rem; padding:.9rem 1rem .8rem; margin-top:.6rem;
+  background:none; border:0; border-radius:0;
+  padding:.6rem .8rem .5rem; margin-top:.4rem;
   flex:1 1 auto; min-height:0;          /* fills the rest of the screen */
   display:flex; flex-direction:column;
 }
-.prompt{ font-size:.72rem; line-height:1.35; }
-.hint{ font-size:.5rem; margin-top:.25rem; }
+
+.prompt{ font-size:1rem; line-height:1.3; text-align:center; }
+.hint{ font-size:.7rem; margin-top:.25rem; text-align:center; color:var(--ink); opacity:.7; }
+
+/* Prev pinned bottom-left, Next bottom-right. On questions with no abacus
+   the Check button stays between them; on abacus questions quiz.js moves it
+   into the answer rail, leaving Prev and Next at the two edges. */
+.qcard:not(.result) .actions{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:.5rem; margin-top:.5rem; width:100%;
+}
+
+/* The stage splits in two whenever the question shows an abacus:
+   rods on the left, the answer blank and Check on the right. */
+.stage:has(.abacus-wrap){
+  display:grid;
+  grid-template-columns:1fr 14rem;
+  grid-template-rows:auto minmax(0,1fr);
+  column-gap:1.2rem;
+  align-items:center; justify-items:center;
+}
+.stage:has(.abacus-wrap) > .readout,
+.stage:has(.abacus-wrap) > .target-row{ grid-column:1; grid-row:1; }
+
+/* The number to build is shown here, big, next to what the child has built
+   so far — so they never have to re-read the question to remember it. */
+.target-row{ display:flex; align-items:stretch; justify-content:center; gap:1rem; }
+.target-row .target,
+.target-row .built{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:.1rem; border-radius:.55rem; padding:.3rem 1.1rem;
+}
+.target-row .target{ background:var(--warm-soft); border:2px solid var(--warm); }
+.target-row .built{ background:var(--card); border:2px dashed var(--accent-line); }
+.target-row .lbl{ font-size:.5rem; letter-spacing:.04em; }
+.target-row .target .num{ font-size:1.6rem; line-height:1.05; letter-spacing:.08em; color:#C2410C; }
+.target-row .built .num{ font-size:1.2rem; line-height:1.05; letter-spacing:.08em; color:var(--accent); }
+/* stretch so the rods flex down to the space available instead of overflowing */
+.stage:has(.abacus-wrap) > .abacus-wrap{
+  grid-column:1; grid-row:2;
+  align-self:stretch; justify-self:stretch; min-height:0;
+}
+
+.answer-rail{
+  grid-column:2; grid-row:1 / -1;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:.7rem; width:100%;
+}
+.answer-rail > *{ width:100%; margin-top:0; }
+.answer-rail .entry,
+.answer-rail .name-input{ width:100%; max-width:none; }
+.answer-rail .btn{ width:100%; }
 
 /* the playing area takes whatever height is left over.
    overflow:auto is only a safety valve for very short windows. */
 .stage{
-  margin-top:.7rem; flex:1 1 auto; min-height:0;
+  margin-top:.5rem; flex:1 1 auto; min-height:0;
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:.6rem;
-  overflow:auto;
+  align-items:center; justify-content:center; gap:.4rem;
+  overflow:hidden;
 }
 
 /* option buttons */
-.options{ display:grid; grid-template-columns:repeat(auto-fit,minmax(6.5rem,1fr)); gap:.55rem; width:100%; margin-top:1rem; }
+.options{ display:grid; grid-template-columns:repeat(auto-fit,minmax(6rem,1fr)); gap:.4rem; width:100%; margin-top:.5rem; }
 .opt{
   background:var(--card); border:1.5px solid var(--line);
-  border-radius:.55rem; padding:.65rem .7rem;
-  font-size:.62rem; text-align:center;
+  border-radius:.5rem; padding:.5rem .6rem;
+  font-size:.8rem; text-align:center;
   transition:border-color .15s ease, background .15s ease;
 }
 .opt:hover:not(:disabled){ border-color:var(--accent); }
@@ -79,12 +134,12 @@ body{ overflow:hidden; }
 .opt:disabled{ cursor:default; }
 
 /* symbol options are wide and chunky */
-.opt.sym{ font-size:.95rem; padding:.5rem; }
+.opt.sym{ font-size:1.2rem; padding:.5rem; }
 
 /* text / number entry */
 .entry{
-  width:8rem; text-align:center;
-  font-size:.85rem; padding:.45rem .5rem;
+  width:9rem; text-align:center;
+  font-size:1rem; padding:.45rem .5rem;
   background:var(--card); border:1.5px solid var(--line);
   border-radius:.5rem; outline:none;
 }
@@ -94,23 +149,24 @@ body{ overflow:hidden; }
 
 /* ---------- FEEDBACK + ACTIONS ---------- */
 .feedback{
-  display:none; align-items:center; gap:.5rem; flex:none;
-  margin-top:.9rem; padding:.6rem .75rem; border-radius:.5rem; font-size:.58rem;
+  display:none; align-items:center; gap:.4rem; flex:none;
+  margin-top:.4rem; padding:.45rem .65rem; border-radius:.4rem; font-size:.7rem;
 }
 .feedback.show{ display:flex; }
 .feedback.ok{ background:var(--good-soft); }
 .feedback.no{ background:var(--bad-soft); }
 .feedback .face{ font-size:.8rem; }
 
-.actions{ display:flex; justify-content:flex-end; gap:.5rem; margin-top:1rem; flex:none; }
+.actions{ display:flex; justify-content:center; gap:.5rem; margin-top:1rem; flex:none; }
 .btn{
   border:0; border-radius:.5rem; padding:.55rem 1.1rem;
-  font-size:.6rem; background:var(--accent); color:#fff;
+  font-size:.75rem; background:var(--accent-soft); color:var(--accent);
   transition:opacity .15s ease, transform .15s ease;
 }
 .btn:hover{ transform:translateY(-.04rem); }
 .btn:active{ transform:translateY(0); }
-.btn:disabled{ opacity:.35; cursor:default; transform:none; }
+.btn:disabled{ opacity:.3; cursor:default; transform:none; }
+.btn.check{ background:var(--accent); color:#fff; }
 .btn.ghost{ background:var(--accent-soft); color:var(--accent); }
 a.btn{ display:inline-block; text-align:center; color:#fff; }
 a.btn.ghost{ color:var(--accent); }
@@ -119,7 +175,7 @@ a.btn.ghost{ color:var(--accent); }
 .chips{ display:flex; flex-wrap:wrap; gap:.45rem; justify-content:center; }
 .numchip{
   border:1.5px solid var(--line); background:var(--card);
-  border-radius:.45rem; padding:.4rem .75rem; font-size:.72rem;
+  border-radius:.45rem; padding:.4rem .75rem; font-size:.85rem;
   transition:border-color .15s ease, opacity .15s ease;
 }
 .numchip:hover:not(:disabled){ border-color:var(--accent); }
@@ -130,7 +186,7 @@ a.btn.ghost{ color:var(--accent); }
   width:100%;
 }
 .slot{
-  min-width:3.4rem; text-align:center; font-size:.72rem;
+  min-width:3.6rem; text-align:center; font-size:.85rem;
   background:var(--card); border:1.5px dashed var(--accent-line);
   border-radius:.4rem; padding:.35rem .5rem;
 }
@@ -140,7 +196,7 @@ a.btn.ghost{ color:var(--accent); }
 
 /* two labelled entries side by side */
 .pair{ display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
-.pair label{ display:grid; gap:.3rem; justify-items:center; font-size:.52rem; }
+.pair label{ display:grid; gap:.3rem; justify-items:center; font-size:.7rem; }
 
 /* ---------- RESULT ---------- */
 .result{ display:none; text-align:center; padding:1.6rem 1.1rem; }
@@ -152,53 +208,304 @@ a.btn.ghost{ color:var(--accent); }
 .stars{ font-size:1.1rem; letter-spacing:.15rem; margin-top:.6rem; }
 .result .actions{ justify-content:center; margin-top:1.2rem; }
 
-/* ---------- SHARED ABACUS WIDGET ---------- */
-/* the whole widget stretches to whatever height the stage has spare */
+/* ---------- SHARED ABACUS WIDGET (cartoon style) ---------- */
 .abacus-wrap{
   display:flex; flex-direction:column; align-items:center;
-  flex:1 1 auto; min-height:0; gap:.4rem;
+  flex:1 1 auto; min-height:0; gap:0;
+  width:100%;
 }
-.abacus{ display:flex; align-items:flex-end; gap:.35rem; flex:1 1 auto; min-height:0; }
+
+/* the main abacus board */
+.abacus{
+  display:flex; align-items:flex-end; justify-content:stretch;
+  gap:0; flex:1 1 auto; min-height:0;
+  width:82%; max-width:20rem;
+}
+
+/* each rod column.
+   justify-content:flex-end keeps the stick pinned to the bottom of the
+   column, so any spare height in the stage opens up ABOVE the rod and the
+   rod always stays joined to the base bar. */
 .rod{
-  width:2.1rem; height:100%;
-  display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-  border:0; background:none; padding:0;
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:flex-end;
+  flex:1; height:100%;
+  border:0; background:none; padding:0; position:relative;
 }
 button.rod{ cursor:pointer; }
-button.rod:hover .stick::before{ background:var(--accent); }
+
+/* the vertical stick/rod line - extends to touch the base */
+/* max-height is only a cap on the spare height the rod may claim, so raising
+   it makes the rods taller without ever forcing the page to scroll */
 .rod .stick{
   position:relative; width:100%;
-  flex:1 1 auto; min-height:1.4rem; max-height:5.2rem;
-  display:flex; flex-direction:column-reverse; align-items:center; gap:.05rem;
-  padding-bottom:.1rem;
+  flex:1 1 auto; min-height:2rem; max-height:9.5rem;
+  display:flex; flex-direction:column-reverse; align-items:center;
+  gap:0; padding-bottom:0;
 }
+/* the rod runs a little past the bottom of the stick so it tucks under the
+   wooden base bar (the bar is painted after it) instead of stopping short */
 .rod .stick::before{
-  content:""; position:absolute; left:50%; top:0; bottom:0;
-  width:.07rem; transform:translateX(-50%); background:var(--accent-line); border-radius:999px;
+  content:""; position:absolute; left:50%; top:0; bottom:-.3rem;
+  width:.2rem; transform:translateX(-50%);
+  background:#2D2D2D; border-radius:2px 2px 0 0;
 }
-/* sized so a full rod of 9 beads still sits inside the stick */
+
+/* cartoon beads - 3D gradient look */
 .bead{
   position:relative; z-index:1;
-  width:.5rem; height:.5rem; border-radius:50%;
-  background:var(--accent);
+  width:1.3rem; height:1.3rem; border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #FF6B6B, #E74C3C 40%, #C0392B 80%);
+  box-shadow:
+    inset 0 -2px 4px rgba(0,0,0,.25),
+    inset 0 2px 4px rgba(255,255,255,.3),
+    0 1px 3px rgba(0,0,0,.2);
+  margin-bottom:-.25rem;   /* pack tighter so a full rod of 9 still fits */
 }
-.bead:nth-child(even){ background:var(--warm); }
-.rod .name{
-  width:100%; text-align:center; font-size:.5rem;
-  background:var(--accent-soft); border-radius:.3rem; padding:.15rem 0; margin-top:.25rem;
+.bead:nth-child(even){
+  background:radial-gradient(circle at 35% 35%, #FFD93D, #F39C12 40%, #E67E22 80%);
+  box-shadow:
+    inset 0 -2px 4px rgba(0,0,0,.2),
+    inset 0 2px 4px rgba(255,255,255,.35),
+    0 1px 3px rgba(0,0,0,.2);
 }
-.rod .val{ font-size:.45rem; margin-top:.15rem; }
-.rod.on .name{ background:var(--warm-soft); }
-/* one minus button sitting directly under each rod */
-.rodrow{ display:flex; gap:.35rem; }
-.rodbtn{
-  flex:none; width:2.1rem;
-  border:1.5px solid var(--line); background:var(--card);
-  border-radius:.4rem; padding:.25rem 0; font-size:.62rem;
+.bead:nth-child(3n){
+  background:radial-gradient(circle at 35% 35%, #74B9FF, #0984E3 40%, #2980B9 80%);
+  box-shadow:
+    inset 0 -2px 4px rgba(0,0,0,.2),
+    inset 0 2px 4px rgba(255,255,255,.3),
+    0 1px 3px rgba(0,0,0,.2);
 }
-.rodbtn:hover{ border-color:var(--accent); }
 
-.readout{
-  font-size:.9rem; background:var(--accent-soft); color:var(--accent);
-  border-radius:.45rem; padding:.35rem .9rem; letter-spacing:.06em;
+/* remove val labels - rods connect directly to base */
+.rod .val{ display:none; }
+
+/* wooden base bar - directly attached to rods */
+.abacus-base{
+  display:flex; justify-content:stretch; gap:0;
+  width:82%; max-width:20rem;
+  background:linear-gradient(180deg, #E8A87C 0%, #D4845E 50%, #C06A3E 100%);
+  border-radius:0 0 .4rem .4rem; padding:.3rem .2rem;
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.3),
+    inset 0 -2px 3px rgba(0,0,0,.15),
+    0 3px 6px rgba(0,0,0,.2);
+  margin-top:0;
+  position:relative;
 }
+.abacus-base::before{
+  content:""; position:absolute; top:-.15rem; left:0; right:0;
+  height:.15rem; background:#C06A3E;
+}
+.abacus-base .base-label{
+  flex:1; text-align:center;
+  font-size:.65rem; font-weight:600; color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.2);
+  letter-spacing:.05em;
+  padding:.15rem 0;
+  border-right:1px solid rgba(255,255,255,.3);
+}
+.abacus-base .base-label:last-child{ border-right:none; }
+.abacus-base .base-label:last-child{ border-right:none; }
+
+/* individual rod labels - now part of the base */
+.rod .name{
+  display:none;
+}
+.rod .val{
+  font-size:.5rem; color:var(--ink); margin:0;
+  font-weight:600;
+}
+
+/* wooden base bar - directly attached to rods */
+.abacus-base{
+  display:flex; justify-content:stretch; gap:0;
+  width:82%; max-width:20rem;
+  background:linear-gradient(180deg, #E8A87C 0%, #D4845E 50%, #C06A3E 100%);
+  border-radius:0 0 .4rem .4rem; padding:.3rem .2rem;
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.3),
+    inset 0 -2px 3px rgba(0,0,0,.15),
+    0 3px 6px rgba(0,0,0,.2);
+  margin-top:0;
+}
+
+/* minus button row */
+/* No gap here on purpose. The rods above are laid out with gap:0, so the
+   minus buttons must be too — the visible space between them comes from
+   symmetric margins instead, which keeps every button centred on its rod. */
+.rodrow{
+  display:flex; gap:0; justify-content:stretch;
+  width:82%; max-width:20rem;
+  margin-top:.2rem;
+}
+.rodbtn{
+  flex:1 1 0; min-width:0; margin:0 .2rem; height:1.5rem;
+  border:0; border-radius:2rem;
+  background:linear-gradient(180deg, #FFD4A8 0%, #FFB870 100%);
+  font-size:.8rem; font-weight:700; color:#8B5A2B;
+  box-shadow:
+    0 2px 0 #D4894A,
+    0 3px 6px rgba(180,100,40,.25);
+  transition:all .15s ease;
+}
+.rodbtn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 5px 0 #D4894A,
+    0 6px 12px rgba(180,100,40,.3);
+}
+.rodbtn:active{
+  transform:translateY(1px);
+  box-shadow:
+    0 1px 0 #D4894A,
+    0 2px 4px rgba(180,100,40,.2);
+}
+
+/* readout display */
+.readout{
+  font-size:.9rem; font-weight:700;
+  background:linear-gradient(180deg, #FFF8F0, #FFE8D6);
+  color:#C06A3E;
+  border:2px solid #D4845E;
+  border-radius:.4rem; padding:.35rem .9rem;
+  letter-spacing:.1em;
+  box-shadow:0 2px 4px rgba(0,0,0,.1);
+}
+
+/* ---------- INLINE ANSWER ---------- */
+.inline-answer{
+  display:flex; flex-direction:column; align-items:center;
+  gap:.4rem; margin-top:.8rem; width:100%;
+}
+.inline-answer label{
+  font-size:.7rem; color:var(--ink); font-weight:600;
+}
+.inline-answer .entry{
+  width:8rem; text-align:center;
+  font-size:1rem; padding:.5rem .6rem;
+  background:var(--card); border:2px solid var(--accent-line);
+  border-radius:.5rem; outline:none;
+  transition:border-color .15s ease;
+}
+.inline-answer .entry:focus{ border-color:var(--accent); }
+.inline-answer .entry.right{ border-color:var(--good); background:var(--good-soft); }
+.inline-answer .entry.wrong{ border-color:var(--bad); background:var(--bad-soft); }
+
+/* name text input */
+.name-input{
+  width:100%; max-width:22rem;
+  font-size:.7rem; padding:.5rem .8rem;
+  background:var(--card); border:2px solid var(--accent-line);
+  border-radius:.5rem; outline:none;
+  color:var(--ink);
+  transition:border-color .15s ease;
+}
+.name-input:focus{ border-color:var(--accent); }
+.name-input:disabled{ opacity:.6; cursor:default; }
+
+/* ---------- PREV / NEXT / CHECK BUTTONS (3D style) ---------- */
+.actions{ display:flex; justify-content:center; gap:.6rem; margin-top:.5rem; flex:none; }
+
+.btn{
+  border:0; border-radius:2rem; padding:.5rem 1.3rem;
+  font-size:.7rem; font-weight:600;
+  cursor:pointer; transition:all .15s ease;
+  position:relative;
+}
+.btn:hover{ transform:translateY(-2px); }
+.btn:active{ transform:translateY(1px); }
+.btn:disabled{ opacity:.35; cursor:default; transform:none; }
+
+/* Prev button - soft orange */
+.btn.prev-btn{
+  background:linear-gradient(180deg, #FFD4A8 0%, #FFB870 100%);
+  color:#8B5A2B;
+  box-shadow:
+    0 4px 0 #D4894A,
+    0 6px 12px rgba(180,100,40,.25);
+}
+.btn.prev-btn:hover{
+  box-shadow:
+    0 6px 0 #D4894A,
+    0 8px 16px rgba(180,100,40,.3);
+}
+.btn.prev-btn:active{
+  box-shadow:
+    0 1px 0 #D4894A,
+    0 2px 4px rgba(180,100,40,.2);
+}
+
+/* Check button - teal */
+.btn.check-btn{
+  background:linear-gradient(180deg, #2DD4BF 0%, #14B8A6 100%);
+  color:#fff;
+  box-shadow:
+    0 4px 0 #0D9488,
+    0 6px 12px rgba(13,148,136,.3);
+}
+.btn.check-btn:hover{
+  box-shadow:
+    0 6px 0 #0D9488,
+    0 8px 16px rgba(13,148,136,.35);
+}
+.btn.check-btn:active{
+  box-shadow:
+    0 1px 0 #0D9488,
+    0 2px 4px rgba(13,148,136,.2);
+}
+
+/* Next button - soft blue */
+.btn.next-btn{
+  background:linear-gradient(180deg, #93C5FD 0%, #60A5FA 100%);
+  color:#1E3A5F;
+  box-shadow:
+    0 4px 0 #3B82F6,
+    0 6px 12px rgba(59,130,246,.25);
+}
+.btn.next-btn:hover{
+  box-shadow:
+    0 6px 0 #3B82F6,
+    0 8px 16px rgba(59,130,246,.3);
+}
+.btn.next-btn:active{
+  box-shadow:
+    0 1px 0 #3B82F6,
+    0 2px 4px rgba(59,130,246,.2);
+}
+
+/* ghost button for result page */
+.btn.ghost{
+  background:linear-gradient(180deg, #FFD4A8 0%, #FFB870 100%);
+  color:#8B5A2B;
+  box-shadow:
+    0 4px 0 #D4894A,
+    0 6px 12px rgba(180,100,40,.25);
+}
+a.btn{ display:inline-block; text-align:center; color:#fff; text-decoration:none; }
+a.btn.ghost{ color:#8B5A2B; }
+.popout-overlay{
+  display:none; position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,.35);
+  align-items:center; justify-content:center;
+}
+.popout-overlay.show{ display:flex; }
+.popout{
+  background:var(--card); border-radius:1rem; padding:1.8rem 2rem;
+  text-align:center; min-width:16rem; max-width:22rem;
+  box-shadow:0 8px 32px rgba(0,0,0,.18);
+  animation:popIn .25s ease;
+}
+@keyframes popIn{
+  0%{ transform:scale(.7); opacity:0; }
+  100%{ transform:scale(1); opacity:1; }
+}
+.popout .icon{ font-size:2.5rem; margin-bottom:.6rem; }
+.popout h2{ font-size:1rem; margin-bottom:.3rem; color:var(--ink); }
+.popout p{ font-size:.7rem; color:var(--ink); margin-bottom:1rem; }
+.popout .btn{ min-width:6rem; }
+
+/* ---------- CONGRATS MODAL ---------- */
+.popout.congrats .icon{ font-size:3rem; }
+.popout.congrats h2{ font-size:1.2rem; color:var(--accent); }
+.popout.congrats .stars{ font-size:1.5rem; margin:.5rem 0; }

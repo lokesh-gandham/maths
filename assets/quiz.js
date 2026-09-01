@@ -7,9 +7,130 @@
 (function(){
   const $ = s => document.querySelector(s);
 
+  /* ---------- VOICE (Web Audio API) ---------- */
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  let audioCtx = null;
+
+  function ensureAudio(){
+    if(!audioCtx) audioCtx = new AudioCtx();
+  }
+
+  function speak(text){
+    ensureAudio();
+    const synth = window.speechSynthesis;
+    if(!synth) return;
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1;
+    u.pitch = 1.1;
+    synth.speak(u);
+  }
+
+  function playTone(freq, dur, type='sine'){
+    ensureAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + dur);
+  }
+
+  function soundCorrect(){
+    playTone(523, 0.12);
+    setTimeout(()=> playTone(659, 0.12), 100);
+    setTimeout(()=> playTone(784, 0.2), 200);
+    speak('Correct!');
+  }
+
+  function soundWrong(){
+    playTone(330, 0.25, 'square');
+    setTimeout(()=> playTone(262, 0.35, 'square'), 200);
+    speak('Try again!');
+  }
+
+  function soundCongrats(){
+    playTone(523, 0.12);
+    setTimeout(()=> playTone(659, 0.12), 120);
+    setTimeout(()=> playTone(784, 0.12), 240);
+    setTimeout(()=> playTone(1047, 0.35), 360);
+    speak('Congratulations!');
+  }
+
+  /* ---------- POPOUT ---------- */
+  function showPopout(type, msg, onClose){
+    let overlay = document.getElementById('popout-overlay');
+    if(!overlay){
+      overlay = document.createElement('div');
+      overlay.id = 'popout-overlay';
+      overlay.className = 'popout-overlay';
+      document.body.appendChild(overlay);
+    }
+
+    const isOk = type === 'correct';
+    const icon = isOk ? '✔' : '✖';
+    const title = isOk ? 'Correct!' : 'Try Again';
+
+    overlay.innerHTML = `
+      <div class="popout">
+        <div class="icon">${icon}</div>
+        <h2>${title}</h2>
+        <p>${msg}</p>
+      </div>`;
+    overlay.classList.add('show');
+
+    if(isOk) soundCorrect(); else soundWrong();
+
+    setTimeout(()=>{
+      overlay.classList.remove('show');
+      if(onClose) onClose();
+    }, 1800);
+  }
+
+  function showCongrats(score, total, stars, onClose){
+    let overlay = document.getElementById('popout-overlay');
+    if(!overlay){
+      overlay = document.createElement('div');
+      overlay.id = 'popout-overlay';
+      overlay.className = 'popout-overlay';
+      document.body.appendChild(overlay);
+    }
+
+    const pct = score / total;
+    const verdict = pct === 1 ? 'Perfect Round!' : pct >= .6 ? 'Great Job!' : 'Good Try!';
+    const blurb = pct === 1
+      ? 'Every answer was correct. You are amazing!'
+      : 'Play it again to push your score higher.';
+
+    overlay.innerHTML = `
+      <div class="popout congrats">
+        <div class="icon">🎉</div>
+        <h2>${verdict}</h2>
+        <div class="stars">${stars}</div>
+        <p>You scored <strong>${score} out of ${total}</strong></p>
+        <p>${blurb}</p>
+        <button class="btn" id="popout-close">Play Again</button>
+        <a class="btn ghost" href="../index.html" style="margin-left:.5rem">Back</a>
+      </div>`;
+    overlay.classList.add('show');
+
+    soundCongrats();
+
+    document.getElementById('popout-close').onclick = ()=>{
+      overlay.classList.remove('show');
+      if(onClose) onClose();
+    };
+  }
+
   window.Quiz = {
     start(cfg){
-      const state = { i:0, score:0, answered:false };
+      const total = cfg.questions.length;
+      const state = { i:0, score:0, answeredResults: new Array(total).fill(null),
+                      triedWrong: new Array(total).fill(false) };
       const els = {
         title:   $('#q-title'),
         kicker:  $('#q-kicker'),
@@ -21,6 +142,9 @@
         stage:   $('#q-stage'),
         feed:    $('#q-feed'),
         primary: $('#q-primary'),
+        prev:    $('#q-prev'),
+        next:    $('#q-next'),
+        actions: $('#q-card .actions'),
         result:  $('#q-result'),
         score:   $('#q-score'),
         of:      $('#q-of'),
@@ -32,11 +156,23 @@
       els.title.textContent  = cfg.title;
       els.kicker.textContent = cfg.kicker;
 
-      const total = cfg.questions.length;
+      function updateNav(){
+        const isAnswered = state.answeredResults[state.i] !== null;
+        els.prev.disabled = state.i === 0;
+        els.next.disabled = !isAnswered;
+        els.primary.style.display = isAnswered ? 'none' : '';
+        if(isAnswered){
+          els.feed.className = 'feedback show ' + (state.answeredResults[state.i].ok ? 'ok' : 'no');
+          els.feed.innerHTML =
+            `<span class="face">${state.answeredResults[state.i].ok ? '✔' : '✖'}</span><span>${state.answeredResults[state.i].msg}</span>`;
+        } else {
+          els.feed.className = 'feedback';
+        }
+      }
 
       function paint(){
         const q = cfg.questions[state.i];
-        state.answered = false;
+        const prev = state.answeredResults[state.i];
 
         els.count.textContent = `${state.i + 1} / ${total}`;
         els.bar.style.width = `${(state.i / total) * 100}%`;
@@ -44,24 +180,62 @@
         els.hint.innerHTML = q.hint || '';
         els.hint.style.display = q.hint ? 'block' : 'none';
         els.stage.innerHTML = '';
-        els.feed.className = 'feedback';
         els.primary.textContent = 'Check';
         els.primary.disabled = true;
 
-        q.render(els.stage, () => { els.primary.disabled = false; });
+        if(prev){
+          // Already answered - show locked state
+          q.renderLocked ? q.renderLocked(els.stage) : q.render(els.stage, ()=>{});
+          els.primary.style.display = 'none';
+        } else {
+          q.render(els.stage, () => { els.primary.disabled = false; });
+        }
+        layoutStage();
+        updateNav();
+      }
+
+      /* On abacus questions the answer blank moves to the right of the rods,
+         with Check directly underneath it. Everything else keeps Check in the
+         bottom row between Prev and Next. */
+      function layoutStage(){
+        const abacus = els.stage.querySelector('.abacus-wrap');
+        const answer = els.stage.querySelector('.inline-answer, .pair, .entry');
+        if(abacus && answer){
+          const rail = document.createElement('div');
+          rail.className = 'answer-rail';
+          els.stage.appendChild(rail);
+          rail.appendChild(answer);
+          rail.appendChild(els.primary);
+        } else if(els.primary.parentElement !== els.actions){
+          els.actions.insertBefore(els.primary, els.next);
+        }
       }
 
       function reveal(){
         const q = cfg.questions[state.i];
         const res = q.check();
-        state.answered = true;
-        if(res.ok) state.score++;
 
-        els.feed.className = `feedback show ${res.ok ? 'ok' : 'no'}`;
-        els.feed.innerHTML =
-          `<span class="face">${res.ok ? '✔' : '✖'}</span><span>${res.msg}</span>`;
+        /* A wrong answer does not move the child on. The question is left
+           unanswered and re-rendered so they can try again. The message is
+           deliberately generic — telling them the answer here would defeat
+           the point of making them retry. */
+        if(!res.ok){
+          state.triedWrong[state.i] = true;
+          showPopout('wrong', q.retry || 'Not quite — have another go.', ()=>{ paint(); });
+          return;
+        }
 
-        els.primary.textContent = state.i === total - 1 ? 'See result' : 'Next';
+        state.answeredResults[state.i] = res;
+        if(!state.triedWrong[state.i]) state.score++;   // point only for a clean first try
+
+        showPopout('correct', res.msg, ()=>{
+          if(state.i === total - 1){
+            finish();
+          } else {
+            state.i++;
+            paint();
+          }
+        });
       }
 
       function finish(){
@@ -72,24 +246,34 @@
         els.of.textContent = `out of ${total}`;
 
         const pct = state.score / total;
-        const stars = pct === 1 ? 3 : pct >= .6 ? 2 : pct > 0 ? 1 : 0;
-        els.stars.textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+        const starCount = pct === 1 ? 3 : pct >= .6 ? 2 : pct > 0 ? 1 : 0;
+        const starStr = '★'.repeat(starCount) + '☆'.repeat(3 - starCount);
+        els.stars.textContent = starStr;
         els.verdict.textContent =
           pct === 1 ? 'Perfect round!' : pct >= .6 ? 'Nicely done!' : 'Good try!';
         els.blurb.textContent =
           pct === 1 ? 'Every answer was correct. On to the next activity.'
                     : 'Play it again to push your score higher.';
+
+        setTimeout(()=> showCongrats(state.score, total, starStr), 300);
       }
 
       els.primary.addEventListener('click', () => {
-        if(!state.answered){ reveal(); return; }
-        if(state.i === total - 1){ finish(); return; }
-        state.i++;
-        paint();
+        if(state.answeredResults[state.i] === null){ reveal(); }
+      });
+
+      els.prev.addEventListener('click', ()=>{
+        if(state.i > 0){ state.i--; paint(); }
+      });
+
+      els.next.addEventListener('click', ()=>{
+        if(state.i < total - 1){ state.i++; paint(); }
       });
 
       $('#q-again').addEventListener('click', () => {
         state.i = 0; state.score = 0;
+        state.answeredResults = new Array(total).fill(null);
+        state.triedWrong = new Array(total).fill(false);
         els.result.classList.remove('show');
         els.card.style.display = '';
         paint();
@@ -116,15 +300,24 @@
           <${editable ? 'button' : 'div'} class="rod${c[i] ? ' on' : ''}" data-i="${i}"
             ${editable ? `aria-label="Add a bead to the ${n} rod"` : ''}>
             <span class="stick">${'<span class="bead"></span>'.repeat(c[i])}</span>
-            <span class="name">${n}</span>
-            <span class="val">${c[i]}</span>
           </${editable ? 'button' : 'div'}>`).join('');
+
+        // Update base bar labels
+        const base = wrap.querySelector('.abacus-base');
+        if(base){
+          base.innerHTML = names.map((n,i) => `<span class="base-label">${n}</span>`).join('');
+        }
       }
+
+      // Create continuous wooden base bar
+      const base = document.createElement('div');
+      base.className = 'abacus-base';
+      base.innerHTML = names.map(n => `<span class="base-label">${n}</span>`).join('');
+      wrap.appendChild(base);
+
       draw();
 
       if(editable){
-        /* tap the rod itself to add a bead — one control row instead of two,
-           which keeps the whole game inside the screen */
         const row = document.createElement('div');
         row.className = 'rodrow';
         row.innerHTML = names.map((n, i) =>
