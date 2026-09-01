@@ -73,13 +73,14 @@
 
     const isOk = type === 'correct';
     const icon = isOk ? '✔' : '✖';
-    const title = isOk ? 'Correct!' : 'Try Again';
+    const title = isOk ? 'Correct!' : 'Try Again!';
+    const cls = isOk ? 'correct' : 'wrong';
 
     overlay.innerHTML = `
-      <div class="popout">
+      <div class="popout ${cls}">
         <div class="icon">${icon}</div>
         <h2>${title}</h2>
-        <p>${msg}</p>
+        <div class="msg-bubble">${msg}</div>
       </div>`;
     overlay.classList.add('show');
 
@@ -88,7 +89,7 @@
     setTimeout(()=>{
       overlay.classList.remove('show');
       if(onClose) onClose();
-    }, 1800);
+    }, 2000);
   }
 
   function showCongrats(score, total, stars, onClose){
@@ -101,26 +102,24 @@
     }
 
     const pct = score / total;
-    const verdict = pct === 1 ? 'Perfect Round!' : pct >= .6 ? 'Great Job!' : 'Good Try!';
-    const blurb = pct === 1
-      ? 'Every answer was correct. You are amazing!'
-      : 'Play it again to push your score higher.';
+    const verdict = 'Congratulations!';
 
     overlay.innerHTML = `
       <div class="popout congrats">
         <div class="icon">🎉</div>
         <h2>${verdict}</h2>
-        <div class="stars">${stars}</div>
-        <p>You scored <strong>${score} out of ${total}</strong></p>
-        <p>${blurb}</p>
-        <button class="btn" id="popout-close">Play Again</button>
-        <a class="btn ghost" href="../index.html" style="margin-left:.5rem">Back</a>
+        <div class="stars">★★★</div>
+        <div class="score-text">${score} / ${total}</div>
+        <div style="display:flex;gap:.4rem;justify-content:center;margin-top:.3rem">
+          <button class="btn prev-btn" id="popout-again" style="font-size:.6rem;padding:.4rem .8rem">Play Again</button>
+          <a class="btn next-btn" href="../index.html" style="font-size:.6rem;padding:.4rem .8rem;text-decoration:none">Menu</a>
+        </div>
       </div>`;
     overlay.classList.add('show');
 
     soundCongrats();
 
-    document.getElementById('popout-close').onclick = ()=>{
+    document.getElementById('popout-again').onclick = ()=>{
       overlay.classList.remove('show');
       if(onClose) onClose();
     };
@@ -239,23 +238,18 @@
       }
 
       function finish(){
-        els.bar.style.width = '100%';
-        els.card.style.display = 'none';
-        els.result.classList.add('show');
-        els.score.textContent = state.score;
-        els.of.textContent = `out of ${total}`;
-
         const pct = state.score / total;
         const starCount = pct === 1 ? 3 : pct >= .6 ? 2 : pct > 0 ? 1 : 0;
         const starStr = '★'.repeat(starCount) + '☆'.repeat(3 - starCount);
-        els.stars.textContent = starStr;
-        els.verdict.textContent =
-          pct === 1 ? 'Perfect round!' : pct >= .6 ? 'Nicely done!' : 'Good try!';
-        els.blurb.textContent =
-          pct === 1 ? 'Every answer was correct. On to the next activity.'
-                    : 'Play it again to push your score higher.';
 
-        setTimeout(()=> showCongrats(state.score, total, starStr), 300);
+        showCongrats(state.score, total, starStr, ()=>{
+          state.i = 0;
+          state.score = 0;
+          state.answeredResults = new Array(total).fill(null);
+          state.triedWrong = new Array(total).fill(false);
+          els.card.style.display = '';
+          paint();
+        });
       }
 
       els.primary.addEventListener('click', () => {
