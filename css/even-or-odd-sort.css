@@ -49,35 +49,6 @@ a:focus-visible, button:focus-visible {
   margin: 0 auto;
 }
 
-/* Progress */
-.progress-row {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0 14px;
-}
-
-.progress-icon {
-  font-size: 18px;
-}
-
-.progress-track {
-  flex: 1;
-  height: 8px;
-  overflow: hidden;
-  background: rgba(119, 104, 216, 0.15);
-  border-radius: 30px;
-}
-
-.progress-bar {
-  display: block;
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--purple), #aba0f5);
-  border-radius: inherit;
-  transition: width 300ms ease;
-}
-
 /* Main worksheet */
 .worksheet {
   position: relative;

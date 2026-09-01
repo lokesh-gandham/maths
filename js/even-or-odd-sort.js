@@ -15,8 +15,6 @@
   var clearButton = document.getElementById('clear-button');
   var checkButton = document.getElementById('check-button');
   var feedback = document.getElementById('activity-feedback');
-  var progressBar = document.getElementById('progress-bar');
-  var progressTrack = document.getElementById('progress-track');
   var numberBoard = document.getElementById('number-board');
 
   var popupOverlay = document.getElementById('popup-overlay');
@@ -118,10 +116,6 @@
     var markedItems = document.querySelectorAll('.number-item[data-mark]');
     var count = markedItems.length;
     var total = numberItems.length;
-    var progress = (count / total) * 100;
-
-    progressBar.style.width = progress + '%';
-    progressTrack.setAttribute('aria-valuenow', String(count));
 
     checkButton.disabled = count !== total;
 
