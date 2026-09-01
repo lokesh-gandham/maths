@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Livvic:wght@400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="css/theme.css">
 <style>
 .wrap{ width:94vw; max-width:46rem; margin:0 auto; padding:1.5rem 0 3rem; }
 
@@ -492,7 +492,7 @@ root.addEventListener('click', e => {
   const btn = e.target.closest('.play');
   if(!btn) return;
   if(btn.dataset.ready === '1'){
-    location.href = `activities/${btn.dataset.id}.html`;
+    location.href = `html/${btn.dataset.id}.html`;
   } else {
     showToast(`${btn.dataset.title} — activity coming soon`);
   }
