@@ -1,0 +1,138 @@
+/* ============================================================
+   Launch Pad Q6 — compare, order and form numbers.
+   Questions for this exercise only; the shared engine is quiz.js.
+   ============================================================ */
+const SYMS = ['&lt;', '&gt;', '='];
+
+/* ---- 1. pick the symbol ---- */
+function symbolQ(a, b){
+  const correct = a < b ? 0 : a > b ? 1 : 2;
+  let opts, gap;
+  return {
+    prompt: 'Which symbol goes in the middle?',
+    render(stage, ready){
+      const duel = document.createElement('div');
+      duel.className = 'duel';
+      duel.innerHTML = `<span class="n">${a}</span><span class="gap" id="gap">?</span><span class="n">${b}</span>`;
+      stage.appendChild(duel);
+      gap = duel.querySelector('#gap');
+      opts = Quiz.options(stage, SYMS, i => { gap.innerHTML = SYMS[i]; ready(); }, {cls:'sym'});
+    },
+    check(){
+      const ok = opts.value() === correct;
+      opts.mark(correct);
+      gap.innerHTML = SYMS[correct];
+      return { ok, msg: ok ? `Right — ${a} ${SYMS[correct]} ${b}.`
+                           : `It is ${a} ${SYMS[correct]} ${b}.` };
+    }
+  };
+}
+
+/* ---- 2. tap the numbers into order ---- */
+function orderQ(nums, dir){
+  const want = nums.slice().sort((x, y) => dir === 'asc' ? x - y : y - x);
+  let picked = [], slotsEl, chipsEl;
+  return {
+    prompt: `Tap the numbers in <strong>${dir === 'asc' ? 'ascending' : 'descending'}</strong> order.`,
+    hint: dir === 'asc' ? 'Smallest first, greatest last.' : 'Greatest first, smallest last.',
+    render(stage, ready){
+      picked = [];
+
+      slotsEl = document.createElement('div');
+      slotsEl.className = 'slots';
+      stage.appendChild(slotsEl);
+
+      chipsEl = document.createElement('div');
+      chipsEl.className = 'chips';
+      chipsEl.innerHTML = nums.map((n, i) =>
+        `<button class="numchip" data-i="${i}">${n}</button>`).join('');
+      stage.appendChild(chipsEl);
+
+      const undo = document.createElement('button');
+      undo.className = 'btn ghost';
+      undo.textContent = 'Undo';
+      undo.style.fontSize = '.5rem';
+      stage.appendChild(undo);
+
+      function paint(){
+        slotsEl.innerHTML = nums.map((_, k) =>
+          `<span class="slot${picked[k] !== undefined ? ' filled' : ''}">${
+            picked[k] !== undefined ? nums[picked[k]] : '&nbsp;'}</span>`).join('');
+        chipsEl.querySelectorAll('.numchip').forEach((c, i) => {
+          const used = picked.includes(i);
+          c.classList.toggle('used', used);
+          c.disabled = used;
+        });
+        if(picked.length === nums.length) ready();
+      }
+      paint();
+
+      chipsEl.addEventListener('click', e => {
+        const b = e.target.closest('.numchip');
+        if(!b || b.disabled) return;
+        picked.push(+b.dataset.i);
+        paint();
+      });
+      undo.addEventListener('click', () => { picked.pop(); paint(); });
+    },
+    check(){
+      const got = picked.map(i => nums[i]);
+      const ok = got.every((v, k) => v === want[k]);
+      slotsEl.querySelectorAll('.slot').forEach((s, k) => {
+        s.classList.add(got[k] === want[k] ? 'right' : 'wrong');
+      });
+      return { ok, msg: ok ? 'That is the right order.'
+                           : `The correct order is ${want.join(', ')}.` };
+    }
+  };
+}
+
+/* ---- 3. build the smallest and greatest number ---- */
+function formQ(digits){
+  const asc = digits.slice().sort((a,b) => a - b);
+  /* a number cannot start with 0, so the 0 moves to second place from the left */
+  if(asc[0] === 0){
+    const firstNonZero = asc.findIndex(d => d !== 0);
+    asc.splice(0, 0, asc.splice(firstNonZero, 1)[0]);
+  }
+  const small = asc.join('');
+  const great = digits.slice().sort((a,b) => b - a).join('');
+  let s, g;
+  return {
+    prompt: `Use the digits <strong>${digits.join(', ')}</strong> once each.`,
+    hint: 'Smallest number: put the digits in order from small to big. Greatest: the other way round.',
+    render(stage, ready){
+      const pair = document.createElement('div');
+      pair.className = 'pair';
+      stage.appendChild(pair);
+
+      const l1 = document.createElement('label'); l1.textContent = 'Smallest';
+      const l2 = document.createElement('label'); l2.textContent = 'Greatest';
+      pair.append(l1, l2);
+
+      const ping = () => { if(s.value() && g.value()) ready(); };
+      s = Quiz.entry(l1, { placeholder:'____', width:'6rem', onInput: ping });
+      g = Quiz.entry(l2, { placeholder:'____', width:'6rem', onInput: ping });
+    },
+    check(){
+      const okS = s.value() === small, okG = g.value() === great;
+      s.mark(okS); g.mark(okG);
+      const ok = okS && okG;
+      return { ok, msg: ok ? `Both right — ${small} and ${great}.`
+                           : `Smallest is ${small} and greatest is ${great}.` };
+    }
+  };
+}
+
+Quiz.start({
+  kicker: 'Launch Pad · Question 6',
+  title: 'Compare and order',
+  questions: [
+    symbolQ(848, 884),
+    symbolQ(7259, 7095),
+    orderQ([1437, 1374, 3471, 4713], 'asc'),
+    orderQ([3204, 7420, 4203, 2430], 'desc'),
+    formQ([7, 6, 9, 3]),
+    formQ([3, 0, 2, 8])
+  ]
+});

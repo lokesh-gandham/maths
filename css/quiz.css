@@ -24,7 +24,7 @@ body{ overflow:hidden; }
   width:94vw; max-width:none; margin:0 auto;
   height:100vh; height:100dvh;
   display:flex; flex-direction:column;
-  padding:.2rem 0 .3rem;
+  padding:0 0 .2rem;
 }
 
 /* ---------- TOP BAR ---------- */
@@ -53,13 +53,13 @@ body{ overflow:hidden; }
    uses the whole screen. */
 .qcard{
   background:none; border:0; border-radius:0;
-  padding:.3rem .6rem .3rem; margin-top:.2rem;
+  padding:.2rem .6rem .2rem; margin-top:0;
   flex:1 1 auto; min-height:0;          /* fills the rest of the screen */
   display:flex; flex-direction:column;
 }
 
-.prompt{ font-size:.9rem; line-height:1.2; text-align:center; }
-.hint{ font-size:.6rem; margin-top:.15rem; text-align:center; color:var(--ink); opacity:.7; }
+.prompt{ font-size:.9rem; line-height:1.2; text-align:center; margin:0; padding-top:0; }
+.hint{ font-size:.6rem; margin-top:0; margin-bottom:.3rem; text-align:center; color:var(--ink); opacity:.7; }
 
 /* Prev pinned bottom-left, Next bottom-right. On questions with no abacus
    the Check button stays between them; on abacus questions quiz.js moves it
@@ -110,30 +110,54 @@ body{ overflow:hidden; }
 .answer-rail .name-input{ width:100%; max-width:none; }
 .answer-rail .btn{ width:auto; }
 
+/* On questions with no abacus the playing area is short, which left the
+   question text stranded at the top of the screen far from the numbers it
+   is asking about. These two auto margins centre the question together with
+   its content as one block, while Prev / Check / Next stay at the bottom. */
+.qcard:not(.result):not(:has(.abacus-wrap)) .prompt{ margin-top:auto; }
+.qcard:not(.result):not(:has(.abacus-wrap)) .stage{ flex:0 1 auto; margin-bottom:auto; }
+
 /* the playing area takes whatever height is left over. */
 .stage{
-  margin-top:.3rem; flex:1 1 auto; min-height:0;
+  margin-top:.1rem; flex:1 1 auto; min-height:0;
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:.3rem;
+  align-items:center; justify-content:center; gap:.1rem;
   overflow:visible;
 }
 
 /* option buttons */
-.options{ display:grid; grid-template-columns:repeat(auto-fit,minmax(6rem,1fr)); gap:.4rem; width:100%; margin-top:.5rem; }
+.options{ display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; width:80%; max-width:28rem; margin:.6rem auto 0; }
 .opt{
-  background:var(--card); border:1.5px solid var(--line);
-  border-radius:.5rem; padding:.5rem .6rem;
-  font-size:.8rem; text-align:center;
-  transition:border-color .15s ease, background .15s ease;
+  background:#FFFFFF; border:2px solid #E0E0E0;
+  border-radius:.8rem; padding:.5rem .6rem;
+  font-size:.85rem; font-weight:500; text-align:center;
+  transition:all .2s ease;
+  box-shadow:0 2px 6px rgba(0,0,0,.05);
 }
-.opt:hover:not(:disabled){ border-color:var(--accent); }
-.opt.sel{ border-color:var(--accent); background:var(--accent-soft); }
-.opt.right{ border-color:var(--good); background:var(--good-soft); }
-.opt.wrong{ border-color:var(--bad); background:var(--bad-soft); }
-.opt:disabled{ cursor:default; }
+.opt:hover:not(:disabled){
+  border-color:#B8D4E3; background:#F0F8FF;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+.opt.sel{
+  border-color:var(--accent); background:#E8F5E9;
+  box-shadow:0 2px 8px rgba(108,92,231,.15);
+}
+.opt.right{ border-color:#81C784; background:#E8F5E9; }
+.opt.wrong{ border-color:#EF9A9A; background:#FFEBEE; }
+.opt:disabled{ cursor:default; opacity:.7; }
 
-/* symbol options are wide and chunky */
-.opt.sym{ font-size:1.2rem; padding:.5rem; }
+/* symbol options - smaller and centered */
+.opt.sym{
+  font-size:1.3rem; padding:.6rem; font-weight:600;
+  background:linear-gradient(180deg, #FFFFFF 0%, #F8F9FA 100%);
+  border:2px solid #E0E0E0;
+  border-radius:1rem;
+}
+.opt.sym:hover:not(:disabled){
+  background:linear-gradient(180deg, #F0F8FF 0%, #E3F2FD 100%);
+  border-color:#90CAF9;
+}
 
 /* text / number entry */
 .entry{
@@ -210,6 +234,7 @@ a.btn.ghost{ color:var(--accent); }
 /* ---------- SHARED ABACUS WIDGET (cartoon style) ---------- */
 .abacus-wrap{
   display:flex; flex-direction:column; align-items:center;
+  justify-content:center;
   flex:1 1 auto; min-height:0; gap:0;
   width:100%;
 }
@@ -217,33 +242,26 @@ a.btn.ghost{ color:var(--accent); }
 /* the main abacus board */
 .abacus{
   display:flex; align-items:flex-end; justify-content:stretch;
-  gap:0; flex:1 1 auto; min-height:0;
+  gap:0;
   width:82%; max-width:20rem;
 }
 
-/* each rod column.
-   justify-content:flex-end keeps the stick pinned to the bottom of the
-   column, so any spare height in the stage opens up ABOVE the rod and the
-   rod always stays joined to the base bar. */
+/* each rod column */
 .rod{
   display:flex; flex-direction:column; align-items:center;
   justify-content:flex-end;
-  flex:1; height:100%;
+  flex:1;
   border:0; background:none; padding:0; position:relative;
 }
 button.rod{ cursor:pointer; }
 
-/* the vertical stick/rod line - extends to touch the base */
-/* max-height is only a cap on the spare height the rod may claim, so raising
-   it makes the rods taller without ever forcing the page to scroll */
+/* the vertical stick/rod line */
 .rod .stick{
   position:relative; width:100%;
-  flex:1 1 auto; min-height:2rem; max-height:9.5rem;
+  flex:1 1 auto; min-height:8rem; max-height:14rem;
   display:flex; flex-direction:column-reverse; align-items:center;
   gap:0; padding-bottom:0;
 }
-/* the rod runs a little past the bottom of the stick so it tucks under the
-   wooden base bar (the bar is painted after it) instead of stopping short */
 .rod .stick::before{
   content:""; position:absolute; left:50%; top:0; bottom:-.3rem;
   width:.2rem; transform:translateX(-50%);
@@ -480,29 +498,29 @@ a.btn.ghost{ color:#8B5A2B; }
   100%{ transform:scale(1) translateY(0); opacity:1; }
 }
 
-/* wrong popout - soft pastel pink */
+/* wrong popout - white with red border */
 .popout.wrong{
-  background:#FFF0F3;
-  border:2px solid #F8B4C4;
-  box-shadow:0 4px 16px rgba(248,180,196,.25);
+  background:#FFFFFF;
+  border:2px solid #F28B82;
+  box-shadow:0 4px 16px rgba(242,139,130,.2);
 }
-.popout.wrong .icon{ font-size:1.8rem; color:#E8788A; margin-bottom:.15rem; }
-.popout.wrong h2{ font-size:.8rem; font-weight:600; color:#C9566B; margin-bottom:.2rem; }
+.popout.wrong .icon{ font-size:1.8rem; color:#E53935; margin-bottom:.15rem; }
+.popout.wrong h2{ font-size:.8rem; font-weight:600; color:#C62828; margin-bottom:.2rem; }
 .popout.wrong .msg-bubble{
-  background:#FFE4EA; border-radius:1rem; padding:.25rem .6rem;
+  background:#FFF0F0; border-radius:1rem; padding:.25rem .6rem;
   font-size:.55rem; color:#8B4050;
 }
 
-/* correct popout - soft pastel green */
+/* correct popout - white with green border */
 .popout.correct{
-  background:#F0FAF4;
-  border:2px solid #A8D8B9;
-  box-shadow:0 4px 16px rgba(168,216,185,.25);
+  background:#FFFFFF;
+  border:2px solid #81C784;
+  box-shadow:0 4px 16px rgba(129,199,132,.2);
 }
-.popout.correct .icon{ font-size:1.8rem; color:#5BAA72; margin-bottom:.15rem; }
-.popout.correct h2{ font-size:.8rem; font-weight:600; color:#3D8B55; margin-bottom:.2rem; }
+.popout.correct .icon{ font-size:1.8rem; color:#43A047; margin-bottom:.15rem; }
+.popout.correct h2{ font-size:.8rem; font-weight:600; color:#2E7D32; margin-bottom:.2rem; }
 .popout.correct .msg-bubble{
-  background:#E0F5E8; border-radius:1rem; padding:.25rem .6rem;
+  background:#F0FFF4; border-radius:1rem; padding:.25rem .6rem;
   font-size:.55rem; color:#2D6B3D;
 }
 
@@ -517,3 +535,8 @@ a.btn.ghost{ color:#8B5A2B; }
 .popout.congrats h2{ font-size:.9rem; font-weight:600; color:#7B4FA0; margin-bottom:.1rem; }
 .popout.congrats .stars{ font-size:1.1rem; color:#D4A017; margin:.15rem 0; }
 .popout.congrats .score-text{ font-size:.6rem; font-weight:600; color:#6B5B7A; margin-bottom:.3rem; }
+
+/* read-the-abacus: nudge the heading down slightly */
+.page-read-abacus .prompt{ padding-top:.5rem; }
+
+
