@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build it on the abacus &middot; Launch Pad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Livvic:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/theme.css">
+<link rel="stylesheet" href="../assets/quiz.css">
+</head>
+<body>
+<div class="shell">
+
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="Back to activities">
+      <svg viewBox="0 0 24 24"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4L10.8 12l6-6z"/></svg>
+    </a>
+    <div class="bar-text">
+      <span class="kicker" id="q-kicker"></span>
+      <h1 id="q-title"></h1>
+    </div>
+    <span class="count" id="q-count"></span>
+  </div>
+  <div class="track"><span id="q-bar"></span></div>
+
+  <section class="qcard" id="q-card">
+    <p class="prompt" id="q-prompt"></p>
+    <p class="hint" id="q-hint"></p>
+    <div class="stage" id="q-stage"></div>
+    <div class="feedback" id="q-feed"></div>
+    <div class="actions"><button class="btn" id="q-primary">Check</button></div>
+  </section>
+
+  <section class="qcard result" id="q-result">
+    <div class="score" id="q-score"></div>
+    <div class="of" id="q-of"></div>
+    <div class="stars" id="q-stars"></div>
+    <h2 id="q-verdict"></h2>
+    <p id="q-blurb"></p>
+    <div class="actions">
+      <button class="btn ghost" id="q-again">Play again</button>
+      <a class="btn" href="../index.html">Back to activities</a>
+    </div>
+  </section>
+
+</div>
+
+<script src="../assets/quiz.js"></script>
+<script>
+const NAMES = ['Th','H','T','O'];
+
+/* build the given number by putting beads on the rods */
+function buildQ(target){
+  let widget, out;
+  return {
+    prompt: `Put beads on the rods to make <strong>${target}</strong>.`,
+    hint: 'Tap a rod to drop a bead on it. Use &minus; underneath to take one off.',
+    render(stage, ready){
+      out = Quiz.readout(stage, '0000');
+      widget = Quiz.abacus(stage, NAMES, {
+        onChange: v => { out.set(v); ready(); }
+      });
+      ready();
+    },
+    check(){
+      const got = widget.value();
+      const ok = +got === +target;
+      return {
+        ok,
+        msg: ok
+          ? `That is ${target} — ${NAMES.map((n,i)=>`${widget.counts[i]} ${n}`).join(', ')}.`
+          : `You built ${+got}. ${target} needs ${target.split('').map((d,i)=>`${d} ${NAMES[i]}`).join(', ')}.`
+      };
+    }
+  };
+}
+
+/* pick the matching number name */
+function nameQ(num, choices, correct){
+  let opts;
+  return {
+    prompt: `Which number name belongs to <strong>${num}</strong>?`,
+    render(stage, ready){
+      opts = Quiz.options(stage, choices, ready);
+    },
+    check(){
+      const ok = opts.value() === correct;
+      opts.mark(correct);
+      return { ok, msg: ok ? `Correct — ${num} is ${choices[correct]}.`
+                           : `${num} is ${choices[correct]}.` };
+    }
+  };
+}
+
+Quiz.start({
+  kicker: 'Launch Pad · Question 2',
+  title: 'Build it on the abacus',
+  questions: [
+    buildQ('3786'),
+    nameQ('3786', [
+      'Three thousand seven hundred eighty six',
+      'Three thousand seven hundred sixty eight',
+      'Thirty seven thousand eighty six'
+    ], 0),
+    buildQ('5092'),
+    nameQ('5092', [
+      'Five thousand nine hundred two',
+      'Five thousand ninety two',
+      'Fifty thousand ninety two'
+    ], 1)
+  ]
+});
+</script>
+</body>
+</html>

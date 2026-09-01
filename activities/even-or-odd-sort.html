@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Even or odd sort &middot; Launch Pad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Livvic:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/theme.css">
+<link rel="stylesheet" href="../assets/quiz.css">
+<style>
+.big{
+  font-size:2rem; line-height:1;
+  background:var(--accent-soft); color:var(--accent);
+  border-radius:.6rem; padding:.7rem 1.4rem; letter-spacing:.04em;
+}
+.lastdigit{ color:var(--warm); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="Back to activities">
+      <svg viewBox="0 0 24 24"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4L10.8 12l6-6z"/></svg>
+    </a>
+    <div class="bar-text">
+      <span class="kicker" id="q-kicker"></span>
+      <h1 id="q-title"></h1>
+    </div>
+    <span class="count" id="q-count"></span>
+  </div>
+  <div class="track"><span id="q-bar"></span></div>
+
+  <section class="qcard" id="q-card">
+    <p class="prompt" id="q-prompt"></p>
+    <p class="hint" id="q-hint"></p>
+    <div class="stage" id="q-stage"></div>
+    <div class="feedback" id="q-feed"></div>
+    <div class="actions"><button class="btn" id="q-primary">Check</button></div>
+  </section>
+
+  <section class="qcard result" id="q-result">
+    <div class="score" id="q-score"></div>
+    <div class="of" id="q-of"></div>
+    <div class="stars" id="q-stars"></div>
+    <h2 id="q-verdict"></h2>
+    <p id="q-blurb"></p>
+    <div class="actions">
+      <button class="btn ghost" id="q-again">Play again</button>
+      <a class="btn" href="../index.html">Back to activities</a>
+    </div>
+  </section>
+
+</div>
+
+<script src="../assets/quiz.js"></script>
+<script>
+const NUMS = [2347, 5642, 984, 1003, 7648, 3764, 4981, 5067, 7650, 1234];
+
+function sortQ(n){
+  const correct = n % 2 === 0 ? 0 : 1;   /* 0 = Even bin, 1 = Odd bin */
+  const s = String(n);
+  let opts;
+  return {
+    prompt: 'Which bin does this number belong in?',
+    hint: 'Look only at the last digit. 0, 2, 4, 6, 8 are even.',
+    render(stage, ready){
+      const big = document.createElement('div');
+      big.className = 'big';
+      big.innerHTML = s.slice(0, -1) + `<span class="lastdigit">${s.slice(-1)}</span>`;
+      stage.appendChild(big);
+      opts = Quiz.options(stage, ['Even bin', 'Odd bin'], ready);
+    },
+    check(){
+      const ok = opts.value() === correct;
+      opts.mark(correct);
+      const word = correct === 0 ? 'even' : 'odd';
+      return { ok,
+        msg: ok ? `Yes — ${n} ends in ${s.slice(-1)}, so it is ${word}.`
+                : `${n} ends in ${s.slice(-1)}, so it is ${word}.` };
+    }
+  };
+}
+
+Quiz.start({
+  kicker: 'Launch Pad · Question 8',
+  title: 'Even or odd sort',
+  questions: NUMS.map(sortQ)
+});
+</script>
+</body>
+</html>

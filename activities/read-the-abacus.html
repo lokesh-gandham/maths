@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Read the abacus &middot; Launch Pad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Livvic:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/theme.css">
+<link rel="stylesheet" href="../assets/quiz.css">
+</head>
+<body>
+<div class="shell">
+
+  <div class="bar">
+    <a class="back" href="../index.html" aria-label="Back to activities">
+      <svg viewBox="0 0 24 24"><path d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4L10.8 12l6-6z"/></svg>
+    </a>
+    <div class="bar-text">
+      <span class="kicker" id="q-kicker"></span>
+      <h1 id="q-title"></h1>
+    </div>
+    <span class="count" id="q-count"></span>
+  </div>
+  <div class="track"><span id="q-bar"></span></div>
+
+  <section class="qcard" id="q-card">
+    <p class="prompt" id="q-prompt"></p>
+    <p class="hint" id="q-hint"></p>
+    <div class="stage" id="q-stage"></div>
+    <div class="feedback" id="q-feed"></div>
+    <div class="actions"><button class="btn" id="q-primary">Check</button></div>
+  </section>
+
+  <section class="qcard result" id="q-result">
+    <div class="score" id="q-score"></div>
+    <div class="of" id="q-of"></div>
+    <div class="stars" id="q-stars"></div>
+    <h2 id="q-verdict"></h2>
+    <p id="q-blurb"></p>
+    <div class="actions">
+      <button class="btn ghost" id="q-again">Play again</button>
+      <a class="btn" href="../index.html">Back to activities</a>
+    </div>
+  </section>
+
+</div>
+
+<script src="../assets/quiz.js"></script>
+<script>
+const NAMES = ['Th','H','T','O'];
+
+function readQ(counts){
+  const answer = counts.join('');
+  let field;
+  return {
+    prompt: 'How many beads are on the abacus? Write the number.',
+    hint: 'Read the rods from the left: thousands, hundreds, tens, ones.',
+    render(stage, ready){
+      Quiz.abacus(stage, NAMES, { counts, editable:false });
+      field = Quiz.entry(stage, { placeholder:'0000', onInput:v => v && ready() });
+    },
+    check(){
+      const ok = +field.value() === +answer;
+      field.mark(ok);
+      const spell = counts.map((c,i)=>`${c} ${NAMES[i]}`).join(' + ');
+      return { ok,
+        msg: ok ? `Yes — ${spell} makes ${+answer}.`
+                : `Count again: ${spell} makes ${+answer}.` };
+    }
+  };
+}
+
+Quiz.start({
+  kicker: 'Launch Pad · Question 3',
+  title: 'Read the abacus',
+  questions: [
+    readQ([3,1,4,4]),
+    readQ([5,0,7,0])
+  ]
+});
+</script>
+</body>
+</html>
