@@ -1,15 +1,7 @@
 /* ============================================================
-   Shared assessment shell for every activity page.
-
-   A game must fit on one screen — never scroll. Only activity
-   pages load this file, so it re-bases the root font size on the
-   viewport: the whole UI shrinks or grows to fill the screen
-   exactly, and stays inside the 30px / 40px band on the laptop
-   and monitor sizes the index page is tuned for.
+   Shared assessment shell — ONLY common layout, buttons, popouts,
+   abacus widget. Exercise-specific styles live in their own CSS.
    ============================================================ */
-/* 30px on laptops, 40px on monitors — the same scale as the index page.
-   The height term only kicks in on unusually short windows, so the game
-   still never scrolls. */
 :root{ font-size: min(30px, calc(100vh / 21)); }
 @media (min-width:1600px){ :root{ font-size: min(40px, calc(100vh / 21)); } }
 @supports (height:100dvh){
@@ -25,18 +17,27 @@ body{ overflow:hidden; }
   height:100vh; height:100dvh;
   display:flex; flex-direction:column;
   padding:0 0 .2rem;
+  position:relative;
 }
 
-/* ---------- TOP BAR ---------- */
+/* ---------- TOP BAR / HOME ---------- */
 .bar{
-  display:none;
+  position:absolute; top:.3rem; left:.6rem;
+  display:flex; align-items:center; gap:.4rem;
+  padding:0; flex:none; z-index:10;
 }
+.bar-text, .count{ display:none; }
 .back{
-  flex:none; display:grid; place-items:center;
-  width:1.5rem; height:1.5rem; border-radius:.4rem;
-  background:var(--accent-soft);
+  flex:none; display:flex; align-items:center; gap:.25rem;
+  padding:.4rem .7rem; border-radius:.5rem;
+  background:var(--accent); color:#fff;
+  font-size:.5rem; text-decoration:none;
+  font-weight:600; letter-spacing:.02em;
+  transition:opacity .16s ease, transform .16s ease;
 }
-.back svg{ width:.6rem; height:.6rem; fill:var(--accent); }
+.back:hover{ transform:scale(1.07); }
+.back:active{ transform:scale(.94); }
+.back svg{ width:.55rem; height:.55rem; fill:#fff; }
 .bar-text{ flex:1 1 auto; min-width:0; }
 .bar-text .kicker{ display:block; font-size:.4rem; letter-spacing:.08em; text-transform:uppercase; }
 .bar-text h1{ font-size:.72rem; line-height:1.2; letter-spacing:-.01em; }
@@ -48,76 +49,23 @@ body{ overflow:hidden; }
 .track{ display:none; }
 .track span{ display:block; height:100%; width:0; background:var(--accent); border-radius:999px; transition:width .35s ease; }
 
-/* ---------- QUESTION AREA ----------
-   No white card — the game sits straight on the page background so it
-   uses the whole screen. */
+/* ---------- QUESTION CARD ---------- */
 .qcard{
   background:none; border:0; border-radius:0;
   padding:.2rem .6rem .2rem; margin-top:0;
-  flex:1 1 auto; min-height:0;          /* fills the rest of the screen */
+  flex:1 1 auto; min-height:0;
   display:flex; flex-direction:column;
 }
 
 .prompt{ font-size:.9rem; line-height:1.2; text-align:center; margin:0; padding-top:0; }
 .hint{ font-size:.6rem; margin-top:0; margin-bottom:.3rem; text-align:center; color:var(--ink); opacity:.7; }
 
-/* Prev pinned bottom-left, Next bottom-right. On questions with no abacus
-   the Check button stays between them; on abacus questions quiz.js moves it
-   into the answer rail, leaving Prev and Next at the two edges. */
 .qcard:not(.result) .actions{
   display:flex; align-items:center; justify-content:space-between;
   gap:.5rem; margin-top:.3rem; width:100%;
 }
 
-/* The stage splits in two whenever the question shows an abacus:
-   rods on the left, the answer blank and Check on the right. */
-.stage:has(.abacus-wrap){
-  display:grid;
-  grid-template-columns:1fr 14rem;
-  grid-template-rows:auto minmax(0,1fr);
-  column-gap:1.2rem;
-  align-items:center; justify-items:center;
-}
-.stage:has(.abacus-wrap) > .readout,
-.stage:has(.abacus-wrap) > .target-row{ grid-column:1; grid-row:1; }
-
-/* The number to build is shown here, big, next to what the child has built
-   so far — so they never have to re-read the question to remember it. */
-.target-row{ display:flex; align-items:stretch; justify-content:center; gap:.6rem; }
-.target-row .target,
-.target-row .built{
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:.05rem; border-radius:.45rem; padding:.2rem .8rem;
-}
-.target-row .target{ background:var(--warm-soft); border:2px solid var(--warm); }
-.target-row .built{ background:var(--card); border:2px dashed var(--accent-line); }
-.target-row .lbl{ font-size:.4rem; letter-spacing:.04em; }
-.target-row .target .num{ font-size:1.3rem; line-height:1.05; letter-spacing:.08em; color:#C2410C; }
-.target-row .built .num{ font-size:1rem; line-height:1.05; letter-spacing:.08em; color:var(--accent); }
-/* stretch so the rods flex down to the space available instead of overflowing */
-.stage:has(.abacus-wrap) > .abacus-wrap{
-  grid-column:1; grid-row:2;
-  align-self:stretch; justify-self:stretch; min-height:0;
-}
-
-.answer-rail{
-  grid-column:2; grid-row:1 / -1;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:.4rem; width:100%;
-}
-.answer-rail > *{ width:100%; margin-top:0; }
-.answer-rail .entry,
-.answer-rail .name-input{ width:100%; max-width:none; }
-.answer-rail .btn{ width:auto; }
-
-/* On questions with no abacus the playing area is short, which left the
-   question text stranded at the top of the screen far from the numbers it
-   is asking about. These two auto margins centre the question together with
-   its content as one block, while Prev / Check / Next stay at the bottom. */
-.qcard:not(.result):not(:has(.abacus-wrap)) .prompt{ margin-top:auto; }
-.qcard:not(.result):not(:has(.abacus-wrap)) .stage{ flex:0 1 auto; margin-bottom:auto; }
-
-/* the playing area takes whatever height is left over. */
+/* ---------- STAGE ---------- */
 .stage{
   margin-top:.1rem; flex:1 1 auto; min-height:0;
   display:flex; flex-direction:column;
@@ -125,7 +73,7 @@ body{ overflow:hidden; }
   overflow:visible;
 }
 
-/* option buttons */
+/* ---------- OPTIONS BASE ---------- */
 .options{ display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; width:80%; max-width:28rem; margin:.6rem auto 0; }
 .opt{
   background:#FFFFFF; border:2px solid #E0E0E0;
@@ -139,27 +87,12 @@ body{ overflow:hidden; }
   transform:translateY(-2px);
   box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
-.opt.sel{
-  border-color:var(--accent); background:#E8F5E9;
-  box-shadow:0 2px 8px rgba(108,92,231,.15);
-}
+.opt.sel{ border-color:var(--accent); background:#E8F5E9; box-shadow:0 2px 8px rgba(108,92,231,.15); }
 .opt.right{ border-color:#81C784; background:#E8F5E9; }
 .opt.wrong{ border-color:#EF9A9A; background:#FFEBEE; }
 .opt:disabled{ cursor:default; opacity:.7; }
 
-/* symbol options - smaller and centered */
-.opt.sym{
-  font-size:1.3rem; padding:.6rem; font-weight:600;
-  background:linear-gradient(180deg, #FFFFFF 0%, #F8F9FA 100%);
-  border:2px solid #E0E0E0;
-  border-radius:1rem;
-}
-.opt.sym:hover:not(:disabled){
-  background:linear-gradient(180deg, #F0F8FF 0%, #E3F2FD 100%);
-  border-color:#90CAF9;
-}
-
-/* text / number entry */
+/* ---------- ENTRY ---------- */
 .entry{
   width:9rem; text-align:center;
   font-size:1rem; padding:.45rem .5rem;
@@ -170,7 +103,7 @@ body{ overflow:hidden; }
 .entry.right{ border-color:var(--good); background:var(--good-soft); }
 .entry.wrong{ border-color:var(--bad); background:var(--bad-soft); }
 
-/* ---------- FEEDBACK + ACTIONS ---------- */
+/* ---------- FEEDBACK ---------- */
 .feedback{
   display:none; align-items:center; gap:.4rem; flex:none;
   margin-top:.4rem; padding:.45rem .65rem; border-radius:.4rem; font-size:.7rem;
@@ -180,21 +113,51 @@ body{ overflow:hidden; }
 .feedback.no{ background:var(--bad-soft); }
 .feedback .face{ font-size:.8rem; }
 
-.actions{ display:flex; justify-content:center; gap:.5rem; margin-top:1rem; flex:none; }
+/* ---------- ACTIONS / BUTTONS ---------- */
+.actions{ display:flex; justify-content:center; gap:.6rem; margin-top:.5rem; flex:none; }
 .btn{
-  border:0; border-radius:.5rem; padding:.55rem 1.1rem;
-  font-size:.75rem; background:var(--accent-soft); color:var(--accent);
-  transition:opacity .15s ease, transform .15s ease;
+  border:0; border-radius:2rem; padding:.5rem 1.3rem;
+  font-size:.7rem; font-weight:600;
+  cursor:pointer; transition:all .15s ease;
+  position:relative;
 }
-.btn:hover{ transform:translateY(-.04rem); }
-.btn:active{ transform:translateY(0); }
-.btn:disabled{ opacity:.3; cursor:default; transform:none; }
-.btn.check{ background:var(--accent); color:#fff; }
-.btn.ghost{ background:var(--accent-soft); color:var(--accent); }
-a.btn{ display:inline-block; text-align:center; color:#fff; }
-a.btn.ghost{ color:var(--accent); }
+.btn:hover{ transform:translateY(-2px); }
+.btn:active{ transform:translateY(1px); }
+.btn:disabled{ opacity:.35; cursor:default; transform:none; }
 
-/* ---------- TAP-IN-ORDER WIDGET ---------- */
+.btn.prev-btn{
+  background:linear-gradient(180deg, #FFD4A8 0%, #FFB870 100%);
+  color:#8B5A2B;
+  box-shadow:0 4px 0 #D4894A, 0 6px 12px rgba(180,100,40,.25);
+}
+.btn.prev-btn:hover{ box-shadow:0 6px 0 #D4894A, 0 8px 16px rgba(180,100,40,.3); }
+.btn.prev-btn:active{ box-shadow:0 1px 0 #D4894A, 0 2px 4px rgba(180,100,40,.2); }
+
+.btn.check-btn{
+  background:linear-gradient(180deg, #2DD4BF 0%, #14B8A6 100%);
+  color:#fff;
+  box-shadow:0 4px 0 #0D9488, 0 6px 12px rgba(13,148,136,.3);
+}
+.btn.check-btn:hover{ box-shadow:0 6px 0 #0D9488, 0 8px 16px rgba(13,148,136,.35); }
+.btn.check-btn:active{ box-shadow:0 1px 0 #0D9488, 0 2px 4px rgba(13,148,136,.2); }
+
+.btn.next-btn{
+  background:linear-gradient(180deg, #93C5FD 0%, #60A5FA 100%);
+  color:#1E3A5F;
+  box-shadow:0 4px 0 #3B82F6, 0 6px 12px rgba(59,130,246,.25);
+}
+.btn.next-btn:hover{ box-shadow:0 6px 0 #3B82F6, 0 8px 16px rgba(59,130,246,.3); }
+.btn.next-btn:active{ box-shadow:0 1px 0 #3B82F6, 0 2px 4px rgba(59,130,246,.2); }
+
+.btn.ghost{
+  background:linear-gradient(180deg, #FFD4A8 0%, #FFB870 100%);
+  color:#8B5A2B;
+  box-shadow:0 4px 0 #D4894A, 0 6px 12px rgba(180,100,40,.25);
+}
+a.btn{ display:inline-block; text-align:center; color:#fff; text-decoration:none; }
+a.btn.ghost{ color:#8B5A2B; }
+
+/* ---------- CHIPS / SLOTS (tap-in-order) ---------- */
 .chips{ display:flex; flex-wrap:wrap; gap:.45rem; justify-content:center; }
 .numchip{
   border:1.5px solid var(--line); background:var(--card);
@@ -217,7 +180,6 @@ a.btn.ghost{ color:var(--accent); }
 .slot.right{ border-color:var(--good); background:var(--good-soft); }
 .slot.wrong{ border-color:var(--bad); background:var(--bad-soft); }
 
-/* two labelled entries side by side */
 .pair{ display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
 .pair label{ display:grid; gap:.3rem; justify-items:center; font-size:.7rem; }
 
@@ -231,22 +193,18 @@ a.btn.ghost{ color:var(--accent); }
 .stars{ font-size:1.1rem; letter-spacing:.15rem; margin-top:.6rem; }
 .result .actions{ justify-content:center; margin-top:1.2rem; }
 
-/* ---------- SHARED ABACUS WIDGET (cartoon style) ---------- */
+/* ---------- ABACUS WIDGET ---------- */
 .abacus-wrap{
   display:flex; flex-direction:column; align-items:center;
   justify-content:center;
   flex:1 1 auto; min-height:0; gap:0;
   width:100%;
 }
-
-/* the main abacus board */
 .abacus{
   display:flex; align-items:flex-end; justify-content:stretch;
   gap:0;
   width:82%; max-width:20rem;
 }
-
-/* each rod column */
 .rod{
   display:flex; flex-direction:column; align-items:center;
   justify-content:flex-end;
@@ -254,8 +212,6 @@ a.btn.ghost{ color:var(--accent); }
   border:0; background:none; padding:0; position:relative;
 }
 button.rod{ cursor:pointer; }
-
-/* the vertical stick/rod line */
 .rod .stick{
   position:relative; width:100%;
   flex:1 1 auto; min-height:8rem; max-height:14rem;
@@ -267,46 +223,30 @@ button.rod{ cursor:pointer; }
   width:.2rem; transform:translateX(-50%);
   background:#2D2D2D; border-radius:2px 2px 0 0;
 }
-
-/* cartoon beads - 3D gradient look */
 .bead{
   position:relative; z-index:1;
   width:1.3rem; height:1.3rem; border-radius:50%;
   background:radial-gradient(circle at 35% 35%, #FF6B6B, #E74C3C 40%, #C0392B 80%);
-  box-shadow:
-    inset 0 -2px 4px rgba(0,0,0,.25),
-    inset 0 2px 4px rgba(255,255,255,.3),
-    0 1px 3px rgba(0,0,0,.2);
-  margin-bottom:-.25rem;   /* pack tighter so a full rod of 9 still fits */
+  box-shadow:inset 0 -2px 4px rgba(0,0,0,.25), inset 0 2px 4px rgba(255,255,255,.3), 0 1px 3px rgba(0,0,0,.2);
+  margin-bottom:-.25rem;
 }
 .bead:nth-child(even){
   background:radial-gradient(circle at 35% 35%, #FFD93D, #F39C12 40%, #E67E22 80%);
-  box-shadow:
-    inset 0 -2px 4px rgba(0,0,0,.2),
-    inset 0 2px 4px rgba(255,255,255,.35),
-    0 1px 3px rgba(0,0,0,.2);
+  box-shadow:inset 0 -2px 4px rgba(0,0,0,.2), inset 0 2px 4px rgba(255,255,255,.35), 0 1px 3px rgba(0,0,0,.2);
 }
 .bead:nth-child(3n){
   background:radial-gradient(circle at 35% 35%, #74B9FF, #0984E3 40%, #2980B9 80%);
-  box-shadow:
-    inset 0 -2px 4px rgba(0,0,0,.2),
-    inset 0 2px 4px rgba(255,255,255,.3),
-    0 1px 3px rgba(0,0,0,.2);
+  box-shadow:inset 0 -2px 4px rgba(0,0,0,.2), inset 0 2px 4px rgba(255,255,255,.3), 0 1px 3px rgba(0,0,0,.2);
 }
-
-/* remove val labels - rods connect directly to base */
 .rod .val{ display:none; }
+.rod .name{ display:none; }
 
-/* wooden base bar - directly attached to rods */
 .abacus-base{
   display:flex; justify-content:stretch; gap:0;
   width:82%; max-width:20rem;
   background:linear-gradient(180deg, #E8A87C 0%, #D4845E 50%, #C06A3E 100%);
   border-radius:.5rem; padding:.35rem .3rem;
-  box-shadow:
-    inset 0 2px 3px rgba(255,255,255,.3),
-    inset 0 -2px 3px rgba(0,0,0,.15),
-    0 3px 6px rgba(0,0,0,.2);
+  box-shadow:inset 0 2px 3px rgba(255,255,255,.3), inset 0 -2px 3px rgba(0,0,0,.15), 0 3px 6px rgba(0,0,0,.2);
   margin-top:0;
   position:relative;
 }
@@ -323,13 +263,7 @@ button.rod{ cursor:pointer; }
   border-right:1px solid rgba(255,255,255,.3);
 }
 .abacus-base .base-label:last-child{ border-right:none; }
-.abacus-base .base-label:last-child{ border-right:none; }
 
-/* individual rod labels - hidden */
-.rod .name{ display:none; }
-.rod .val{ display:none; }
-
-/* minus button row */
 .rodrow{
   display:flex; gap:0; justify-content:stretch;
   width:82%; max-width:20rem;
@@ -340,25 +274,12 @@ button.rod{ cursor:pointer; }
   border:0; border-radius:2rem;
   background:linear-gradient(180deg, #FFD4A8 0%, #FFB870 100%);
   font-size:.75rem; font-weight:700; color:#8B5A2B;
-  box-shadow:
-    0 2px 0 #D4894A,
-    0 3px 6px rgba(180,100,40,.25);
+  box-shadow:0 2px 0 #D4894A, 0 3px 6px rgba(180,100,40,.25);
   transition:all .15s ease;
 }
-.rodbtn:hover{
-  transform:translateY(-2px);
-  box-shadow:
-    0 5px 0 #D4894A,
-    0 6px 12px rgba(180,100,40,.3);
-}
-.rodbtn:active{
-  transform:translateY(1px);
-  box-shadow:
-    0 1px 0 #D4894A,
-    0 2px 4px rgba(180,100,40,.2);
-}
+.rodbtn:hover{ transform:translateY(-2px); box-shadow:0 5px 0 #D4894A, 0 6px 12px rgba(180,100,40,.3); }
+.rodbtn:active{ transform:translateY(1px); box-shadow:0 1px 0 #D4894A, 0 2px 4px rgba(180,100,40,.2); }
 
-/* readout display */
 .readout{
   font-size:.9rem; font-weight:700;
   background:linear-gradient(180deg, #FFF8F0, #FFE8D6);
@@ -369,14 +290,12 @@ button.rod{ cursor:pointer; }
   box-shadow:0 2px 4px rgba(0,0,0,.1);
 }
 
-/* ---------- INLINE ANSWER ---------- */
+/* Inline answer (shared by read + build) */
 .inline-answer{
   display:flex; flex-direction:column; align-items:center;
   gap:.2rem; margin-top:.3rem; width:100%;
 }
-.inline-answer label{
-  font-size:.6rem; color:var(--ink); font-weight:600;
-}
+.inline-answer label{ font-size:.6rem; color:var(--ink); font-weight:600; }
 .inline-answer .entry{
   width:8rem; text-align:center;
   font-size:1rem; padding:.5rem .6rem;
@@ -388,98 +307,7 @@ button.rod{ cursor:pointer; }
 .inline-answer .entry.right{ border-color:var(--good); background:var(--good-soft); }
 .inline-answer .entry.wrong{ border-color:var(--bad); background:var(--bad-soft); }
 
-/* name text input */
-.name-input{
-  width:100%; max-width:22rem;
-  font-size:.7rem; padding:.5rem .8rem;
-  background:var(--card); border:2px solid var(--accent-line);
-  border-radius:.5rem; outline:none;
-  color:var(--ink);
-  transition:border-color .15s ease;
-}
-.name-input:focus{ border-color:var(--accent); }
-.name-input:disabled{ opacity:.6; cursor:default; }
-
-/* ---------- PREV / NEXT / CHECK BUTTONS (3D style) ---------- */
-.actions{ display:flex; justify-content:center; gap:.6rem; margin-top:.5rem; flex:none; }
-
-.btn{
-  border:0; border-radius:2rem; padding:.5rem 1.3rem;
-  font-size:.7rem; font-weight:600;
-  cursor:pointer; transition:all .15s ease;
-  position:relative;
-}
-.btn:hover{ transform:translateY(-2px); }
-.btn:active{ transform:translateY(1px); }
-.btn:disabled{ opacity:.35; cursor:default; transform:none; }
-
-/* Prev button - soft orange */
-.btn.prev-btn{
-  background:linear-gradient(180deg, #FFD4A8 0%, #FFB870 100%);
-  color:#8B5A2B;
-  box-shadow:
-    0 4px 0 #D4894A,
-    0 6px 12px rgba(180,100,40,.25);
-}
-.btn.prev-btn:hover{
-  box-shadow:
-    0 6px 0 #D4894A,
-    0 8px 16px rgba(180,100,40,.3);
-}
-.btn.prev-btn:active{
-  box-shadow:
-    0 1px 0 #D4894A,
-    0 2px 4px rgba(180,100,40,.2);
-}
-
-/* Check button - teal */
-.btn.check-btn{
-  background:linear-gradient(180deg, #2DD4BF 0%, #14B8A6 100%);
-  color:#fff;
-  box-shadow:
-    0 4px 0 #0D9488,
-    0 6px 12px rgba(13,148,136,.3);
-}
-.btn.check-btn:hover{
-  box-shadow:
-    0 6px 0 #0D9488,
-    0 8px 16px rgba(13,148,136,.35);
-}
-.btn.check-btn:active{
-  box-shadow:
-    0 1px 0 #0D9488,
-    0 2px 4px rgba(13,148,136,.2);
-}
-
-/* Next button - soft blue */
-.btn.next-btn{
-  background:linear-gradient(180deg, #93C5FD 0%, #60A5FA 100%);
-  color:#1E3A5F;
-  box-shadow:
-    0 4px 0 #3B82F6,
-    0 6px 12px rgba(59,130,246,.25);
-}
-.btn.next-btn:hover{
-  box-shadow:
-    0 6px 0 #3B82F6,
-    0 8px 16px rgba(59,130,246,.3);
-}
-.btn.next-btn:active{
-  box-shadow:
-    0 1px 0 #3B82F6,
-    0 2px 4px rgba(59,130,246,.2);
-}
-
-/* ghost button for result page */
-.btn.ghost{
-  background:linear-gradient(180deg, #FFD4A8 0%, #FFB870 100%);
-  color:#8B5A2B;
-  box-shadow:
-    0 4px 0 #D4894A,
-    0 6px 12px rgba(180,100,40,.25);
-}
-a.btn{ display:inline-block; text-align:center; color:#fff; text-decoration:none; }
-a.btn.ghost{ color:#8B5A2B; }
+/* ---------- POPUPS ---------- */
 .popout-overlay{
   display:none; position:fixed; inset:0; z-index:100;
   background:transparent;
@@ -497,8 +325,6 @@ a.btn.ghost{ color:#8B5A2B; }
   0%{ transform:scale(.5) translateY(10px); opacity:0; }
   100%{ transform:scale(1) translateY(0); opacity:1; }
 }
-
-/* wrong popout - white with red border */
 .popout.wrong{
   background:#FFFFFF;
   border:2px solid #F28B82;
@@ -510,8 +336,6 @@ a.btn.ghost{ color:#8B5A2B; }
   background:#FFF0F0; border-radius:1rem; padding:.25rem .6rem;
   font-size:.55rem; color:#8B4050;
 }
-
-/* correct popout - white with green border */
 .popout.correct{
   background:#FFFFFF;
   border:2px solid #81C784;
@@ -523,8 +347,6 @@ a.btn.ghost{ color:#8B5A2B; }
   background:#F0FFF4; border-radius:1rem; padding:.25rem .6rem;
   font-size:.55rem; color:#2D6B3D;
 }
-
-/* congrats popout - soft pastel lavender */
 .popout.congrats{
   background:#F8F0FF;
   border:2px solid #C8A8E8;
@@ -535,8 +357,3 @@ a.btn.ghost{ color:#8B5A2B; }
 .popout.congrats h2{ font-size:.9rem; font-weight:600; color:#7B4FA0; margin-bottom:.1rem; }
 .popout.congrats .stars{ font-size:1.1rem; color:#D4A017; margin:.15rem 0; }
 .popout.congrats .score-text{ font-size:.6rem; font-weight:600; color:#6B5B7A; margin-bottom:.3rem; }
-
-/* read-the-abacus: nudge the heading down slightly */
-.page-read-abacus .prompt{ padding-top:.5rem; }
-
-

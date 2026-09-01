@@ -213,28 +213,30 @@
       function reveal(){
         const q = cfg.questions[state.i];
         const res = q.check();
+        const delay = res.delay || 0;
 
-        /* A wrong answer does not move the child on. The question is left
-           unanswered and re-rendered so they can try again. The message is
-           deliberately generic — telling them the answer here would defeat
-           the point of making them retry. */
-        if(!res.ok){
-          state.triedWrong[state.i] = true;
-          showPopout('wrong', q.retry || 'Not quite — have another go.', ()=>{ paint(); });
-          return;
+        function afterDelay(){
+          if(!res.ok){
+            state.triedWrong[state.i] = true;
+            showPopout('wrong', q.retry || 'Not quite — have another go.', ()=>{ paint(); });
+            return;
+          }
+
+          state.answeredResults[state.i] = res;
+          if(!state.triedWrong[state.i]) state.score++;
+
+          showPopout('correct', res.msg, ()=>{
+            if(state.i === total - 1){
+              finish();
+            } else {
+              state.i++;
+              paint();
+            }
+          });
         }
 
-        state.answeredResults[state.i] = res;
-        if(!state.triedWrong[state.i]) state.score++;   // point only for a clean first try
-
-        showPopout('correct', res.msg, ()=>{
-          if(state.i === total - 1){
-            finish();
-          } else {
-            state.i++;
-            paint();
-          }
-        });
+        if(delay > 0) setTimeout(afterDelay, delay);
+        else afterDelay();
       }
 
       function finish(){

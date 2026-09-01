@@ -1,0 +1,44 @@
+/* Compare and Order — exercise styles */
+
+/* Duel number display */
+.duel{ display:flex; align-items:center; justify-content:center; gap:1.2rem; font-size:1.2rem; margin:.5rem 0; }
+.duel .n{
+  background:linear-gradient(180deg, #FFF8E1 0%, #FFECB3 100%);
+  border:2px solid #FFD54F; border-radius:1rem;
+  padding:.6rem 1.5rem; font-weight:700; color:#5D4037;
+  font-size:1.8rem; letter-spacing:.03em;
+  box-shadow:0 3px 10px rgba(255,213,79,.25);
+}
+.duel .gap{
+  width:3rem; text-align:center; color:var(--accent);
+  font-size:2rem; font-weight:700;
+}
+
+/* Symbol option buttons — colorful 3D */
+.options .sym{
+  font-size:1.3rem; padding:.7rem; font-weight:700;
+  border:2px solid transparent;
+  border-radius:1rem;
+}
+.options .sym:nth-child(1){
+  background:linear-gradient(180deg, #FFE0B2 0%, #FFB74D 100%);
+  border-color:#FFA726; color:#E65100;
+  box-shadow:0 4px 0 #F57C00, 0 6px 12px rgba(255,152,0,.25);
+}
+.options .sym:nth-child(2){
+  background:linear-gradient(180deg, #C8E6C9 0%, #81C784 100%);
+  border-color:#66BB6A; color:#1B5E20;
+  box-shadow:0 4px 0 #43A047, 0 6px 12px rgba(76,175,80,.25);
+}
+.options .sym:nth-child(3){
+  background:linear-gradient(180deg, #D1C4E9 0%, #9575CD 100%);
+  border-color:#7E57C2; color:#311B92;
+  box-shadow:0 4px 0 #673AB7, 0 6px 12px rgba(103,58,183,.25);
+}
+.options .sym:hover:not(:disabled){
+  filter:brightness(1.08);
+  box-shadow:0 6px 0 currentColor, 0 8px 16px rgba(0,0,0,.15);
+}
+.options .sym:active:not(:disabled){
+  box-shadow:0 1px 0 currentColor, 0 2px 4px rgba(0,0,0,.1);
+}

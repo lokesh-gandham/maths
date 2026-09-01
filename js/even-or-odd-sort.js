@@ -7,22 +7,33 @@ const NUMS = [2347, 5642, 984, 1003, 7648, 3764, 4981, 5067, 7650, 1234];
 function sortQ(n){
   const correct = n % 2 === 0 ? 0 : 1;   /* 0 = Even bin, 1 = Odd bin */
   const s = String(n);
-  let opts;
+  let opts, bigEl, binEls;
   return {
     prompt: 'Which bin does this number belong in?',
-    hint: 'Look only at the last digit. 0, 2, 4, 6, 8 are even.',
+    hint: '',
     render(stage, ready){
-      const big = document.createElement('div');
-      big.className = 'big';
-      big.innerHTML = s.slice(0, -1) + `<span class="lastdigit">${s.slice(-1)}</span>`;
-      stage.appendChild(big);
-      opts = Quiz.options(stage, ['Even bin', 'Odd bin'], ready);
+      const wrap = document.createElement('div');
+      wrap.className = 'eo-stage';
+
+      bigEl = document.createElement('div');
+      bigEl.className = 'eo-num';
+      bigEl.innerHTML = s.slice(0, -1) + `<span class="lastdigit">${s.slice(-1)}</span>`;
+
+      wrap.appendChild(bigEl);
+      stage.appendChild(wrap);
+
+      opts = Quiz.options(stage, ['Even bin', 'Odd bin'], ready, {cls:'eo-opt'});
+      binEls = stage.querySelectorAll('.eo-opt');
     },
     check(){
       const ok = opts.value() === correct;
+      if(ok && bigEl){
+        bigEl.classList.add('throwing');
+        setTimeout(() => binEls[correct].classList.add('bin-hit'), 250);
+      }
       opts.mark(correct);
       const word = correct === 0 ? 'even' : 'odd';
-      return { ok,
+      return { ok, delay: ok ? 700 : 0,
         msg: ok ? `Yes — ${n} ends in ${s.slice(-1)}, so it is ${word}.`
                 : `${n} ends in ${s.slice(-1)}, so it is ${word}.` };
     }
