@@ -341,7 +341,7 @@ const root = document.getElementById('sections');
 let total = 0, questions = 0;
 
 SECTIONS.forEach(sec => {
-  const cards = sec.items.map(it => {
+  const cards = sec.items.map((it, idx) => {
     total++; questions += it.n;
     const label = it.title.replace(/&lt;/g,'less than ').replace(/&gt;/g,'greater than ');
     return `
@@ -349,14 +349,14 @@ SECTIONS.forEach(sec => {
         <div class="preview">${it.art()}</div>
         <div class="card-body">
           <div class="card-top">
-            <span class="qnum">${it.q}</span>
+            <span class="qnum">${idx + 1}</span>
             <h3>${it.title}</h3>
           </div>
           <p>${it.desc}</p>
           <div class="card-play">
             <button class="play big" data-id="${it.id}" data-ready="${it.ready ? 1 : 0}"
                     data-title="${sec.code} · Q${it.q}"
-                    aria-label="Play ${sec.code} question ${it.q}: ${label}">${PLAY}</button>
+                    aria-label="Play ${sec.code} question ${idx + 1}: ${label}">${PLAY}</button>
           </div>
         </div>
       </article>`;

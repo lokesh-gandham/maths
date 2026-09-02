@@ -549,40 +549,45 @@ button.rod:hover .stick::before{
 .db-undo{ margin-top:.1rem; font-size:.55rem; padding:.3rem 1.1rem; }
 
 /* ---------- NUMBER LINE WIDGET ---------- */
-.nl-wrap{ width:100%; max-width:26rem; padding:2.6rem .9rem 0; }
+.nl-wrap{ width:100%; max-width:28rem; padding:3.2rem 1.2rem 0; }
 .nl-line{
-  position:relative; height:.22rem; border-radius:1rem;
-  background:var(--sand-line);
+  position:relative; height:.35rem; border-radius:1.5rem;
+  background:linear-gradient(90deg, var(--sand-line) 0%, #C8B99A 50%, var(--sand-line) 100%);
+  box-shadow:0 2px 6px rgba(120,100,70,.15), inset 0 1px 2px rgba(255,255,255,.6);
 }
 .nl-tick{
-  position:absolute; top:50%; width:.1rem; height:.45rem;
-  background:var(--sand-line); transform:translate(-50%,-50%); border-radius:1rem;
+  position:absolute; top:50%; width:.12rem; height:.6rem;
+  background:var(--sand-ink); opacity:.35;
+  transform:translate(-50%,-50%); border-radius:1rem;
 }
-.nl-tick.major{ height:1rem; width:.16rem; background:var(--sand-ink); }
+.nl-tick.major{ height:1.4rem; width:.2rem; opacity:.7; }
 .nl-half{
-  position:absolute; top:50%; width:0; height:1.5rem;
-  border-left:.08rem dashed var(--sand-ink); opacity:.55;
+  position:absolute; top:50%; width:0; height:2rem;
+  border-left:.12rem dashed var(--peach-line); opacity:.7;
   transform:translate(-50%,-50%);
 }
 .nl-pin{
-  position:absolute; bottom:.4rem; transform:translateX(-50%);
+  position:absolute; bottom:.5rem; transform:translateX(-50%);
   display:flex; flex-direction:column; align-items:center;
+  filter:drop-shadow(0 2px 4px rgba(232,137,156,.35));
 }
 .nl-pin::after{
-  content:""; width:.5rem; height:.5rem; border-radius:50%;
-  background:var(--rose-line); border:2px solid var(--surface);
-  margin-top:.14rem;
+  content:""; width:.65rem; height:.65rem; border-radius:50%;
+  background:var(--rose-line); border:3px solid var(--surface);
+  margin-top:.18rem;
+  box-shadow:0 0 0 3px rgba(232,137,156,.25);
 }
 .nl-pin-val{
-  padding:.22rem .6rem; border-radius:2rem; white-space:nowrap;
-  font-size:.9rem; color:var(--rose-ink);
-  background:var(--rose-bg); border:2px solid var(--rose-line);
+  padding:.3rem .8rem; border-radius:2rem; white-space:nowrap;
+  font-size:1rem; color:var(--rose-ink);
+  background:var(--rose-bg); border:2.5px solid var(--rose-line);
+  box-shadow:0 2px 8px rgba(232,137,156,.25);
 }
 .nl-ends{
   display:flex; justify-content:space-between; align-items:center;
-  margin-top:.9rem; font-size:.8rem; color:var(--ink);
+  margin-top:1rem; font-size:.85rem; color:var(--ink);
 }
-.nl-mid{ font-size:.45rem; letter-spacing:.08em; text-transform:uppercase; }
+.nl-mid{ font-size:.5rem; letter-spacing:.1em; text-transform:uppercase; color:var(--peach-ink); }
 
 /* one pulse used by every "your turn here" slot on the site */
 @keyframes softPulse{
