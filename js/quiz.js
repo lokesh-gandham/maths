@@ -248,6 +248,7 @@
     soundCongrats: soundCongrats,
     showPopout: showPopout,
     showCongrats: showCongrats,
+    _finish: null,
     start(cfg){
       const total = cfg.questions.length;
       const state = { i:0, score:0, answeredResults: new Array(total).fill(null),
@@ -402,9 +403,9 @@
       });
 
       paint();
-    },
 
-    /* ---------- reusable pieces ---------- */
+      Quiz._finish = finish;
+    },
 
     /* clickable abacus: click a rod to add a bead, right-click / long tap removes */
     abacus(stage, names, {counts = null, editable = true, onChange = null} = {}){

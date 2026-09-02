@@ -168,8 +168,7 @@ function matchQ(){
         ready0();
         /* let the last burst play, then close the round out */
         setTimeout(() => {
-          const go = document.getElementById('q-primary');
-          if(go) go.click();
+          Quiz._finish();
         }, 900);
       }
     });
