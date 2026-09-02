@@ -161,7 +161,7 @@ function matchQ(){
       sel = nextFree();
       paint();
       Quiz.soundCorrect();
-      requestAnimationFrame(() => { Quiz.confetti({ count: 44 }); });
+      requestAnimationFrame(() => { Quiz.confetti({ count: 44, y: window.innerHeight * 0.6 }); });
 
       if(allDone()){
         busy = true;
