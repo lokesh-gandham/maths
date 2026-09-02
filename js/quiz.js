@@ -306,15 +306,34 @@
         els.primary.textContent = 'Check';
         els.primary.disabled = true;
 
+        els.stage.classList.remove('answered');
+
         if(prev){
-          // Already answered - show locked state with saved answers
-          q.renderLocked ? q.renderLocked(els.stage, state.userAnswers[state.i]) : q.render(els.stage, ()=>{}, state.userAnswers[state.i]);
+          /* Already answered: redraw it with the child's own answer showing. */
+          q.renderLocked ? q.renderLocked(els.stage, state.userAnswers[state.i])
+                         : q.render(els.stage, ()=>{}, state.userAnswers[state.i]);
           els.primary.style.display = 'none';
         } else {
           q.render(els.stage, () => { els.primary.disabled = false; }, state.userAnswers[state.i]);
         }
         layoutStage();
+        /* after layoutStage, because it can move the engine's own buttons
+           into the stage and those must stay usable */
+        if(prev) lockStage();
         updateNav();
+      }
+
+      /* An answered question is a record, not a control. Whatever the question
+         drew, the engine seals it — so coming back with Prev can never let the
+         answer be changed, even if a question forgets to lock itself. */
+      function lockStage(){
+        els.stage.classList.add('answered');
+        els.stage.querySelectorAll('button, input, select, textarea').forEach(el => {
+          /* Prev / Next / Check belong to the engine — sealing the answer must
+             never seal the way out of the question. */
+          if(el === els.primary || el === els.prev || el === els.next) return;
+          el.disabled = true;
+        });
       }
 
       /* On abacus and place-value-tube questions the answer blank moves to

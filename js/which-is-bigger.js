@@ -20,42 +20,61 @@ function bigger(a, b){
     return 'Every digit matches, so the two numbers are equal.';
   }
 
+  /* the picture half of the question — shared by the live and the locked view */
+  function board(stage){
+    croc = document.createElement('div');
+    croc.className = 'croc';
+    /* jaws hinge on the left and open to the right — that is the "<" shape.
+       Flipping the whole thing turns it into ">". */
+    croc.innerHTML = `
+      <svg viewBox="0 0 64 46" aria-hidden="true">
+        <path class="jaw" d="M6 23 L60 3 L60 19 Z"/>
+        <path class="jaw" d="M6 23 L60 43 L60 27 Z"/>
+        <path class="teeth" d="M22 17 L26 21 L30 15 L34 20 L38 13 L42 19 L46 12 L50 18 L54 10 L58 17 L58 19 L22 19 Z"/>
+        <path class="teeth" d="M22 29 L26 25 L30 31 L34 26 L38 33 L42 27 L46 34 L50 28 L54 36 L58 29 L58 27 L22 27 Z"/>
+        <circle class="eye" cx="17" cy="18" r="2.6"/>
+      </svg>`;
+    stage.appendChild(croc);
+
+    const duel = document.createElement('div');
+    duel.className = 'duel';
+    duel.innerHTML = `<span class="n">${a}</span><span class="gap">?</span><span class="n">${b}</span>`;
+    stage.appendChild(duel);
+    gap = duel.querySelector('.gap');
+  }
+
+  function faceFor(i){
+    croc.classList.remove('face-left', 'face-right');
+    if(i === 0) croc.classList.add('face-left');
+    if(i === 1) croc.classList.add('face-right');
+  }
+
   return {
     prompt: 'Which symbol goes in the middle?',
     hint: '',
     render(stage, ready, saved){
-      croc = document.createElement('div');
-      croc.className = 'croc';
-      /* jaws hinge on the left and open to the right — that is the "<" shape.
-         Flipping the whole thing turns it into ">". */
-      croc.innerHTML = `
-        <svg viewBox="0 0 64 46" aria-hidden="true">
-          <path class="jaw" d="M6 23 L60 3 L60 19 Z"/>
-          <path class="jaw" d="M6 23 L60 43 L60 27 Z"/>
-          <path class="teeth" d="M22 17 L26 21 L30 15 L34 20 L38 13 L42 19 L46 12 L50 18 L54 10 L58 17 L58 19 L22 19 Z"/>
-          <path class="teeth" d="M22 29 L26 25 L30 31 L34 26 L38 33 L42 27 L46 34 L50 28 L54 36 L58 29 L58 27 L22 27 Z"/>
-          <circle class="eye" cx="17" cy="18" r="2.6"/>
-        </svg>`;
-      stage.appendChild(croc);
-
-      const duel = document.createElement('div');
-      duel.className = 'duel';
-      duel.innerHTML = `<span class="n">${a}</span><span class="gap">?</span><span class="n">${b}</span>`;
-      stage.appendChild(duel);
-      gap = duel.querySelector('.gap');
-
+      board(stage);
       opts = Quiz.options(stage, SYMS, i => {
         gap.innerHTML = SYMS[i];
         gap.classList.add('filled');
-        croc.classList.remove('face-left', 'face-right');
-        croc.classList.add(i === 1 ? 'face-right' : i === 0 ? 'face-left' : '');
+        faceFor(i);
         ready();
       }, { cls:'sym', saved });
 
       if(saved !== null && saved !== undefined){
         gap.innerHTML = SYMS[saved];
         gap.classList.add('filled');
+        faceFor(saved);
       }
+    },
+    /* coming back to it: the answer is shown and marked, nothing is clickable */
+    renderLocked(stage, saved){
+      board(stage);
+      const o = Quiz.options(stage, SYMS, () => {}, { cls:'sym', saved });
+      o.mark(correct);
+      gap.innerHTML = SYMS[correct];
+      gap.classList.add('filled');
+      faceFor(correct);
     },
     check(){
       const ok = opts.value() === correct;

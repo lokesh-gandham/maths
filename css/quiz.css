@@ -99,6 +99,14 @@ body{ overflow:hidden; background:var(--bg); }
   overflow:visible;
 }
 
+/* a question already answered is frozen — belt and braces over the
+   disabled attributes, for anything that listens on a plain element.
+   The nav buttons can sit inside the stage on abacus/tube pages, so they
+   are explicitly let back through. */
+.stage.answered{ pointer-events:none; }
+.stage.answered .answer-rail,
+.stage.answered .btn{ pointer-events:auto; }
+
 /* ---------- OPTIONS BASE ---------- */
 .options{
   display:grid; grid-template-columns:repeat(3,1fr);

@@ -27,6 +27,20 @@ function symbolQ(a, b){
         gap.classList.add('filled');
       }
     },
+    /* revisited: the answer is shown and marked, nothing is clickable */
+    renderLocked(stage, saved){
+      const title = document.createElement('div');
+      title.className = 'compare-title';
+      title.textContent = 'Which symbol goes in the middle?';
+      stage.appendChild(title);
+
+      const duel = document.createElement('div');
+      duel.className = 'duel';
+      duel.innerHTML = `<span class="n">${a}</span><span class="gap filled">${SYMS[correct]}</span><span class="n">${b}</span>`;
+      stage.appendChild(duel);
+
+      Quiz.options(stage, SYMS, () => {}, {cls:'sym', saved}).mark(correct);
+    },
     check(){
       const ok = opts.value() === correct;
       opts.mark(correct);
@@ -84,6 +98,15 @@ function orderQ(nums, dir){
         paint();
       });
       undo.addEventListener('click', () => { picked.pop(); paint(); });
+    },
+    renderLocked(stage, saved){
+      const chosen = (saved || []).map(i => nums[i]);
+      const box = document.createElement('div');
+      box.className = 'slots';
+      box.innerHTML = want.map((w, k) =>
+        `<span class="slot filled ${chosen[k] === w ? 'right' : 'wrong'}">${
+          chosen[k] !== undefined ? chosen[k] : '&nbsp;'}</span>`).join('');
+      stage.appendChild(box);
     },
     check(){
       const got = picked.map(i => nums[i]);
@@ -231,6 +254,9 @@ function formQ(digits){
         wrap.querySelectorAll('.form-chips').forEach(c => c.style.display = 'none');
         undo.style.display = 'none';
       }
+    },
+    renderLocked(stage, saved){
+      this.render(stage, () => {}, saved);
     },
     check(){
       const smSlots = document.querySelectorAll('.page-compare .form-row:nth-child(2) .form-slot');
