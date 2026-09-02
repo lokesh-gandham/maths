@@ -61,75 +61,130 @@
     speak('Congratulations!');
   }
 
-  /* ---------- POPOUT ---------- */
+  /* ---------- POPUP (auto-close with timer bar) ---------- */
+  let popupHideTimer = null;
+  let popupRemoveTimer = null;
+
+  function clearPopupTimers(){
+    clearTimeout(popupHideTimer);
+    clearTimeout(popupRemoveTimer);
+  }
+
   function showPopout(type, msg, onClose){
-    let overlay = document.getElementById('popout-overlay');
+    clearPopupTimers();
+
+    let overlay = document.getElementById('quiz-popup-overlay');
     if(!overlay){
       overlay = document.createElement('div');
-      overlay.id = 'popout-overlay';
-      overlay.className = 'popout-overlay';
+      overlay.id = 'quiz-popup-overlay';
+      overlay.className = 'popup-overlay';
       document.body.appendChild(overlay);
     }
 
     const isOk = type === 'correct';
-    const icon = isOk ? '✔' : '✖';
-    const title = isOk ? 'Correct!' : 'Try Again!';
+    const icon = isOk ? '🎉' : '💡';
+    const label = isOk ? 'Correct Answer' : 'Keep Learning';
+    const title = isOk ? 'Brilliant!' : 'Almost There!';
     const cls = isOk ? 'correct' : 'wrong';
 
     overlay.innerHTML = `
-      <div class="popout ${cls}">
-        <div class="icon">${icon}</div>
-        <h2>${title}</h2>
-        <div class="msg-bubble">${msg}</div>
-      </div>`;
+      <section class="answer-popup ${cls}" role="status" aria-live="polite">
+        <div class="popup-body">
+          <div class="popup-icon" aria-hidden="true">${icon}</div>
+          <div class="popup-label">${label}</div>
+          <h2 class="popup-title">${title}</h2>
+          <p class="popup-message">${msg}</p>
+          <div class="popup-track" aria-hidden="true">
+            <div class="popup-bar"></div>
+          </div>
+        </div>
+      </section>`;
+
+    overlay.classList.remove('hide');
+    void overlay.offsetWidth;
     overlay.classList.add('show');
+    overlay.setAttribute('aria-hidden', 'false');
 
     if(isOk) soundCorrect(); else soundWrong();
 
-    setTimeout(()=>{
+    popupHideTimer = setTimeout(function(){
       overlay.classList.remove('show');
-      if(onClose) onClose();
+      overlay.classList.add('hide');
+      popupRemoveTimer = setTimeout(function(){
+        overlay.classList.remove('hide');
+        overlay.setAttribute('aria-hidden', 'true');
+        if(onClose) onClose();
+      }, 300);
     }, 2000);
   }
 
   function showCongrats(score, total, stars, onClose){
-    let overlay = document.getElementById('popout-overlay');
+    clearPopupTimers();
+
+    let overlay = document.getElementById('quiz-popup-overlay');
     if(!overlay){
       overlay = document.createElement('div');
-      overlay.id = 'popout-overlay';
-      overlay.className = 'popout-overlay';
+      overlay.id = 'quiz-popup-overlay';
+      overlay.className = 'popup-overlay';
       document.body.appendChild(overlay);
     }
 
-    const pct = score / total;
-    const verdict = 'Congratulations!';
-
     overlay.innerHTML = `
-      <div class="popout congrats">
-        <div class="icon">🎉</div>
-        <h2>${verdict}</h2>
-        <div class="stars">★★★</div>
-        <div class="score-text">${score} / ${total}</div>
-        <div style="display:flex;gap:.4rem;justify-content:center;margin-top:.3rem">
-          <button class="btn prev-btn" id="popout-again" style="font-size:.6rem;padding:.4rem .8rem">Play Again</button>
-          <a class="btn next-btn" href="../index.html" style="font-size:.6rem;padding:.4rem .8rem;text-decoration:none">Menu</a>
+      <section class="answer-popup congrats" role="status" aria-live="polite" aria-atomic="true">
+        <span class="confetti confetti-1"></span>
+        <span class="confetti confetti-2"></span>
+        <span class="confetti confetti-3"></span>
+        <span class="confetti confetti-4"></span>
+        <span class="confetti confetti-5"></span>
+        <span class="confetti confetti-6"></span>
+        <div class="popup-body">
+          <div class="popup-icon" aria-hidden="true">🎉</div>
+          <div class="popup-label">Quiz Complete</div>
+          <h2 class="popup-title">Congratulations!</h2>
+          <div class="popup-stars" aria-label="You earned ${stars.replace(/★/g,'one star,').replace(/☆/g,'').slice(0,-1) || 'no stars'}">
+            <span class="popup-star" aria-hidden="true">⭐</span>
+            <span class="popup-star" aria-hidden="true">⭐</span>
+            <span class="popup-star" aria-hidden="true">⭐</span>
+          </div>
+          <div class="popup-score">${score} / ${total}</div>
+          <p class="popup-message">You did an amazing job!</p>
+          <div class="popup-actions">
+            <button class="btn btn-again" id="popup-again">Play Again</button>
+            <a class="btn btn-menu" href="../index.html">Menu</a>
+          </div>
         </div>
-      </div>`;
+      </section>`;
+
+    overlay.classList.remove('hide');
+    void overlay.offsetWidth;
     overlay.classList.add('show');
+    overlay.setAttribute('aria-hidden', 'false');
 
     soundCongrats();
 
-    document.getElementById('popout-again').onclick = ()=>{
+    document.getElementById('popup-again').onclick = function(){
+      clearPopupTimers();
       overlay.classList.remove('show');
-      if(onClose) onClose();
+      overlay.classList.add('hide');
+      popupRemoveTimer = setTimeout(function(){
+        overlay.classList.remove('hide');
+        overlay.setAttribute('aria-hidden', 'true');
+        if(onClose) onClose();
+      }, 300);
     };
   }
 
   window.Quiz = {
+    soundCorrect: soundCorrect,
+    soundWrong: soundWrong,
+    soundCongrats: soundCongrats,
+    showPopout: showPopout,
+    showCongrats: showCongrats,
     start(cfg){
       const total = cfg.questions.length;
       const state = { i:0, score:0, answeredResults: new Array(total).fill(null),
-                      triedWrong: new Array(total).fill(false) };
+                      triedWrong: new Array(total).fill(false),
+                      userAnswers: new Array(total).fill(null) };
       const els = {
         title:   $('#q-title'),
         kicker:  $('#q-kicker'),
@@ -183,11 +238,11 @@
         els.primary.disabled = true;
 
         if(prev){
-          // Already answered - show locked state
-          q.renderLocked ? q.renderLocked(els.stage) : q.render(els.stage, ()=>{});
+          // Already answered - show locked state with saved answers
+          q.renderLocked ? q.renderLocked(els.stage, state.userAnswers[state.i]) : q.render(els.stage, ()=>{}, state.userAnswers[state.i]);
           els.primary.style.display = 'none';
         } else {
-          q.render(els.stage, () => { els.primary.disabled = false; });
+          q.render(els.stage, () => { els.primary.disabled = false; }, state.userAnswers[state.i]);
         }
         layoutStage();
         updateNav();
@@ -218,11 +273,13 @@
         function afterDelay(){
           if(!res.ok){
             state.triedWrong[state.i] = true;
+            state.userAnswers[state.i] = null;  // clear on wrong
             showPopout('wrong', q.retry || 'Not quite — have another go.', ()=>{ paint(); });
             return;
           }
 
           state.answeredResults[state.i] = res;
+          state.userAnswers[state.i] = res.answer || null;
           if(!state.triedWrong[state.i]) state.score++;
 
           showPopout('correct', res.msg, ()=>{
@@ -249,6 +306,7 @@
           state.score = 0;
           state.answeredResults = new Array(total).fill(null);
           state.triedWrong = new Array(total).fill(false);
+          state.userAnswers = new Array(total).fill(null);
           els.card.style.display = '';
           paint();
         });
@@ -341,7 +399,7 @@
     },
 
     /* one-of-many option buttons */
-    options(stage, list, onPick, {cls = ''} = {}){
+    options(stage, list, onPick, {cls = '', saved = null} = {}){
       const box = document.createElement('div');
       box.className = 'options';
       box.innerHTML = list.map((t, i) =>
@@ -355,6 +413,10 @@
         picked = +b.dataset.i;
         onPick(picked);
       });
+      if(saved !== null && saved !== undefined){
+        const btn = box.querySelectorAll('.opt')[saved];
+        if(btn){ btn.classList.add('sel'); picked = saved; }
+      }
       stage.appendChild(box);
       return {
         value: () => picked,
@@ -384,6 +446,148 @@
         value: () => el.value.trim(),
         mark(ok){ el.classList.add(ok ? 'right' : 'wrong'); el.disabled = true; }
       };
+    },
+
+    /* Digit builder — one strip of digit chips feeding two (or more) rows of
+       slots, e.g. "smallest" and "greatest". Each row spends every digit at
+       most once, so the chips grey out per row, not globally. */
+    digitBuilder(stage, {digits, slots, rows, saved = null, locked = false, onComplete = null} = {}){
+      const picks = {};
+      rows.forEach(r => { picks[r.key] = saved && saved[r.key] ? saved[r.key].slice() : []; });
+      let active = locked ? null : rows[0].key;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'db-wrap';
+
+      const board = document.createElement('div');
+      board.className = 'db-board';
+      wrap.appendChild(board);
+
+      const chips = document.createElement('div');
+      chips.className = 'db-chips';
+      wrap.appendChild(chips);
+
+      const undo = document.createElement('button');
+      undo.className = 'btn ghost db-undo';
+      undo.textContent = 'Undo';
+      wrap.appendChild(undo);
+
+      function complete(){
+        return rows.every(r => picks[r.key].length === slots);
+      }
+
+      function paint(){
+        board.innerHTML = rows.map(r => {
+          const p = picks[r.key];
+          const cells = [];
+          for(let i = 0; i < slots; i++){
+            const on = p[i] !== undefined;
+            const next = active === r.key && i === p.length;
+            cells.push(`<span class="db-slot${on ? ' filled' : ''}${next ? ' next' : ''}"
+              data-row="${r.key}" data-i="${i}">${on ? digits[p[i]] : ''}</span>`);
+          }
+          return `<div class="db-row${active === r.key ? ' active' : ''}" data-row="${r.key}">
+                    <span class="db-label">${r.label}</span>
+                    <span class="db-slots">${cells.join('')}</span>
+                  </div>`;
+        }).join('');
+
+        const used = active ? picks[active] : [];
+        chips.innerHTML = digits.map((d, i) => {
+          const taken = used.indexOf(i) > -1;
+          return `<button class="db-chip${taken ? ' used' : ''}" data-i="${i}" ${taken ? 'disabled' : ''}>${d}</button>`;
+        }).join('');
+
+        chips.style.display = locked || !active ? 'none' : 'flex';
+        undo.style.display  = locked || !active ? 'none' : '';
+      }
+
+      board.addEventListener('click', e => {
+        if(locked) return;
+        const row = e.target.closest('.db-row');
+        if(!row) return;
+        active = row.dataset.row;
+        paint();
+      });
+
+      chips.addEventListener('click', e => {
+        const b = e.target.closest('.db-chip');
+        if(!b || b.disabled || !active) return;
+        const p = picks[active];
+        if(p.length >= slots) return;
+        p.push(+b.dataset.i);
+        if(p.length === slots){
+          const next = rows.find(r => picks[r.key].length < slots);
+          active = next ? next.key : null;
+        }
+        paint();
+        if(complete() && onComplete) onComplete();
+      });
+
+      undo.addEventListener('click', () => {
+        if(!active) active = rows[rows.length - 1].key;
+        picks[active].pop();
+        paint();
+      });
+
+      paint();
+      stage.appendChild(wrap);
+
+      return {
+        values(){
+          const out = {};
+          rows.forEach(r => { out[r.key] = picks[r.key].map(i => digits[i]).join(''); });
+          return out;
+        },
+        picks(){
+          const out = {};
+          rows.forEach(r => { out[r.key] = picks[r.key].slice(); });
+          return out;
+        },
+        /* expected: {rowKey: "103468", ...} — paints each slot green or red */
+        mark(expected){
+          active = null;
+          paint();
+          board.querySelectorAll('.db-slot').forEach(s => {
+            const want = expected[s.dataset.row][+s.dataset.i];
+            s.classList.add(s.textContent === want ? 'right' : 'wrong');
+          });
+        }
+      };
+    },
+
+    /* Number line between two round neighbours, with the number pinned on it
+       and the halfway mark shown, so "which side is it closer to" is visible. */
+    numberLine(stage, {lo, hi, ticks = 10, value}){
+      const span = hi - lo;
+      const pct  = v => ((v - lo) / span) * 100;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'nl-wrap';
+
+      let tickHtml = '';
+      for(let i = 0; i <= ticks; i++){
+        const at = (i / ticks) * 100;
+        const major = i === 0 || i === ticks;
+        tickHtml += `<span class="nl-tick${major ? ' major' : ''}" style="left:${at}%"></span>`;
+      }
+
+      wrap.innerHTML = `
+        <div class="nl-line">
+          ${tickHtml}
+          <span class="nl-half" style="left:50%"></span>
+          <span class="nl-pin" style="left:${pct(value)}%">
+            <span class="nl-pin-val">${value}</span>
+          </span>
+        </div>
+        <div class="nl-ends">
+          <span class="nl-end">${lo}</span>
+          <span class="nl-mid">halfway</span>
+          <span class="nl-end">${hi}</span>
+        </div>`;
+
+      stage.appendChild(wrap);
+      return wrap;
     },
 
     /* live read-out chip, e.g. the number the abacus currently shows */

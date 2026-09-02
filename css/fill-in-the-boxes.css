@@ -1,0 +1,51 @@
+/* Fill in the Boxes — exercise styles */
+
+.page-fib .qcard .prompt{ margin-bottom:.15rem; }
+
+/* keep the list at the top of the play area, not floated in the middle */
+.page-fib .qcard:not(.result) .prompt,
+.page-fib .qcard:not(.result) .hint,
+.page-fib .qcard:not(.result) .stage{
+  margin-top:0 !important; margin-bottom:0 !important;
+  flex:0 0 auto !important;
+}
+.page-fib .stage{ margin-top:.9rem !important; }
+
+.fib-list{
+  display:flex; flex-direction:column; gap:.3rem;
+  width:100%; max-width:34rem; margin:0 auto;
+}
+.fib-item{
+  display:flex; align-items:center; gap:.55rem;
+  padding:.35rem .8rem;
+  background:var(--surface); border:2px solid var(--surface-line);
+  border-radius:var(--r-md);
+  font-size:.85rem;
+}
+.fib-letter{
+  display:grid; place-items:center;
+  width:1.5rem; height:1.5rem; flex:none;
+  background:var(--sand-bg); border-radius:var(--r-sm);
+  color:var(--sand-ink); font-size:.6rem;
+}
+.fib-text{ flex:1; }
+.fib-entry{
+  width:6.5rem; text-align:center;
+  font-size:1.3rem; padding:.2rem .4rem;
+  background:var(--surface); border:2px solid var(--sun-line);
+  border-radius:var(--r-sm); outline:none;
+  transition:border-color .15s ease;
+}
+.fib-entry::placeholder{ color:#C9C2BA; }
+.fib-entry:focus{ border-color:var(--accent); }
+.fib-entry.right{ border-color:var(--good); background:var(--good-soft); }
+.fib-entry.wrong{ border-color:var(--bad); background:var(--bad-soft); }
+.fib-entry:disabled{ cursor:default; }
+.fib-unit{ color:var(--ink-soft); font-size:.7rem; }
+
+.page-fib .qcard .actions{ justify-content:center; margin-top:.5rem !important; }
+
+@media(max-width:590px){
+  .fib-item{ flex-wrap:wrap; }
+  .fib-entry{ width:100%; margin-top:.2rem; }
+}

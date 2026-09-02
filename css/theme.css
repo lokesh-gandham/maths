@@ -26,6 +26,29 @@
 
   --line:#E8E0D8;
   --radius:.6rem;
+
+  /* ----------------------------------------------------------
+     Flat pastel families. No gradients anywhere: every surface
+     is one light fill, one solid border, one readable ink.
+     Use them in pairs — <family>-bg with <family>-line/-ink.
+     ---------------------------------------------------------- */
+  --mint-bg:#E3F8F1;   --mint-line:#5CC8A5;  --mint-ink:#1F7A62;  --mint-deep:#3EA886;
+  --sky-bg:#E4F1FD;    --sky-line:#7FB6E8;   --sky-ink:#1B5E8C;   --sky-deep:#5B9BD5;
+  --sun-bg:#FFF6DC;    --sun-line:#EFC94C;   --sun-ink:#8A6410;   --sun-deep:#D9AF2E;
+  --peach-bg:#FFEFE6;  --peach-line:#F0A87E; --peach-ink:#A85A2E; --peach-deep:#DE8A5C;
+  --lilac-bg:#F0EAFB;  --lilac-line:#A991DE; --lilac-ink:#5A3FA0; --lilac-deep:#8E72CC;
+  --rose-bg:#FDE8EC;   --rose-line:#E8899C;  --rose-ink:#A8324B;  --rose-deep:#D46A80;
+  --sand-bg:#FBF5EC;   --sand-line:#DCCDB8;  --sand-ink:#7A6650;
+
+  /* neutral surfaces */
+  --surface:#FFFFFF;
+  --surface-line:#E6DED4;
+  --ink-soft:#6D6A7C;   /* only for tiny captions */
+
+  /* one shared rhythm */
+  --r-sm:.45rem;
+  --r-md:.7rem;
+  --r-lg:1rem;
 }
 @media (min-width:1600px){ :root{ font-size:40px; } }
 @media (max-width:820px){ :root{ font-size:22px; } }

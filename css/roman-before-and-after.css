@@ -1,0 +1,46 @@
+/* Roman before and after — exercise styles */
+
+.rba-board{
+  display:flex; flex-direction:column; align-items:center; gap:.7rem;
+  width:100%; max-width:28rem;
+}
+
+.rba-chain{ display:flex; align-items:center; gap:.6rem; }
+.rba-slot{
+  display:grid; place-items:center;
+  min-width:6.4rem; height:3.2rem; padding:0 .7rem;
+  font-size:1.6rem; letter-spacing:.12em;
+  background:var(--surface);
+  border:2px dashed var(--surface-line); border-radius:var(--r-md);
+  color:#C9C2BA;
+}
+.rba-slot.filled{
+  border-style:solid; border-color:var(--sky-line);
+  background:var(--sky-bg); color:var(--sky-ink);
+}
+.rba-arrow{ font-size:1rem; color:var(--sand-line); }
+.rba-now{
+  display:grid; place-items:center;
+  min-width:6.8rem; height:3.6rem; padding:0 .9rem;
+  font-size:2.2rem; letter-spacing:.14em;
+  background:var(--sun-bg); border:2px solid var(--sun-line);
+  border-radius:var(--r-lg); color:var(--ink);
+}
+
+.rba-side{ display:flex; flex-direction:column; align-items:center; gap:.25rem; width:100%; }
+.rba-tag{ font-size:.46rem; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-soft); }
+.rba-opts{ display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap; }
+.rba-opt{
+  min-width:5.4rem; padding:.4rem .8rem;
+  font-size:1.15rem; letter-spacing:.1em;
+  background:var(--sky-bg); border:2px solid var(--sky-line);
+  border-radius:var(--r-md); color:var(--sky-ink);
+  box-shadow:0 3px 0 var(--sky-line);
+  transition:transform .13s ease;
+}
+.rba-opt:hover:not(:disabled){ transform:translateY(-2px); }
+.rba-opt:active:not(:disabled){ transform:translateY(1px); }
+.rba-opt.sel{ background:var(--mint-bg); border-color:var(--mint-line); color:var(--mint-ink); box-shadow:0 3px 0 var(--mint-line); }
+.rba-opt.right{ background:var(--good-soft); border-color:var(--good); color:var(--mint-ink); box-shadow:0 3px 0 var(--good); }
+.rba-opt.wrong{ background:var(--bad-soft); border-color:var(--bad); color:var(--rose-ink); box-shadow:0 3px 0 var(--bad); }
+.rba-opt:disabled{ cursor:default; }

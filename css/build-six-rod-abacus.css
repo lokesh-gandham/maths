@@ -1,4 +1,4 @@
-/* Build on the Abacus — exercise styles */
+/* Build it on the abacus (six rods) — exercise styles */
 
 .target-row{
   display:flex; gap:.7rem; justify-content:center; align-items:stretch;
@@ -13,9 +13,13 @@
   color:var(--ink-soft);
 }
 .target-row .num{ font-size:1.35rem; line-height:1.1; letter-spacing:.08em; }
-.target-row .target{ background:var(--sun-bg); border:2px solid var(--sun-line); }
+.target-row .target{
+  background:var(--sun-bg); border:2px solid var(--sun-line);
+}
 .target-row .target .num{ color:var(--sun-ink); }
-.target-row .built{ background:var(--surface); border:2px dashed var(--surface-line); }
+.target-row .built{
+  background:var(--surface); border:2px dashed var(--surface-line);
+}
 .target-row .built .num{ color:var(--sky-ink); }
 
 /* Name input */
@@ -29,3 +33,10 @@
 .name-input::placeholder{ color:#C9C2BA; }
 .name-input:focus{ border-color:var(--accent); }
 .name-input:disabled{ opacity:.65; cursor:default; }
+
+/* six rods are narrow — let the beads shrink a little */
+.page-b6a .bead{ width:1.05rem; height:1.05rem; margin-bottom:-.16rem; }
+.page-b6a .abacus,
+.page-b6a .abacus-base,
+.page-b6a .rodrow{ width:98%; max-width:23rem; }
+.page-b6a .abacus-base .base-label{ font-size:.5rem; letter-spacing:.02em; }

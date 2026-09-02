@@ -1,0 +1,45 @@
+/* Compare Roman numerals — exercise styles */
+
+.duel{
+  display:flex; align-items:center; justify-content:center;
+  gap:1.1rem; margin:.4rem 0 .1rem;
+}
+.duel .n{
+  display:flex; flex-direction:column; align-items:center; gap:.05rem;
+  min-width:8rem;
+  background:var(--sun-bg); border:2px solid var(--sun-line);
+  border-radius:var(--r-lg);
+  padding:.55rem 1.1rem; color:var(--ink);
+}
+.duel .rn{ font-size:2.3rem; line-height:1.1; letter-spacing:.14em; }
+.duel .val{
+  font-size:.55rem; letter-spacing:.06em; color:var(--sun-ink);
+  min-height:.85rem; opacity:0; transition:opacity .25s ease;
+}
+.duel.shown .val{ opacity:1; }
+.duel .gap{
+  display:grid; place-items:center;
+  width:3.4rem; height:3.4rem; color:var(--accent);
+  font-size:2rem;
+  border:2px dashed var(--surface-line); background:var(--surface);
+  border-radius:var(--r-lg);
+  transition:border-color .2s ease, background .2s ease;
+}
+.duel .gap.filled{ border-style:solid; border-color:var(--mint-line); background:var(--mint-bg); }
+
+.page-crn .options{
+  margin-top:1.2rem; width:auto;
+  grid-template-columns:repeat(3, 5rem); gap:.8rem;
+}
+.opt.sym{
+  font-size:1.7rem; padding:.5rem; border-radius:var(--r-lg);
+  border:2px solid;
+}
+.opt.sym:nth-child(1){ background:var(--peach-bg); border-color:var(--peach-line); color:var(--peach-ink); box-shadow:0 3px 0 var(--peach-line); }
+.opt.sym:nth-child(2){ background:var(--mint-bg);  border-color:var(--mint-line);  color:var(--mint-ink);  box-shadow:0 3px 0 var(--mint-line); }
+.opt.sym:nth-child(3){ background:var(--lilac-bg); border-color:var(--lilac-line); color:var(--lilac-ink); box-shadow:0 3px 0 var(--lilac-line); }
+.opt.sym:hover:not(:disabled){ transform:translateY(-2px); }
+.opt.sym:active:not(:disabled){ transform:translateY(1px); }
+.opt.sym.sel{ box-shadow:0 0 0 .2rem rgba(92,200,165,.35), 0 3px 0 currentColor; }
+.opt.sym.right{ background:var(--good-soft); border-color:var(--good); color:var(--mint-ink); box-shadow:0 3px 0 var(--good); }
+.opt.sym.wrong{ background:var(--bad-soft); border-color:var(--bad); color:var(--rose-ink); box-shadow:0 3px 0 var(--bad); }

@@ -1,0 +1,26 @@
+/* Roman to number — exercise styles */
+
+.rtn-tiles{ display:flex; gap:.4rem; flex-wrap:wrap; justify-content:center; }
+.rtn-tile{
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  min-width:2.9rem; padding:.4rem .55rem .3rem;
+  background:var(--sun-bg); border:2px solid var(--sun-line);
+  border-radius:var(--r-md); color:var(--ink);
+}
+.rtn-ch{ font-size:1.8rem; line-height:1.1; letter-spacing:.06em; }
+.rtn-v{ font-size:.45rem; color:var(--sun-ink); }
+
+.rtn-arrow{ font-size:1.1rem; color:var(--sand-line); margin:.4rem 0 .15rem; }
+
+.rtn-input{
+  width:9rem; text-align:center;
+  font-size:2.4rem; letter-spacing:.1em;
+  padding:.28rem .5rem;
+  background:var(--surface); border:2px solid var(--mint-line);
+  border-radius:var(--r-lg); outline:none;
+}
+.rtn-input::placeholder{ color:#C9C2BA; }
+.rtn-input:focus{ border-color:var(--mint-deep); }
+.rtn-input.right{ border-color:var(--good); background:var(--good-soft); }
+.rtn-input.wrong{ border-color:var(--bad); background:var(--bad-soft); }
+.rtn-input:disabled{ cursor:default; }

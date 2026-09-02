@@ -22,35 +22,44 @@ function buildAndNameQ(target, choices, correct){
   return {
     prompt: 'Build the number shown, then write its name in words.',
     hint: 'Tap a rod to drop a bead on it. Use &minus; underneath to take one off.',
-    render(stage, ready){
+    render(stage, ready, saved){
       /* The number to build is on screen at all times, next to a live
          read-out of what the child has built, so the question text never
          has to be re-read. */
-      out = targetRow(stage, target, '0000');
+      const builtVal = saved ? saved.abacus : '0000';
+      out = targetRow(stage, target, builtVal);
+      const counts = saved ? saved.abacus.split('').map(Number) : null;
       widget = Quiz.abacus(stage, NAMES, {
+        counts,
         onChange: v => { out.set(v); ready(); }
       });
 
       const nameWrap = document.createElement('div');
       nameWrap.className = 'inline-answer';
+      const nameVal = saved ? saved.name : '';
+      const disabled = saved ? 'disabled' : '';
       nameWrap.innerHTML = `
         <label>Number Name</label>
-        <input type="text" class="name-input" placeholder="Write it in words" autocomplete="off">
+        <input type="text" class="name-input" value="${nameVal}" placeholder="Write it in words" autocomplete="off" ${disabled}>
       `;
       stage.appendChild(nameWrap);
       nameField = nameWrap.querySelector('.name-input');
-      nameField.addEventListener('input', () => { if(nameField.value.trim().length > 3) ready(); });
-      ready();
+      if(!saved){
+        nameField.addEventListener('input', () => { if(nameField.value.trim().length > 3) ready(); });
+      }
+      if(saved) return;  /* locked — no more interaction */
     },
-    renderLocked(stage){
-      out = targetRow(stage, target, target);
-      widget = Quiz.abacus(stage, NAMES, { counts: target.split('').map(Number), editable:false });
+    renderLocked(stage, saved){
+      const abacusVal = saved ? saved.abacus : target;
+      out = targetRow(stage, target, abacusVal);
+      widget = Quiz.abacus(stage, NAMES, { counts: abacusVal.split('').map(Number), editable:false });
 
       const nameWrap = document.createElement('div');
       nameWrap.className = 'inline-answer';
+      const nameVal = saved ? saved.name : choices[correct];
       nameWrap.innerHTML = `
         <label>Number Name</label>
-        <input type="text" class="name-input" value="${choices[correct]}" disabled>
+        <input type="text" class="name-input" value="${nameVal}" disabled>
       `;
       stage.appendChild(nameWrap);
     },
@@ -71,7 +80,7 @@ function buildAndNameQ(target, choices, correct){
       };
 
       return {
-        ok: true,
+        ok: true, answer: { abacus: got, name: nameField.value.trim() },
         msg: `Correct — ${target} is ${choices[correct]}.`
       };
     }

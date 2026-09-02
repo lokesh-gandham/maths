@@ -1,4 +1,4 @@
 /* Read the Abacus — exercise styles */
 
-/* Nudge prompt down slightly */
-.prompt{ padding-top:.5rem; }
+.page-rta .inline-answer .entry,
+.inline-answer .entry{ font-size:1.7rem; letter-spacing:.12em; }

@@ -1,0 +1,53 @@
+/* Match the place values — exercise styles */
+
+.mtp-board{
+  display:grid; grid-template-columns:1fr 1.3fr;
+  gap:.4rem 1.4rem; width:100%; max-width:30rem;
+}
+.mtp-col{ display:flex; flex-direction:column; gap:.3rem; }
+
+.mtp-card{
+  display:flex; align-items:center; gap:.5rem;
+  padding:.35rem .7rem; min-height:2.1rem;
+  font-size:.72rem; text-align:left; line-height:1.15;
+  background:var(--surface); border:2px solid var(--surface-line);
+  border-radius:var(--r-md);
+  transition:transform .14s ease, border-color .15s ease, background .15s ease;
+}
+.mtp-card:hover{ transform:translateY(-1px); }
+.mtp-num{ font-size:1.15rem; letter-spacing:.07em; }
+
+.mtp-dot{
+  flex:none; width:.6rem; height:.6rem; border-radius:50%;
+  background:var(--surface-line); transition:background .15s ease;
+}
+.mtp-right .mtp-card{ flex-direction:row-reverse; text-align:right; }
+.mtp-right .mtp-card > :not(.mtp-dot){ flex:1; }
+
+.mtp-card.sel{
+  border-color:var(--sun-line); background:var(--sun-bg);
+  animation:softPulse 1.1s ease-in-out infinite;
+}
+
+/* seven link colours — a matched pair shares one */
+.mtp-card.c0{ border-color:var(--sky-line);   background:var(--sky-bg); }
+.mtp-card.c0 .mtp-dot{ background:var(--sky-line); }
+.mtp-card.c1{ border-color:var(--mint-line);  background:var(--mint-bg); }
+.mtp-card.c1 .mtp-dot{ background:var(--mint-line); }
+.mtp-card.c2{ border-color:var(--peach-line); background:var(--peach-bg); }
+.mtp-card.c2 .mtp-dot{ background:var(--peach-line); }
+.mtp-card.c3{ border-color:var(--lilac-line); background:var(--lilac-bg); }
+.mtp-card.c3 .mtp-dot{ background:var(--lilac-line); }
+.mtp-card.c4{ border-color:var(--rose-line);  background:var(--rose-bg); }
+.mtp-card.c4 .mtp-dot{ background:var(--rose-line); }
+.mtp-card.c5{ border-color:var(--sun-line);   background:var(--sun-bg); }
+.mtp-card.c5 .mtp-dot{ background:var(--sun-line); }
+.mtp-card.c6{ border-color:var(--sand-line);  background:var(--sand-bg); }
+.mtp-card.c6 .mtp-dot{ background:var(--sand-ink); }
+
+.mtp-card.right{ border-color:var(--good) !important; background:var(--good-soft) !important; animation:none; }
+.mtp-card.right .mtp-dot{ background:var(--good); }
+.mtp-card.wrong{ border-color:var(--bad) !important; background:var(--bad-soft) !important; animation:none; }
+.mtp-card.wrong .mtp-dot{ background:var(--bad); }
+
+.mtp-board.locked .mtp-card{ pointer-events:none; }

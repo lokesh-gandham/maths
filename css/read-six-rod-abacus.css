@@ -1,0 +1,23 @@
+/* Read the six rod abacus — exercise styles */
+
+.page-r6a .bead{ width:1.05rem; height:1.05rem; margin-bottom:-.16rem; }
+.page-r6a .abacus,
+.page-r6a .abacus-base{ width:98%; max-width:23rem; }
+.page-r6a .abacus-base .base-label{ font-size:.5rem; letter-spacing:.02em; }
+
+.r6a-answers{ gap:.2rem; }
+.r6a-answers label{ margin-top:.35rem; }
+.r6a-answers .entry{
+  width:100%; font-size:1.7rem; letter-spacing:.12em;
+  padding:.35rem .4rem;
+}
+.r6a-answers .name-input{
+  width:100%; text-align:center;
+  font-size:.68rem; padding:.45rem .5rem;
+  background:var(--surface); border:2px solid var(--sun-line);
+  border-radius:var(--r-md); outline:none; color:var(--ink);
+}
+.r6a-answers .name-input::placeholder{ color:#C9C2BA; }
+.r6a-answers .name-input:focus{ border-color:var(--accent); }
+.r6a-answers .name-input.right{ border-color:var(--good); background:var(--good-soft); }
+.r6a-answers .name-input.wrong{ border-color:var(--bad); background:var(--bad-soft); }

@@ -9,102 +9,98 @@
 <link href="https://fonts.googleapis.com/css2?family=Livvic:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/theme.css">
 <style>
-.wrap{ width:94vw; max-width:46rem; margin:0 auto; padding:1.5rem 0 3rem; }
+.wrap{ width:92vw; max-width:62rem; margin:0 auto; padding:1.4rem 0 3rem; }
 
 /* ---------- HEADER ---------- */
 .hero{
-  padding:1.2rem 1.3rem;
-  display:flex; align-items:center; justify-content:center; gap:1.2rem; flex-wrap:wrap;
-  text-align:center;
+  display:flex; align-items:center; justify-content:space-between; gap:1.2rem;
+  flex-wrap:wrap;
+  padding:1rem 1.3rem;
+  background:var(--surface); border:2px solid var(--surface-line);
+  border-radius:var(--r-lg);
 }
-.hero-text{ flex:1 1 16rem; padding-left:5rem; }
+.hero-text{ flex:1 1 16rem; }
 .eyebrow{
-  display:inline-block; font-size:.7rem;
-  margin-bottom:.35rem;
+  display:inline-block; font-size:.55rem; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-soft); margin-bottom:.2rem;
 }
-.hero h1{ font-size:1.5rem; line-height:1.1; letter-spacing:-.015em; }
-.hero h1 em{ font-style:normal; color:var(--ink); }
-.hero p{ font-size:.75rem; margin-top:.3rem; max-width:20rem; }
+.hero h1{ font-size:1.7rem; line-height:1.05; letter-spacing:-.02em; }
+.hero h1 em{ font-style:normal; color:var(--mint-ink); }
 
 .stats{ display:flex; gap:.5rem; }
 .stat{
-  background:var(--accent-soft); border-radius:.5rem;
-  padding:.55rem .75rem; min-width:4.6rem; text-align:center;
+  background:var(--mint-bg); border:2px solid var(--mint-line);
+  border-radius:var(--r-md);
+  padding:.5rem .9rem; min-width:5.4rem; text-align:center;
 }
-.stat .num{ display:block; font-size:1rem; line-height:1.1; color:var(--accent); }
-.stat .lbl{ display:block; font-size:.65rem; }
+.stat .num{ display:block; font-size:1.6rem; line-height:1.05; color:var(--mint-ink); }
+.stat .lbl{ display:block; font-size:.5rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); }
 
 /* ---------- SECTION ---------- */
-.section{ margin-top:1.9rem; }
-.section-head{ display:flex; align-items:center; gap:.6rem; margin-bottom:.9rem; }
-.chip{
-  flex:none; display:grid; place-items:center;
-  min-width:1.8rem; height:1.3rem; padding:0 .35rem;
-  border-radius:.38rem; background:var(--accent); color:#fff; font-size:.55rem;
-}
-.section-head h2{ font-size:.82rem; line-height:1.2; letter-spacing:-.01em; }
-.section-head .pages{ display:block; font-size:.65rem; }
-.rule{ flex:1 1 2rem; height:1px; background:var(--line); }
+.section{ margin-top:1.6rem; }
+.section-head{ display:flex; align-items:center; gap:.7rem; margin-bottom:.8rem; }
+.section-head h2{ font-size:.85rem; line-height:1.2; white-space:nowrap; }
+.rule{ flex:1 1 2rem; height:2px; background:var(--surface-line); border-radius:2px; }
 
 /* ---------- CARDS ---------- */
-.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(11.5rem,1fr)); gap:.8rem; }
+.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(12.5rem,1fr)); gap:.8rem; }
 
 .card{
   display:flex; flex-direction:column;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:.7rem;
+  background:var(--surface);
+  border:2px solid var(--surface-line);
+  border-radius:var(--r-lg);
   overflow:hidden;
-  transition:border-color .18s ease, transform .18s ease;
+  transition:transform .18s ease, border-color .18s ease;
 }
-.card:hover,.card:focus-within{ border-color:var(--accent); transform:translateY(-.09rem); }
+.card:hover,.card:focus-within{ border-color:var(--mint-line); transform:translateY(-.14rem); }
 
 /* the little picture of the game inside */
 .preview{
-  height:4.2rem;
-  background:var(--accent-soft);
-  border-bottom:1px solid var(--line);
+  height:4.6rem;
+  background:var(--sand-bg);
+  border-bottom:2px solid var(--surface-line);
   padding:.5rem .6rem;
   display:grid; place-items:center;
 }
 .preview svg{ width:100%; height:100%; }
 
-.card-body{ padding:.75rem .8rem .6rem; flex:1 1 auto; display:flex; flex-direction:column; }
+.card-body{ padding:.7rem .8rem .7rem; flex:1 1 auto; display:flex; flex-direction:column; }
 .card-top{ display:flex; align-items:flex-start; gap:.45rem; }
 .qnum{
   flex:none; display:grid; place-items:center;
-  width:1.15rem; height:1.15rem; border-radius:.3rem;
-  background:var(--accent-soft); color:var(--accent); font-size:.65rem;
+  width:1.3rem; height:1.3rem; border-radius:var(--r-sm);
+  background:var(--sand-bg); color:var(--sand-ink); font-size:.6rem;
 }
 .card h3{ font-size:.82rem; line-height:1.25; }
-.card p{ font-size:.75rem; line-height:1.4; margin-top:.4rem; }
+.card p{ font-size:.7rem; line-height:1.4; margin-top:.35rem; color:var(--ink-soft); }
 
-.card-play{
-  display:flex; justify-content:center; margin-top:auto; padding:.7rem 1.5rem 0;
-}
+.card-play{ display:flex; justify-content:center; margin-top:auto; padding:.7rem 0 0; }
 .play.big{
   display:inline-flex; align-items:center; justify-content:center; gap:.3rem;
-  width:100%; padding:.55rem .9rem; border-radius:.5rem;
-  border:0; background:var(--accent); color:#fff; font-size:.7rem;
-  transition:opacity .16s ease, transform .16s ease;
+  width:100%; padding:.45rem .9rem; border-radius:2rem;
+  border:2px solid var(--mint-deep); background:var(--mint-line); color:#08402F;
+  box-shadow:0 3px 0 var(--mint-deep);
+  font-size:.7rem;
+  transition:transform .16s ease, background .16s ease;
 }
-.play.big svg{ width:.75rem; height:.75rem; fill:#fff; margin-left:0; }
-.play.big:hover{ transform:scale(1.07); }
-.play.big:active{ transform:scale(.94); }
-.play.big:focus-visible{ outline:.06rem solid var(--accent); outline-offset:.14rem; }
-.play.big[data-ready="0"]{ background:var(--accent-line); }
+.play.big svg{ width:.72rem; height:.72rem; fill:currentColor; }
+.play.big:hover{ transform:translateY(-2px); background:#6FD4B3; }
+.play.big:active{ transform:translateY(1px); }
+.play.big[data-ready="0"]{
+  background:var(--sand-bg); border-color:var(--sand-line); color:var(--sand-ink);
+  box-shadow:0 3px 0 var(--sand-line);
+}
 
 /* ---------- TOAST ---------- */
 .toast{
   position:fixed; left:50%; bottom:1.2rem; transform:translate(-50%,1.4rem);
-  background:var(--ink); color:#fff; font-size:.5rem;
-  padding:.5rem .9rem; border-radius:.4rem;
+  background:var(--ink); color:#fff; font-size:.55rem;
+  padding:.5rem .9rem; border-radius:2rem;
   opacity:0; pointer-events:none;
   transition:opacity .22s ease,transform .22s ease; z-index:50;
 }
 .toast.show{ opacity:1; transform:translate(-50%,0); }
-
-.foot{ margin-top:2.2rem; text-align:center; font-size:.7rem; }
 </style>
 </head>
 <body>

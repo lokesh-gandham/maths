@@ -5,7 +5,7 @@
    PREVIEWS — each card shows a little picture of the game inside.
    All drawn as inline SVG on a 160 x 70 canvas so they scale with rem.
    ================================================================== */
-const A='var(--accent)', AL='var(--accent-line)', W='var(--warm)', INK='var(--ink)', WH='#fff';
+const A='var(--mint-line)', AL='var(--sand-line)', W='var(--sun-line)', INK='var(--ink)', WH='#fff';
 
 const svg = inner => `<svg viewBox="0 0 160 70" preserveAspectRatio="xMidYMid meet">${inner}</svg>`;
 
@@ -25,7 +25,7 @@ function label(x,y,txt,size=11,color=INK){
 function abacus(counts,{names=null,target=null}={}){
   const n=counts.length, left=18, right=142, span=(right-left)/(n-1||1);
   let s='';
-  if(target) s+=chip(56,2,48,16,target,{fill:'var(--warm-soft)',stroke:W,size:12});
+  if(target) s+=chip(56,2,48,16,target,{fill:'var(--sun-bg)',stroke:W,size:12});
   const top = target?22:8, baseY=52;
   counts.forEach((c,i)=>{
     const x=left+span*i;
@@ -43,7 +43,7 @@ function abacus(counts,{names=null,target=null}={}){
 function compare(a,b,sym='?'){
   return svg(
     chip(6,20,52,30,a,{size:15})+
-    chip(64,20,32,30,sym,{fill:'var(--warm-soft)',stroke:W,size:16,dash:1})+
+    chip(64,20,32,30,sym,{fill:'var(--sun-bg)',stroke:W,size:16,dash:1})+
     chip(102,20,52,30,b,{size:15})
   );
 }
@@ -67,8 +67,8 @@ function bins(l='Even',r='Odd'){
   s+=chip(4,4,70,20,'2347',{size:12})+chip(86,4,70,20,'5642',{size:12});
   s+=`<path d="M39 26 L39 34" stroke="${AL}" stroke-width="1.5"/>
       <path d="M121 26 L121 34" stroke="${AL}" stroke-width="1.5"/>`;
-  s+=chip(4,36,70,30,l,{fill:'var(--accent-soft)',stroke:A,size:13,color:A});
-  s+=chip(86,36,70,30,r,{fill:'var(--warm-soft)',stroke:W,size:13});
+  s+=chip(4,36,70,30,l,{fill:'var(--mint-bg)',stroke:A,size:13,color:A});
+  s+=chip(86,36,70,30,r,{fill:'var(--sun-bg)',stroke:W,size:13});
   return svg(s);
 }
 
@@ -76,7 +76,7 @@ function bins(l='Even',r='Odd'){
 function boxes(txt='9'){
   let s='';
   for(let i=0;i<4;i++){
-    s+=chip(6+i*39,20,32,30,i===1?txt:'',{fill:i===1?'var(--warm-soft)':WH,stroke:i===1?W:AL,size:15,dash:i===1?0:1});
+    s+=chip(6+i*39,20,32,30,i===1?txt:'',{fill:i===1?'var(--sun-bg)':WH,stroke:i===1?W:AL,size:15,dash:i===1?0:1});
   }
   s+=label(80,12,'fill each box',10);
   return svg(s);
@@ -87,7 +87,7 @@ function words(word,num){
   return svg(
     chip(2,22,74,26,word,{size:11})+
     `<path d="M80 35 L94 35 M89 30 L94 35 L89 40" stroke="${A}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`+
-    chip(98,22,60,26,num,{fill:'var(--warm-soft)',stroke:W,size:14,dash:1})
+    chip(98,22,60,26,num,{fill:'var(--sun-bg)',stroke:W,size:14,dash:1})
   );
 }
 
@@ -109,7 +109,7 @@ function match(){
   let s='';
   const L=[14,32,50], R=[14,32,50];
   L.forEach((y,i)=>{ s+=chip(6,y-9,54,18,['76549','89011','99999'][i],{size:11}); });
-  R.forEach((y,i)=>{ s+=chip(100,y-9,54,18,['9000','800','50000'][i],{size:11,fill:'var(--warm-soft)',stroke:W}); });
+  R.forEach((y,i)=>{ s+=chip(100,y-9,54,18,['9000','800','50000'][i],{size:11,fill:'var(--sun-bg)',stroke:W}); });
   s+=`<path d="M62 14 C80 14 82 32 98 32" stroke="${A}" stroke-width="2" fill="none"/>`;
   s+=`<path d="M62 32 C80 32 82 50 98 50" stroke="${A}" stroke-width="2" fill="none" opacity=".45"/>`;
   return svg(s);
@@ -121,17 +121,17 @@ function formnum(digits){
   digits.forEach((d,i)=>{ s+=chip(6+i*26,4,22,22,d,{size:13}); });
   s+=`<path d="M52 30 L52 40 M47 35 L52 40 L57 35" stroke="${A}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
   s+=`<path d="M108 30 L108 40 M103 35 L108 40 L113 35" stroke="${W}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-  s+=chip(6,44,72,22,'smallest',{size:11,fill:'var(--accent-soft)',stroke:A,color:A});
-  s+=chip(82,44,72,22,'greatest',{size:11,fill:'var(--warm-soft)',stroke:W});
+  s+=chip(6,44,72,22,'smallest',{size:11,fill:'var(--mint-bg)',stroke:A,color:A});
+  s+=chip(82,44,72,22,'greatest',{size:11,fill:'var(--sun-bg)',stroke:W});
   return svg(s);
 }
 
 /* --- before / number / after --- */
 function prevnext(n){
   return svg(
-    chip(4,22,44,26,'?',{fill:'var(--warm-soft)',stroke:W,size:15,dash:1})+
+    chip(4,22,44,26,'?',{fill:'var(--sun-bg)',stroke:W,size:15,dash:1})+
     chip(52,22,56,26,n,{size:14})+
-    chip(112,22,44,26,'?',{fill:'var(--warm-soft)',stroke:W,size:15,dash:1})+
+    chip(112,22,44,26,'?',{fill:'var(--sun-bg)',stroke:W,size:15,dash:1})+
     label(26,14,'before',10)+label(134,14,'after',10)
   );
 }
@@ -155,7 +155,7 @@ function roman(items,{hi=1}={}){
   const w=Math.min(46,150/items.length-6);
   items.forEach((t,i)=>{
     s+=chip(6+i*(w+6),20,w,30,t,{size:14,
-      fill:i===hi?'var(--warm-soft)':WH, stroke:i===hi?W:AL, dash:i===hi?1:0});
+      fill:i===hi?'var(--sun-bg)':WH, stroke:i===hi?W:AL, dash:i===hi?1:0});
   });
   return svg(s);
 }
@@ -165,7 +165,7 @@ function convert(from,to){
   return svg(
     chip(6,20,60,30,from,{size:15})+
     `<path d="M72 35 L88 35 M83 30 L88 35 L83 40" stroke="${A}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`+
-    chip(94,20,60,30,to,{fill:'var(--warm-soft)',stroke:W,size:15,dash:1})
+    chip(94,20,60,30,to,{fill:'var(--sun-bg)',stroke:W,size:15,dash:1})
   );
 }
 
@@ -200,12 +200,12 @@ const SECTIONS = [
   {
     code:'1.1', title:'Count by Ten Thousands', pages:'Page 16',
     items:[
-      {q:'1', id:'fill-in-the-boxes', n:6, page:16,
+      {q:'1', id:'fill-in-the-boxes', ready:true, n:6, page:16,
        title:'Fill in the boxes',
        desc:'Smallest and greatest 1 to 4 digit numbers, and ones to thousands swaps.',
        tags:['Place value'], art:()=>boxes('9')},
 
-      {q:'2', id:'write-the-number-formed', n:2, page:16,
+      {q:'2', id:'write-the-number-formed', ready:true, n:2, page:16,
        title:'Write the number formed',
        desc:'Ones, tens, hundreds and thousands arrive shuffled — rebuild the number.',
        tags:['Building'], art:()=>strip(['Th','H','T','O'],[0])}
@@ -214,22 +214,22 @@ const SECTIONS = [
   {
     code:'1.2', title:'Numbers up to Lakhs', pages:'Pages 19–20',
     items:[
-      {q:'2', id:'build-six-rod-abacus', n:2, page:19,
+      {q:'2', id:'build-six-rod-abacus', ready:true, n:2, page:19,
        title:'Build 490306 and 85430',
        desc:'Place beads across six rods, then write the number name.',
        tags:['Abacus'], art:()=>abacus([0,0,0,0,0,0],{names:['L','TTh','Th','H','T','O'],target:'490306'})},
 
-      {q:'3', id:'read-six-rod-abacus', n:1, page:19,
+      {q:'3', id:'read-six-rod-abacus', ready:true, n:1, page:19,
        title:'Read the six rod abacus',
        desc:'Count the beads and answer in numerals and in words.',
        tags:['Abacus','Words'], art:()=>abacus([4,3,1,6,3,1],{names:['L','TTh','Th','H','T','O']})},
 
-      {q:'4', id:'number-names-to-numerals', n:3, page:19,
+      {q:'4', id:'number-names-to-numerals', ready:true, n:3, page:19,
        title:'Number names to numerals',
        desc:'Turn the words into digits and drop the commas in the right places.',
        tags:['Words','Commas'], art:()=>words('Three lakh six thousand','3,06,024')},
 
-      {q:'5', id:'periods-puzzle', n:2, page:20,
+      {q:'5', id:'periods-puzzle', ready:true, n:2, page:20,
        title:'Periods puzzle',
        desc:'Swap digits for zeros, and fill the lakhs, thousands and ones periods.',
        tags:['Periods'], art:()=>strip(['L','TTh','Th','H','T','O'],[0,1,2])}
@@ -238,26 +238,26 @@ const SECTIONS = [
   {
     code:'1.3', title:'Face Value and Place Value', pages:'Page 22',
     items:[
-      {q:'4', id:'match-the-place-values', n:7, page:22,
+      {q:'4', id:'match-the-place-values', ready:true, n:7, page:22,
        title:'Match the place values',
-       desc:'Draw a line from each number to the place value that belongs to it.',
+       desc:'Tap a number, then tap the place value card that belongs to it.',
        tags:['Matching'], art:()=>match()}
     ]
   },
   {
     code:'1.5', title:'Comparing and Arranging Numbers', pages:'Pages 27–29',
     items:[
-      {q:'1', id:'which-is-bigger', n:3, page:27,
+      {q:'1', id:'which-is-bigger', ready:true, n:3, page:27,
        title:'Which one is bigger?',
        desc:'Tap the crocodile symbol that points at the greater number.',
        tags:['Compare'], art:()=>compare('59843','124587')},
 
-      {q:'4', id:'smallest-and-greatest', n:4, page:29,
+      {q:'4', id:'smallest-and-greatest', ready:true, n:4, page:29,
        title:'Smallest and greatest',
        desc:'Arrange every digit once to build the smallest and the greatest number.',
        tags:['Building'], art:()=>formnum(['6','3','0','1','8'])},
 
-      {q:'5', id:'six-digit-challenge', n:4, page:29,
+      {q:'5', id:'six-digit-challenge', ready:true, n:4, page:29,
        title:'Six digit challenge',
        desc:'Pick six digits from eight and build the smallest and greatest number.',
        tags:['6 digit'], art:()=>formnum(['4','0','9','8','1'])}
@@ -266,7 +266,7 @@ const SECTIONS = [
   {
     code:'1.6', title:'Predecessor and Successor', pages:'Page 30',
     items:[
-      {q:'1', id:'before-and-after', n:10, page:30,
+      {q:'1', id:'before-and-after', ready:true, n:10, page:30,
        title:'Before and after',
        desc:'Fill the number that comes just before and just after each one.',
        tags:['Before / After'], art:()=>prevnext('65378')}
@@ -275,12 +275,12 @@ const SECTIONS = [
   {
     code:'1.7', title:'Rounding Off Numbers', pages:'Page 33',
     items:[
-      {q:'1', id:'round-to-nearest-10', n:6, page:33,
+      {q:'1', id:'round-to-nearest-10', ready:true, n:6, page:33,
        title:'Round to the nearest 10',
        desc:'Slide along the number line and land on the closest ten.',
        tags:['Nearest 10'], art:()=>numberline('17500','17600',96,'554')},
 
-      {q:'2', id:'round-to-nearest-100', n:6, page:33,
+      {q:'2', id:'round-to-nearest-100', ready:true, n:6, page:33,
        title:'Round to the nearest 100',
        desc:'Same game, bigger jumps — find the closest hundred.',
        tags:['Nearest 100'], art:()=>numberline('17100','17700',66,'328')}
@@ -289,22 +289,22 @@ const SECTIONS = [
   {
     code:'1.8', title:'Roman Numerals', pages:'Pages 36–37',
     items:[
-      {q:'2', id:'compare-roman-numerals', n:6, page:36,
+      {q:'2', id:'compare-roman-numerals', ready:true, n:6, page:36,
        title:'Compare Roman numerals',
        desc:'Decide whether IX is less than, greater than or equal to XI.',
        tags:['Compare','Roman'], art:()=>compare('IX','XI')},
 
-      {q:'3', id:'roman-before-and-after', n:8, page:37,
+      {q:'3', id:'roman-before-and-after', ready:true, n:8, page:37,
        title:'Roman before and after',
        desc:'Which Roman numeral comes just before and just after XC?',
        tags:['Before / After'], art:()=>roman(['LXXXIX','XC','XCI'],{hi:1})},
 
-      {q:'4', id:'roman-to-number', n:4, page:37,
+      {q:'4', id:'roman-to-number', ready:true, n:4, page:37,
        title:'Roman to number',
        desc:'Decode XXIII, LXIX, XLIX and LXXXVIII into digits.',
        tags:['Decode'], art:()=>convert('XLIX','49')},
 
-      {q:'5', id:'number-to-roman', n:6, page:37,
+      {q:'5', id:'number-to-roman', ready:true, n:6, page:37,
        title:'Number to Roman',
        desc:'Turn 18, 24, 57, 63, 85 and 79 into Roman numerals.',
        tags:['Encode'], art:()=>convert('57','LVII')}

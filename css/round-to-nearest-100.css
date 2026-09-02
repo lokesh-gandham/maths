@@ -1,0 +1,20 @@
+/* Round to the nearest 100 — exercise styles */
+
+.page-r10 .options,
+.page-r100 .options{
+  grid-template-columns:repeat(2, 8rem);
+  width:auto; max-width:none; margin-top:1.6rem;
+  gap:1rem;
+}
+.opt.round{
+  font-size:1.8rem; letter-spacing:.05em; padding:.5rem .6rem;
+  border-radius:var(--r-lg);
+  background:var(--peach-bg); border:2px solid var(--peach-line);
+  color:var(--ink);
+  box-shadow:0 3px 0 var(--peach-line);
+}
+.opt.round:hover:not(:disabled){ transform:translateY(-2px); background:#FFE6D6; }
+.opt.round:active:not(:disabled){ transform:translateY(1px); }
+.opt.round.sel{ background:var(--mint-bg); border-color:var(--mint-line); box-shadow:0 3px 0 var(--mint-line); }
+.opt.round.right{ background:var(--good-soft); border-color:var(--good); box-shadow:0 3px 0 var(--good); }
+.opt.round.wrong{ background:var(--bad-soft); border-color:var(--bad); box-shadow:0 3px 0 var(--bad); }

@@ -1,0 +1,17 @@
+/* Six digit challenge — exercise styles */
+
+.sdc-lead{
+  display:flex; flex-direction:column; align-items:center; gap:.1rem;
+  padding:.4rem 1.3rem; margin-bottom:.6rem;
+  border-radius:var(--r-lg);
+  background:var(--lilac-bg); border:2px solid var(--lilac-line);
+}
+.sdc-tag{
+  font-size:.46rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--lilac-ink);
+}
+.sdc-digits{ font-size:1.4rem; letter-spacing:.24em; color:var(--ink); }
+
+.page-sdc .db-row:first-child.active{ background:var(--mint-bg); border-color:var(--mint-line); }
+.page-sdc .db-row:last-child.active{ background:var(--peach-bg); border-color:var(--peach-line); }
+.page-sdc .db-slot{ width:2.5rem; height:2.8rem; font-size:1.5rem; }

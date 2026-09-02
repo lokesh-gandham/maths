@@ -1,0 +1,48 @@
+/* Before and after — exercise styles */
+
+.baa-train{
+  display:flex; align-items:stretch; justify-content:center;
+  gap:.7rem; flex-wrap:wrap;
+}
+.baa-car{
+  position:relative;
+  display:flex; flex-direction:column; align-items:center; gap:.25rem;
+  padding:.6rem .9rem .7rem; min-width:9rem;
+  border-radius:var(--r-lg); border:2px solid;
+}
+.baa-tag{ font-size:.45rem; letter-spacing:.09em; text-transform:uppercase; }
+.baa-num{ font-size:2.4rem; line-height:1.1; letter-spacing:.05em; color:var(--ink); }
+
+.baa-back{ background:var(--peach-bg); border-color:var(--peach-line); }
+.baa-back .baa-tag{ color:var(--peach-ink); }
+.baa-now{  background:var(--sun-bg);   border-color:var(--sun-line); }
+.baa-now .baa-tag{ color:var(--sun-ink); }
+.baa-fwd{  background:var(--mint-bg);  border-color:var(--mint-line); }
+.baa-fwd .baa-tag{ color:var(--mint-ink); }
+
+.baa-step{
+  position:absolute; top:-.6rem; right:-.4rem;
+  display:grid; place-items:center;
+  min-width:1.7rem; height:1.7rem; padding:0 .35rem;
+  border-radius:2rem; font-size:.6rem;
+  background:var(--surface); border:2px solid;
+}
+.baa-back .baa-step{ left:-.4rem; right:auto; border-color:var(--peach-line); color:var(--peach-ink); }
+.baa-fwd .baa-step{ border-color:var(--mint-line); color:var(--mint-ink); }
+
+.baa-input{
+  width:7.4rem; text-align:center;
+  font-size:2rem; letter-spacing:.05em;
+  padding:.22rem .3rem;
+  background:var(--surface); border:2px solid var(--surface-line);
+  border-radius:var(--r-md); outline:none;
+}
+.baa-input::placeholder{ color:#C9C2BA; }
+.baa-input:focus{ border-color:var(--accent); }
+.baa-input.right{ border-color:var(--good); background:var(--good-soft); }
+.baa-input.wrong{ border-color:var(--bad); background:var(--bad-soft); }
+.baa-input:disabled{ cursor:default; }
+
+@media(max-width:640px){
+  .baa-train{ flex-direction:column; align-items:center; }
+}
