@@ -698,7 +698,7 @@ button.rod:hover .stick::before{
    ============================================================ */
 .opt, .btn, a.btn, .numchip, .db-chip, .nnn-key, .ntr-key,
 .pp-chip, .pp-tile, .rba-opt, .form-chip, .eo-num, .eo-tool-btn,
-.rodbtn, .popup-actions .btn, .mtp-card, .back, .tblock{
+.rodbtn, .popup-actions .btn, .mtp-card, .back, .tblock, .fib-tile{
   --face:var(--surface);
   --edge:var(--surface-line);
   position:relative;
@@ -718,7 +718,8 @@ button.rod:hover .stick::before{
 .pp-chip:hover:not(:disabled), .pp-tile:hover:not(:disabled),
 .rba-opt:hover:not(:disabled), .form-chip:hover:not(:disabled),
 .eo-num:hover, .eo-tool-btn:hover, .rodbtn:hover,
-.popup-actions .btn:hover, .mtp-card:hover, .back:hover, .tblock:hover{
+.popup-actions .btn:hover, .mtp-card:hover, .back:hover, .tblock:hover,
+.fib-tile:hover:not(:disabled){
   transform:translateY(-.1rem);
   box-shadow:
     inset 0 .11rem 0 rgba(255,255,255,.95),
@@ -733,7 +734,8 @@ button.rod:hover .stick::before{
 .pp-chip:active:not(:disabled), .pp-tile:active,
 .rba-opt:active:not(:disabled), .form-chip:active:not(:disabled),
 .eo-num:active, .eo-tool-btn:active, .rodbtn:active,
-.popup-actions .btn:active, .mtp-card:active, .back:active, .tblock:active{
+.popup-actions .btn:active, .mtp-card:active, .back:active, .tblock:active,
+.fib-tile:active:not(:disabled){
   transform:translateY(.14rem);
   box-shadow:
     inset 0 .1rem 0 rgba(255,255,255,.8),
@@ -742,7 +744,7 @@ button.rod:hover .stick::before{
 }
 /* spent or locked — lay it flat on the page */
 .opt:disabled, .btn:disabled, .rba-opt:disabled,
-.numchip.used, .db-chip.used, .form-chip.used, .pp-chip.used{
+.numchip.used, .db-chip.used, .form-chip.used, .pp-chip.used, .fib-tile.used{
   transform:none;
   box-shadow:inset 0 .1rem 0 rgba(255,255,255,.65), 0 .05rem 0 var(--edge);
 }

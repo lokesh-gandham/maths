@@ -1,53 +1,70 @@
-/* Fill in the Boxes — exercise styles */
+/* Fill in the Boxes — exercise styles
+   Empty boxes on top, a tray of digit tiles underneath. */
 
-.page-fib .qcard .prompt{ margin-bottom:.15rem; }
-
-/* keep the list at the top of the play area, not floated in the middle */
-.page-fib .qcard:not(.result) .prompt,
-.page-fib .qcard:not(.result) .hint,
+/* Keep the sentence, the boxes and the tray as one block so the question
+   sits directly above its blank instead of floating at the top of the page.
+   The stage hugs its content; the pair of auto margins centres the group. */
+.page-fib .qcard:not(.result) .prompt{ margin-top:auto; }
 .page-fib .qcard:not(.result) .stage{
-  margin-top:0 !important; margin-bottom:0 !important;
-  flex:0 0 auto !important;
+  flex:0 0 auto;
+  margin-top:.45rem;
+  margin-bottom:auto;
+  justify-content:flex-start;
 }
-.page-fib .stage{ margin-top:.9rem !important; }
 
-.fib-list{
-  display:flex; flex-direction:column; gap:.3rem;
-  width:100%; max-width:34rem; margin:0 auto;
+/* the blank inside the sentence */
+.fib-blank{
+  display:inline-block;
+  width:3.4rem; height:.12rem;
+  margin:0 .18rem .18rem;
+  vertical-align:middle;
+  background:var(--sand-line); border-radius:1rem;
 }
-.fib-item{
-  display:flex; align-items:center; gap:.55rem;
-  padding:.35rem .8rem;
-  background:var(--surface); border:2px solid var(--surface-line);
-  border-radius:var(--r-md);
-  font-size:.85rem;
+
+/* ---- the boxes being filled ---- */
+.fib-slots{
+  display:flex; gap:.45rem; justify-content:center;
+  margin-top:.15rem;
 }
-.fib-letter{
+.fib-slot{
   display:grid; place-items:center;
-  width:1.5rem; height:1.5rem; flex:none;
-  background:var(--sand-bg); border:1.5px solid var(--sand-line);
-  border-radius:var(--r-sm);
-  color:var(--ink); font-size:.6rem;
+  width:3rem; height:3.4rem;
+  font-size:2rem; color:var(--ink);
+  background:var(--surface);
+  border:2px dashed var(--surface-line);
+  border-radius:var(--r-md);
+  box-shadow:inset 0 .12rem .22rem rgba(90,70,50,.09);
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
 }
-.fib-text{ flex:1; }
-.fib-entry{
-  width:6.5rem; text-align:center;
-  font-size:1.3rem; padding:.2rem .4rem;
-  background:var(--surface); border:2px solid var(--sun-line);
-  border-radius:var(--r-sm); outline:none;
-  transition:border-color .15s ease;
+.fib-slot.filled{
+  border-style:solid; border-color:var(--sun-line);
+  background:var(--sun-bg);
 }
-.fib-entry::placeholder{ color:#9C9389; }
-.fib-entry:focus{ border-color:var(--accent); }
-.fib-entry.right{ border-color:var(--good); background:var(--good-soft); }
-.fib-entry.wrong{ border-color:var(--bad); background:var(--bad-soft); }
-.fib-entry:disabled{ cursor:default; }
-.fib-unit{ color:var(--ink); font-size:.7rem; }
+.fib-slot.next{
+  border-color:var(--sun-line);
+  animation:softPulse 1.1s ease-in-out infinite;
+}
+.fib-slot.right{
+  border-style:solid; border-color:var(--good);
+  background:var(--good-soft); animation:none;
+}
+.fib-slot.wrong{
+  border-style:solid; border-color:var(--bad);
+  background:var(--bad-soft); animation:none;
+}
+.fib-slot:disabled{ cursor:default; }
 
-.page-fib #q-primary{ display:none !important; }
-.page-fib .qcard .actions{ justify-content:center; margin-top:.5rem !important; }
-
-@media(max-width:590px){
-  .fib-item{ flex-wrap:wrap; }
-  .fib-entry{ width:100%; margin-top:.2rem; }
+/* ---- the tray of digits ---- */
+.fib-tray{
+  display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap;
+  margin-top:.95rem;
 }
+.fib-tile{
+  width:2.7rem; height:2.7rem; border-radius:50%;
+  font-size:1.35rem;
+  --face:var(--sun-bg); --edge:var(--sun-line); color:var(--ink);
+}
+.fib-tile.used{ opacity:.22; cursor:default; }
+
+.page-fib .qcard .actions{ justify-content:center; }
