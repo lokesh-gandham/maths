@@ -52,9 +52,10 @@
 /* row number — the "1)" of the worksheet */
 .mtp-no{
   flex:none; display:grid; place-items:center;
-  width:1.15rem; height:1.15rem; border-radius:50%;
-  background:var(--sand-bg); color:var(--sand-ink);
-  font-size:.48rem;
+  width:1.3rem; height:1.3rem; border-radius:50%;
+  background:var(--sand-bg); border:1.5px solid var(--sand-line);
+  color:var(--ink);
+  font-size:.58rem;
 }
 
 /* the connector dot on each card's facing edge */

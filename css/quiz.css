@@ -34,16 +34,12 @@ body{ overflow:hidden; background:var(--bg); }
 }
 .bar-text, .count{ display:none; }
 .back{
-  flex:none; display:flex; align-items:center; gap:.28rem;
-  padding:.38rem .75rem; border-radius:2rem;
-  background:var(--mint-bg); color:var(--mint-ink);
-  border:2px solid var(--mint-line);
-  font-size:.5rem; letter-spacing:.03em;
-  transition:transform .16s ease, background .16s ease;
+  flex:none; display:flex; align-items:center; gap:.32rem;
+  padding:.42rem .95rem; border-radius:2rem;
+  font-size:.62rem; letter-spacing:.02em;
+  text-decoration:none;
 }
-.back:hover{ transform:translateY(-2px); background:#D6F3E9; }
-.back:active{ transform:translateY(1px); }
-.back svg{ width:.55rem; height:.55rem; fill:currentColor; }
+.back svg{ width:.7rem; height:.7rem; fill:var(--mint-ink); }
 
 .track{ display:none; }
 .track span{ display:block; height:100%; width:0; background:var(--accent); }
@@ -67,7 +63,7 @@ body{ overflow:hidden; background:var(--bg); }
   display:inline-block; align-self:center;
   margin-top:.3rem; padding:.2rem .7rem;
   font-size:.55rem; line-height:1.3; text-align:center;
-  color:var(--sand-ink); background:var(--sand-bg);
+  color:var(--ink); background:var(--sand-bg);
   border-radius:2rem;
   max-width:32rem;
 }
@@ -110,7 +106,7 @@ body{ overflow:hidden; background:var(--bg); }
   border-radius:var(--r-md); outline:none;
   transition:border-color .15s ease;
 }
-.entry::placeholder{ color:#C9C2BA; }
+.entry::placeholder{ color:#9C9389; }
 .entry:focus{ border-color:var(--accent); }
 .entry.right{ border-color:var(--good); background:var(--good-soft); }
 .entry.wrong{ border-color:var(--bad); background:var(--bad-soft); }
@@ -318,7 +314,7 @@ button.rod:hover .stick::before{
 }
 .abacus-base .base-label{
   flex:1; text-align:center;
-  font-size:.62rem; color:var(--sand-ink);
+  font-size:.62rem; color:var(--ink);
   letter-spacing:.05em;
   padding:.1rem 0;
   border-right:2px solid rgba(220,205,184,.7);
@@ -343,7 +339,7 @@ button.rod:hover .stick::before{
 
 .readout{
   font-size:1rem;
-  background:var(--sand-bg); color:var(--sand-ink);
+  background:var(--sand-bg); color:var(--ink);
   border:2px solid var(--sand-line);
   border-radius:var(--r-md); padding:.3rem .9rem;
   letter-spacing:.1em;
@@ -442,7 +438,7 @@ button.rod:hover .stick::before{
 }
 .nl-ends{
   display:flex; justify-content:space-between; align-items:center;
-  margin-top:.9rem; font-size:.8rem; color:var(--sand-ink);
+  margin-top:.9rem; font-size:.8rem; color:var(--ink);
 }
 .nl-mid{ font-size:.45rem; opacity:.7; letter-spacing:.08em; text-transform:uppercase; }
 
@@ -617,7 +613,7 @@ button.rod:hover .stick::before{
    ============================================================ */
 .opt, .btn, a.btn, .numchip, .db-chip, .nnn-key, .ntr-key,
 .pp-chip, .pp-tile, .rba-opt, .form-chip, .eo-num, .eo-tool-btn,
-.rodbtn, .popup-actions .btn, .mtp-card{
+.rodbtn, .popup-actions .btn, .mtp-card, .back{
   --face:var(--surface);
   --edge:var(--surface-line);
   position:relative;
@@ -637,7 +633,7 @@ button.rod:hover .stick::before{
 .pp-chip:hover:not(:disabled), .pp-tile:hover:not(:disabled),
 .rba-opt:hover:not(:disabled), .form-chip:hover:not(:disabled),
 .eo-num:hover, .eo-tool-btn:hover, .rodbtn:hover,
-.popup-actions .btn:hover, .mtp-card:hover{
+.popup-actions .btn:hover, .mtp-card:hover, .back:hover{
   transform:translateY(-.1rem);
   box-shadow:
     inset 0 .11rem 0 rgba(255,255,255,.95),
@@ -652,7 +648,7 @@ button.rod:hover .stick::before{
 .pp-chip:active:not(:disabled), .pp-tile:active,
 .rba-opt:active:not(:disabled), .form-chip:active:not(:disabled),
 .eo-num:active, .eo-tool-btn:active, .rodbtn:active,
-.popup-actions .btn:active, .mtp-card:active{
+.popup-actions .btn:active, .mtp-card:active, .back:active{
   transform:translateY(.14rem);
   box-shadow:
     inset 0 .1rem 0 rgba(255,255,255,.8),
@@ -667,6 +663,9 @@ button.rod:hover .stick::before{
 }
 
 /* ---- the colours each surface wears ---- */
+.back{ --face:var(--mint-bg); --edge:var(--mint-deep); color:var(--mint-ink); }
+.back:hover{ --face:#D2F2E7; }
+.back svg{ fill:var(--mint-ink); }
 .btn.check-btn, a.btn, .popup-actions .btn-again{
   --face:#63D2B2; --edge:var(--mint-deep); color:#07402F;
 }

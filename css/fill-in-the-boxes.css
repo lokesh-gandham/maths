@@ -25,8 +25,9 @@
 .fib-letter{
   display:grid; place-items:center;
   width:1.5rem; height:1.5rem; flex:none;
-  background:var(--sand-bg); border-radius:var(--r-sm);
-  color:var(--sand-ink); font-size:.6rem;
+  background:var(--sand-bg); border:1.5px solid var(--sand-line);
+  border-radius:var(--r-sm);
+  color:var(--ink); font-size:.6rem;
 }
 .fib-text{ flex:1; }
 .fib-entry{
@@ -36,12 +37,12 @@
   border-radius:var(--r-sm); outline:none;
   transition:border-color .15s ease;
 }
-.fib-entry::placeholder{ color:#C9C2BA; }
+.fib-entry::placeholder{ color:#9C9389; }
 .fib-entry:focus{ border-color:var(--accent); }
 .fib-entry.right{ border-color:var(--good); background:var(--good-soft); }
 .fib-entry.wrong{ border-color:var(--bad); background:var(--bad-soft); }
 .fib-entry:disabled{ cursor:default; }
-.fib-unit{ color:var(--ink-soft); font-size:.7rem; }
+.fib-unit{ color:var(--ink); font-size:.7rem; }
 
 .page-fib #q-primary{ display:none !important; }
 .page-fib .qcard .actions{ justify-content:center; margin-top:.5rem !important; }

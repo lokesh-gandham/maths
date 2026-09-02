@@ -5,7 +5,7 @@
   font-size:1rem; line-height:1.2; text-align:center; margin-bottom:.4rem;
 }
 .page-evenodd .prompt small{
-  display:block; margin-top:.25rem; font-size:.6rem; color:var(--ink-soft);
+  display:block; margin-top:.25rem; font-size:.6rem; color:var(--ink);
 }
 
 /* Tool selector */
@@ -58,7 +58,8 @@
 .eo-row-label{
   display:grid; place-items:center;
   width:1.8rem; height:1.8rem;
-  background:var(--sand-bg); color:var(--sand-ink);
+  background:var(--sand-bg); border:1.5px solid var(--sand-line);
+  color:var(--ink);
   border-radius:var(--r-sm); font-size:.7rem;
   flex:none;
 }

@@ -37,7 +37,7 @@
   background:var(--surface); border:2px solid var(--surface-line);
   border-radius:var(--r-md); outline:none;
 }
-.baa-input::placeholder{ color:#C9C2BA; }
+.baa-input::placeholder{ color:#9C9389; }
 .baa-input:focus{ border-color:var(--accent); }
 .baa-input.right{ border-color:var(--good); background:var(--good-soft); }
 .baa-input.wrong{ border-color:var(--bad); background:var(--bad-soft); }

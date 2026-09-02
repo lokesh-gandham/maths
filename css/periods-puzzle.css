@@ -18,7 +18,7 @@
 
 .pp-out{
   margin-top:.8rem; min-height:1.9rem;
-  font-size:1.6rem; letter-spacing:.16em; color:var(--sand-ink);
+  font-size:1.6rem; letter-spacing:.16em; color:var(--ink);
 }
 
 .pp-words{ display:flex; flex-direction:column; align-items:center; gap:.25rem; margin-top:.4rem; }
@@ -29,7 +29,7 @@
   background:var(--surface); border:2px solid var(--sun-line);
   border-radius:var(--r-md); outline:none;
 }
-.pp-input::placeholder{ color:#C9C2BA; }
+.pp-input::placeholder{ color:#9C9389; }
 .pp-input:focus{ border-color:var(--accent); }
 .pp-input.right{ border-color:var(--good); background:var(--good-soft); }
 .pp-input.wrong{ border-color:var(--bad); background:var(--bad-soft); }

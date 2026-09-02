@@ -17,7 +17,7 @@
   background:var(--surface); border:2px solid var(--sun-line);
   border-radius:var(--r-md); outline:none; color:var(--ink);
 }
-.r6a-answers .name-input::placeholder{ color:#C9C2BA; }
+.r6a-answers .name-input::placeholder{ color:#9C9389; }
 .r6a-answers .name-input:focus{ border-color:var(--accent); }
 .r6a-answers .name-input.right{ border-color:var(--good); background:var(--good-soft); }
 .r6a-answers .name-input.wrong{ border-color:var(--bad); background:var(--bad-soft); }
