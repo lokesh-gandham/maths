@@ -4,7 +4,7 @@
 /* Keep the sentence, the boxes and the tray as one block so the question
    sits directly above its blank instead of floating at the top of the page.
    The stage hugs its content; the pair of auto margins centres the group. */
-.page-fib .qcard:not(.result) .prompt{ margin-top:auto; }
+.page-fib .qcard:not(.result) .prompt{ margin-top:1rem; }
 .page-fib .qcard:not(.result) .stage{
   flex:0 0 auto;
   margin-top:.45rem;

@@ -8,12 +8,12 @@
 /* Answers as printed in the book's key: 1, 99, 100, 9999, 1, 10.
    Note (a) — the key counts from 1, so the smallest 1 digit number is 1. */
 const FIBQS = [
-  { letter:'a', before:'Smallest 1 digit number is', answer:'1' },
-  { letter:'b', before:'Greatest 2 digit number is', answer:'99' },
-  { letter:'c', before:'Smallest 3 digit number is', answer:'100' },
-  { letter:'d', before:'Greatest 4 digit number is', answer:'9999' },
-  { letter:'e', before:'100 ones =', answer:'1', after:'hundred' },
-  { letter:'f', before:'1 thousand =', answer:'10', after:'hundreds' }
+  { before:'Smallest 1 digit number is', answer:'1' },
+  { before:'Greatest 2 digit number is', answer:'99' },
+  { before:'Smallest 3 digit number is', answer:'100' },
+  { before:'Greatest 4 digit number is', answer:'9999' },
+  { before:'100 ones =', answer:'1', after:'hundred' },
+  { before:'1 thousand =', answer:'10', after:'hundreds' }
 ];
 
 /* a small seeded shuffle, so the tray keeps the same order when the
@@ -96,7 +96,7 @@ function fibQ(item, idx){
   const blank = '<span class="fib-blank"></span>';
 
   return {
-    prompt: `${item.letter}) ${item.before} ${blank}${item.after ? ' ' + item.after : ''}`,
+    prompt: `Q${idx + 1}: ${item.before} ${blank}${item.after ? ' ' + item.after : ''}`,
     hint: 'Tap the digits to build the answer. Tap a box to take a digit back.',
     render(stage, ready, saved){ ready0 = ready; build(stage, saved, false); },
     renderLocked(stage, saved){
