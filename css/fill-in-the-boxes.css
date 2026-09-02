@@ -43,6 +43,7 @@
 .fib-entry:disabled{ cursor:default; }
 .fib-unit{ color:var(--ink-soft); font-size:.7rem; }
 
+.page-fib #q-primary{ display:none !important; }
 .page-fib .qcard .actions{ justify-content:center; margin-top:.5rem !important; }
 
 @media(max-width:590px){
