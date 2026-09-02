@@ -108,9 +108,9 @@ function boxes(txt='9'){
 /* --- word phrase turning into a number --- */
 function words(word,num){
   return svg(
-    chip(2,22,74,26,word,{size:11})+
-    `<path d="M80 35 L94 35 M89 30 L94 35 L89 40" stroke="${A}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`+
-    chip(98,22,60,26,num,{fill:'var(--sun-bg)',stroke:W,size:14,dash:1})
+    chip(10,4,140,26,word,{size:11})+
+    `<path d="M80 30 L80 42 M75 37 L80 42 L85 37" stroke="${A}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`+
+    chip(30,46,100,22,num,{fill:'var(--sun-bg)',stroke:W,size:13,dash:1})
   );
 }
 
@@ -388,8 +388,20 @@ root.addEventListener('click', e => {
   const btn = e.target.closest('.play');
   if(!btn) return;
   if(btn.dataset.ready === '1'){
+    sessionStorage.setItem('scrollToCard', btn.dataset.id);
     location.href = `html/${btn.dataset.id}.html`;
   } else {
     showToast(`${btn.dataset.title} — activity coming soon`);
   }
 });
+
+(function restoreScroll(){
+  const id = sessionStorage.getItem('scrollToCard');
+  if(!id) return;
+  sessionStorage.removeItem('scrollToCard');
+  const btn = root.querySelector(`.play[data-id="${id}"]`);
+  if(btn){
+    const card = btn.closest('.card');
+    if(card) setTimeout(()=> card.scrollIntoView({block:'center'}), 60);
+  }
+})();
