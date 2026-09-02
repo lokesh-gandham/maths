@@ -1,53 +1,123 @@
-/* Match the place values — exercise styles */
+/* Match the place values — exercise styles
+   Two facing columns joined by drawn wires. The board keeps the page
+   background; only the cards and the wires carry colour.
+   Seven rows have to fit one screen, so the row rhythm is tight. */
+
+/* pairs judge themselves, so there is nothing to press Check on */
+.page-match #q-primary{ display:none !important; }
+.page-match .qcard:not(.result) .actions{ margin-top:0; min-height:0; }
 
 .mtp-board{
-  display:grid; grid-template-columns:1fr 1.3fr;
-  gap:.4rem 1.4rem; width:100%; max-width:30rem;
+  position:relative;
+  display:grid; grid-template-columns:1fr 1.32fr;
+  column-gap:4.4rem; row-gap:.26rem;
+  width:100%; max-width:31rem;
 }
-.mtp-col{ display:flex; flex-direction:column; gap:.3rem; }
+.mtp-col{ display:flex; flex-direction:column; gap:.26rem; }
+
+/* the wires layer spans the whole board, gap included */
+.mtp-wires{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  pointer-events:none; overflow:visible;
+  z-index:2;
+}
 
 .mtp-card{
-  display:flex; align-items:center; gap:.5rem;
-  padding:.35rem .7rem; min-height:2.1rem;
-  font-size:.72rem; text-align:left; line-height:1.15;
-  background:var(--surface); border:2px solid var(--surface-line);
-  border-radius:var(--r-md);
-  transition:transform .14s ease, border-color .15s ease, background .15s ease;
+  display:flex; align-items:center; gap:.45rem;
+  padding:.26rem .55rem; min-height:1.85rem;
+  font-size:.66rem; text-align:left; line-height:1.15;
+  border-radius:2rem;
+  z-index:1;
 }
-.mtp-card:hover{ transform:translateY(-1px); }
-.mtp-num{ font-size:1.15rem; letter-spacing:.07em; }
+.mtp-label{ flex:1; }
+.mtp-num .mtp-label{ font-size:1.05rem; letter-spacing:.06em; }
 
+/* row number — the "1)" of the worksheet */
+.mtp-no{
+  flex:none; display:grid; place-items:center;
+  width:1.15rem; height:1.15rem; border-radius:50%;
+  background:var(--sand-bg); color:var(--sand-ink);
+  font-size:.48rem;
+}
+
+/* the connector dot on each card's facing edge */
 .mtp-dot{
-  flex:none; width:.6rem; height:.6rem; border-radius:50%;
-  background:var(--surface-line); transition:background .15s ease;
+  flex:none; width:.48rem; height:.48rem; border-radius:50%;
+  background:#CFC6BB;
+  box-shadow:0 0 0 .1rem var(--face);
+  transition:background .15s ease;
 }
-.mtp-right .mtp-card{ flex-direction:row-reverse; text-align:right; }
-.mtp-right .mtp-card > :not(.mtp-dot){ flex:1; }
 
+/* ---- left column: neutral, so the numbers read first ---- */
+.mtp-num{ --face:var(--surface); --edge:var(--surface-line); }
+.mtp-num.done.w0{ --edge:var(--sky-line); }
+.mtp-num.done.w1{ --edge:var(--mint-line); }
+.mtp-num.done.w2{ --edge:var(--peach-line); }
+.mtp-num.done.w3{ --edge:var(--lilac-line); }
+.mtp-num.done.w4{ --edge:var(--rose-line); }
+.mtp-num.done.w5{ --edge:var(--sun-line); }
+.mtp-num.done.w6{ --edge:var(--sand-line); }
+.mtp-num.done.w0 .mtp-dot{ background:var(--sky-line); }
+.mtp-num.done.w1 .mtp-dot{ background:var(--mint-line); }
+.mtp-num.done.w2 .mtp-dot{ background:var(--peach-line); }
+.mtp-num.done.w3 .mtp-dot{ background:var(--lilac-line); }
+.mtp-num.done.w4 .mtp-dot{ background:var(--rose-line); }
+.mtp-num.done.w5 .mtp-dot{ background:var(--sun-line); }
+.mtp-num.done.w6 .mtp-dot{ background:var(--sand-ink); }
+
+/* the number you are on right now */
 .mtp-card.sel{
-  border-color:var(--sun-line); background:var(--sun-bg);
-  animation:softPulse 1.1s ease-in-out infinite;
+  --face:#2FC79E; --edge:#1CA37F; color:#04352A;
+}
+.mtp-card.sel .mtp-no{ background:rgba(255,255,255,.8); color:#04352A; }
+.mtp-card.sel .mtp-dot{ background:#04352A; box-shadow:0 0 0 .1rem #2FC79E; }
+
+/* ---- right column: each row keeps a soft tint of its own ---- */
+.mtp-val.t0{ --face:var(--sky-bg);   --edge:#CFE3F6; }
+.mtp-val.t1{ --face:var(--mint-bg);  --edge:#C4EBDD; }
+.mtp-val.t2{ --face:var(--peach-bg); --edge:#F7DBCA; }
+.mtp-val.t3{ --face:var(--lilac-bg); --edge:#DED2F2; }
+.mtp-val.t4{ --face:var(--rose-bg);  --edge:#F5CBD5; }
+.mtp-val.t5{ --face:var(--sun-bg);   --edge:#F2E4B4; }
+.mtp-val.t6{ --face:var(--sand-bg);  --edge:var(--sand-line); }
+
+/* the badge that says which number this belongs to */
+.mtp-badge{
+  flex:none; display:grid; place-items:center;
+  width:1.15rem; height:1.15rem; border-radius:50%;
+  color:#fff; font-size:.5rem;
+  box-shadow:0 .06rem .12rem rgba(60,45,30,.28);
+  animation:mtpBadgePop .34s cubic-bezier(.2,1.5,.4,1) both;
+}
+@keyframes mtpBadgePop{
+  0%{ opacity:0; transform:scale(.2); }
+  100%{ opacity:1; transform:scale(1); }
 }
 
-/* seven link colours — a matched pair shares one */
-.mtp-card.c0{ border-color:var(--sky-line);   background:var(--sky-bg); }
-.mtp-card.c0 .mtp-dot{ background:var(--sky-line); }
-.mtp-card.c1{ border-color:var(--mint-line);  background:var(--mint-bg); }
-.mtp-card.c1 .mtp-dot{ background:var(--mint-line); }
-.mtp-card.c2{ border-color:var(--peach-line); background:var(--peach-bg); }
-.mtp-card.c2 .mtp-dot{ background:var(--peach-line); }
-.mtp-card.c3{ border-color:var(--lilac-line); background:var(--lilac-bg); }
-.mtp-card.c3 .mtp-dot{ background:var(--lilac-line); }
-.mtp-card.c4{ border-color:var(--rose-line);  background:var(--rose-bg); }
-.mtp-card.c4 .mtp-dot{ background:var(--rose-line); }
-.mtp-card.c5{ border-color:var(--sun-line);   background:var(--sun-bg); }
-.mtp-card.c5 .mtp-dot{ background:var(--sun-line); }
-.mtp-card.c6{ border-color:var(--sand-line);  background:var(--sand-bg); }
-.mtp-card.c6 .mtp-dot{ background:var(--sand-ink); }
+/* a locked pair settles down onto the page */
+.mtp-card.done{ cursor:default; opacity:1; }
+.mtp-card:disabled{ transform:none; }
 
-.mtp-card.right{ border-color:var(--good) !important; background:var(--good-soft) !important; animation:none; }
-.mtp-card.right .mtp-dot{ background:var(--good); }
-.mtp-card.wrong{ border-color:var(--bad) !important; background:var(--bad-soft) !important; animation:none; }
-.mtp-card.wrong .mtp-dot{ background:var(--bad); }
+/* ---- wrong pair: both cards flash and shake ---- */
+.mtp-card.bad{ --face:var(--bad-soft); --edge:var(--bad); }
+.mtp-card.shake{ animation:mtpShake .44s ease; }
+@keyframes mtpShake{
+  0%,100%{ transform:translateX(0); }
+  12%{ transform:translateX(-.3rem); }
+  28%{ transform:translateX(.3rem); }
+  44%{ transform:translateX(-.22rem); }
+  60%{ transform:translateX(.22rem); }
+  76%{ transform:translateX(-.1rem); }
+  88%{ transform:translateX(.1rem); }
+}
 
 .mtp-board.locked .mtp-card{ pointer-events:none; }
+
+@media(prefers-reduced-motion:reduce){
+  .mtp-card.shake, .mtp-badge{ animation:none !important; }
+}
+
+@media(max-width:700px){
+  .mtp-board{ column-gap:2.2rem; }
+}

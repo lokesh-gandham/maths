@@ -25,24 +25,13 @@
   flex:1; max-width:12rem;
   display:flex; align-items:center; justify-content:center; gap:.4rem;
   padding:.5rem .8rem;
-  background:var(--surface); border:2px solid var(--surface-line);
   border-radius:var(--r-md); font-size:.8rem;
   cursor:pointer;
-  transition:transform .15s ease, background .15s ease, border-color .15s ease;
 }
-.eo-tool-btn:hover{ transform:translateY(-2px); }
-.eo-tool-btn.circle-tool{ border-color:var(--mint-line); }
-.eo-tool-btn.cross-tool{ border-color:var(--peach-line); }
-.eo-tool-btn.circle-tool.active{
-  color:var(--mint-ink); background:var(--mint-bg);
-  border-color:var(--mint-line);
-  box-shadow:0 0 0 .16rem rgba(92,200,165,.25);
-}
-.eo-tool-btn.cross-tool.active{
-  color:var(--peach-ink); background:var(--peach-bg);
-  border-color:var(--peach-line);
-  box-shadow:0 0 0 .16rem rgba(240,168,126,.25);
-}
+.eo-tool-btn.circle-tool{ --edge:var(--mint-line); }
+.eo-tool-btn.cross-tool{ --edge:var(--peach-line); }
+.eo-tool-btn.circle-tool.active{ --face:var(--mint-bg); --edge:var(--mint-line); color:var(--mint-ink); }
+.eo-tool-btn.cross-tool.active{ --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }
 .eo-tool-symbol{
   display:grid; width:1.5rem; height:1.5rem;
   place-items:center; border-radius:50%;
@@ -81,20 +70,20 @@
   position:relative;
   display:grid; place-items:center;
   min-height:3.6rem; padding:.4rem .3rem;
-  background:var(--surface); border:2px solid var(--surface-line);
   border-radius:var(--r-md);
   font-size:1.7rem;
   cursor:pointer; user-select:none;
-  transition:transform .15s ease, background .15s ease, border-color .15s ease;
 }
-.eo-num:hover{
-  border-color:var(--sky-line); background:var(--sky-bg);
-  transform:translateY(-2px);
-}
+/* five colours across a row so no two neighbours look alike */
+.eo-row-nums .eo-num:nth-child(5n+1){ --face:var(--sky-bg);   --edge:var(--sky-line); }
+.eo-row-nums .eo-num:nth-child(5n+2){ --face:var(--sun-bg);   --edge:var(--sun-line); }
+.eo-row-nums .eo-num:nth-child(5n+3){ --face:var(--lilac-bg); --edge:var(--lilac-line); }
+.eo-row-nums .eo-num:nth-child(5n+4){ --face:var(--peach-bg); --edge:var(--peach-line); }
+.eo-row-nums .eo-num:nth-child(5n){   --face:var(--rose-bg);  --edge:var(--rose-line); }
 
 /* Circle mark */
-.eo-num.marked-circle{
-  color:var(--mint-ink); background:var(--mint-bg); border-color:transparent;
+.eo-row-nums .eo-num.marked-circle{
+  color:var(--mint-ink); --face:var(--mint-bg); --edge:var(--mint-line);
 }
 .eo-num.marked-circle::before{
   position:absolute; inset:5px;
@@ -104,8 +93,8 @@
 }
 
 /* Cross mark */
-.eo-num.marked-cross{
-  color:var(--peach-ink); background:var(--peach-bg); border-color:transparent;
+.eo-row-nums .eo-num.marked-cross{
+  color:var(--peach-ink); --face:var(--peach-bg); --edge:var(--peach-line);
 }
 .eo-num.marked-cross::before,
 .eo-num.marked-cross::after{
@@ -124,9 +113,7 @@
 }
 
 /* Correct / Wrong */
-.eo-num.answer-correct{
-  border-color:var(--good); background:var(--good-soft);
-}
+.eo-row-nums .eo-num.answer-correct{ --face:var(--good-soft); --edge:var(--good); }
 .eo-num.answer-correct::after{
   position:absolute; top:-5px; right:-5px;
   display:grid; width:1.1rem; height:1.1rem;
@@ -136,8 +123,8 @@
   font-size:.5rem;
   animation:eoBadgePop .28s ease both;
 }
-.eo-num.answer-wrong{
-  background:var(--bad-soft); border-color:var(--bad);
+.eo-row-nums .eo-num.answer-wrong{
+  --face:var(--bad-soft); --edge:var(--bad);
   animation:eoWrongShake .36s ease;
 }
 .eo-num.answer-wrong::after{

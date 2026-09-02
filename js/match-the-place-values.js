@@ -1,7 +1,11 @@
 /* ============================================================
    1.3 Q4 (page 22) — Match the following with place values.
-   Tap a number, then tap the card that describes it. Every pair
-   locks in with its own colour so the board reads at a glance.
+
+   Two facing columns joined by drawn wires. One number is always
+   lit and waiting; tap its partner on the right.
+     · right  — the wire locks in, confetti bursts off the card
+     · wrong  — both cards shake and nothing sticks
+   When the last pair lands the round finishes on its own.
    ============================================================ */
 const LEFT = [
   { n:'76549',  key:'tenk7'  },
@@ -15,100 +19,170 @@ const LEFT = [
 
 /* printed a) to g) — deliberately out of order, as in the book */
 const RIGHT = [
-  { t:'800',                    key:'eight'  },
-  { t:'9000',                   key:'nine'   },
-  { t:'50000',                  key:'fifty'  },
-  { t:'7 ten thousand',         key:'tenk7'  },
-  { t:'Greatest 5 digit number',key:'great5' },
-  { t:'4 lakh',                 key:'lakh4'  },
-  { t:'Smallest 6 digit number',key:'small6' }
+  { t:'800',                     key:'eight'  },
+  { t:'9000',                    key:'nine'   },
+  { t:'50000',                   key:'fifty'  },
+  { t:'7 ten thousand',          key:'tenk7'  },
+  { t:'Greatest 5 digit number', key:'great5' },
+  { t:'4 lakh',                  key:'lakh4'  },
+  { t:'Smallest 6 digit number', key:'small6' }
 ];
 
 const WHY = {
-  tenk7:  '7 sits in the ten thousands place of 76549',
-  fifty:  '5 sits in the ten thousands place of 254907',
-  nine:   '9 sits in the thousands place of 89011',
+  tenk7:  '7 is in the ten thousands place of 76549',
+  fifty:  '5 is in the ten thousands place of 254907',
+  nine:   '9 is in the thousands place of 89011',
   great5: '99999 is the biggest number with 5 digits',
-  lakh4:  '4 sits in the lakhs place of 402754',
+  lakh4:  '4 is in the lakhs place of 402754',
   small6: '100000 is the first number with 6 digits',
-  eight:  '8 sits in the hundreds place of 30875'
+  eight:  '8 is in the hundreds place of 30875'
 };
 
+/* one colour per number, so a locked pair reads as a colour, not just a line */
+const WIRE = [
+  'var(--sky-line)', 'var(--mint-line)', 'var(--peach-line)', 'var(--lilac-line)',
+  'var(--rose-line)', 'var(--sun-line)',  'var(--sand-ink)'
+];
+
 function matchQ(){
-  let link, sel, leftEl, rightEl, ready0;
+  let locked, sel, boardEl, leftEl, rightEl, wiresEl, ready0, busy;
 
-  function partnerOf(li){
-    const r = link[li];
-    return r === null || r === undefined ? null : r;
+  const allDone = () => Object.keys(locked).length === LEFT.length;
+  const nextFree = () => { const i = LEFT.findIndex((_, k) => locked[k] === undefined); return i < 0 ? null : i; };
+
+  /* --- the curved wires between the two facing dots --- */
+  function drawWires(){
+    if(!boardEl || !boardEl.isConnected) return;
+    const box = boardEl.getBoundingClientRect();
+    wiresEl.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+    wiresEl.style.width = box.width + 'px';
+    wiresEl.style.height = box.height + 'px';
+
+    let out = '';
+    Object.keys(locked).forEach(k => {
+      const i = +k, j = locked[k];
+      const a = leftEl.querySelector(`.mtp-card[data-i="${i}"] .mtp-dot`);
+      const b = rightEl.querySelector(`.mtp-card[data-j="${j}"] .mtp-dot`);
+      if(!a || !b) return;
+      const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+      const x1 = ra.left + ra.width / 2 - box.left, y1 = ra.top + ra.height / 2 - box.top;
+      const x2 = rb.left + rb.width / 2 - box.left, y2 = rb.top + rb.height / 2 - box.top;
+      const bend = Math.max(26, (x2 - x1) * 0.55);
+      out += `<path d="M${x1} ${y1} C${x1 + bend} ${y1} ${x2 - bend} ${y2} ${x2} ${y2}"
+                fill="none" stroke="${WIRE[i % WIRE.length]}" stroke-width="3"
+                stroke-linecap="round"/>`;
+    });
+    wiresEl.innerHTML = out;
   }
 
-  function paint(marked){
+  /* --- confetti off a card that was just matched --- */
+  function burst(card){
+    Quiz.confetti({ from: card, count: 44 });
+  }
+
+  function shake(i, j){
+    const a = leftEl.querySelector(`.mtp-card[data-i="${i}"]`);
+    const b = rightEl.querySelector(`.mtp-card[data-j="${j}"]`);
+    [a, b].forEach(el => {
+      if(!el) return;
+      el.classList.add('shake', 'bad');
+      setTimeout(() => el.classList.remove('shake', 'bad'), 460);
+    });
+  }
+
+  function paint(){
     leftEl.innerHTML = LEFT.map((row, i) => {
-      const r = partnerOf(i);
-      const tone = r === null ? '' : ` linked c${r % 7}`;
-      const mark = marked ? (RIGHT[r] && RIGHT[r].key === row.key ? ' right' : ' wrong') : '';
-      return `<button class="mtp-card mtp-num${tone}${sel === i ? ' sel' : ''}${mark}" data-i="${i}">
-                <span class="mtp-dot"></span>${row.n}
+      const done = locked[i] !== undefined;
+      let cls = 'mtp-card mtp-num';
+      if(done) cls += ' done w' + (i % WIRE.length);
+      else if(sel === i) cls += ' sel';
+      return `<button class="${cls}" data-i="${i}"${done ? ' disabled' : ''}>
+                <span class="mtp-no">${i + 1}</span>
+                <span class="mtp-label">${row.n}</span>
+                <span class="mtp-dot"></span>
               </button>`;
     }).join('');
 
-    const taken = Object.keys(link).map(k => link[k]);
     rightEl.innerHTML = RIGHT.map((row, j) => {
-      const used = taken.indexOf(j) > -1;
-      return `<button class="mtp-card mtp-val${used ? ' linked c' + (j % 7) : ''}" data-j="${j}">
-                <span class="mtp-dot"></span>${row.t}
+      const owner = Object.keys(locked).find(k => locked[k] === j);
+      const done = owner !== undefined;
+      const tone = done ? WIRE[+owner % WIRE.length] : null;
+      let cls = 'mtp-card mtp-val t' + (j % WIRE.length);
+      if(done) cls += ' done';
+      return `<button class="${cls}" data-j="${j}"${done ? ' disabled' : ''}>
+                <span class="mtp-dot"${tone ? ` style="background:${tone}"` : ''}></span>
+                <span class="mtp-label">${row.t}</span>
+                ${done ? `<span class="mtp-badge" style="background:${tone}">${+owner + 1}</span>` : ''}
               </button>`;
     }).join('');
+
+    requestAnimationFrame(drawWires);
   }
 
-  function build(stage, saved, locked){
-    link = {};
-    if(saved) Object.keys(saved).forEach(k => { link[k] = saved[k]; });
-    sel = null;
+  function build(stage, saved, isLocked){
+    locked = {};
+    if(saved) Object.keys(saved).forEach(k => { locked[k] = saved[k]; });
+    busy = false;
+    sel = isLocked ? null : nextFree();
 
-    const board = document.createElement('div');
-    board.className = 'mtp-board';
+    boardEl = document.createElement('div');
+    boardEl.className = 'mtp-board' + (isLocked ? ' locked' : '');
+
     leftEl = document.createElement('div');
     leftEl.className = 'mtp-col mtp-left';
     rightEl = document.createElement('div');
     rightEl.className = 'mtp-col mtp-right';
-    board.append(leftEl, rightEl);
-    stage.appendChild(board);
 
-    paint(false);
-    if(locked){ board.classList.add('locked'); return; }
+    wiresEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    wiresEl.setAttribute('class', 'mtp-wires');
+    wiresEl.setAttribute('aria-hidden', 'true');
+
+    boardEl.append(leftEl, wiresEl, rightEl);
+    stage.appendChild(boardEl);
+
+    paint();
+    if(isLocked) return;
 
     leftEl.addEventListener('click', e => {
       const b = e.target.closest('.mtp-card');
-      if(!b) return;
-      const i = +b.dataset.i;
-      if(link[i] !== undefined){ delete link[i]; sel = i; }
-      else sel = sel === i ? null : i;
-      paint(false);
+      if(!b || b.disabled || busy) return;
+      sel = +b.dataset.i;
+      paint();
     });
 
     rightEl.addEventListener('click', e => {
       const b = e.target.closest('.mtp-card');
-      if(!b) return;
+      if(!b || b.disabled || busy || sel === null) return;
       const j = +b.dataset.j;
-      Object.keys(link).forEach(k => { if(link[k] === j) delete link[k]; });
-      if(sel === null){
-        /* no number picked yet — pick the first one still free */
-        const free = LEFT.findIndex((_, i) => link[i] === undefined);
-        if(free < 0) return;
-        sel = free;
+
+      if(RIGHT[j].key !== LEFT[sel].key){ shake(sel, j); return; }
+
+      locked[sel] = j;
+      sel = nextFree();
+      paint();
+      requestAnimationFrame(() => {
+        const card = rightEl.querySelector(`.mtp-card[data-j="${j}"]`);
+        if(card) burst(card);
+      });
+
+      if(allDone()){
+        busy = true;
+        ready0();
+        /* let the last burst play, then close the round out */
+        setTimeout(() => {
+          const go = document.getElementById('q-primary');
+          if(go) go.click();
+        }, 900);
       }
-      link[sel] = j;
-      sel = LEFT.findIndex((_, i) => link[i] === undefined);
-      if(sel < 0) sel = null;
-      paint(false);
-      if(Object.keys(link).length === LEFT.length) ready0();
     });
   }
 
+  /* wires are measured in pixels, so re-measure when the box moves */
+  window.addEventListener('resize', () => { if(wiresEl) drawWires(); });
+
   return {
     prompt: 'Match every number with the place value that belongs to it.',
-    hint: 'Tap a number on the left, then tap its partner on the right.',
+    hint: 'Tap the number that is lit, then tap its partner on the right.',
     render(stage, ready, saved){ ready0 = ready; build(stage, saved, !!saved); },
     renderLocked(stage, saved){
       const done = saved || (function(){
@@ -119,19 +193,13 @@ function matchQ(){
       build(stage, done, true);
     },
     check(){
-      sel = null;
-      paint(true);
-      let wrong = 0;
-      LEFT.forEach((row, i) => {
-        const r = link[i];
-        if(!RIGHT[r] || RIGHT[r].key !== row.key) wrong++;
-      });
-      const ok = wrong === 0;
-      const first = LEFT.find((row, i) => !RIGHT[link[i]] || RIGHT[link[i]].key !== row.key);
-      return { ok, answer: ok ? Object.assign({}, link) : null,
-        msg: ok ? 'Every pair is matched — brilliant!'
-                : `${wrong} still to fix. Clue: ${WHY[first.key]}.` };
-    }
+      /* a pair only ever locks in when it is right, so reaching here means
+         the whole board is correct */
+      return { ok:true, answer: Object.assign({}, locked),
+               msg:'Every pair is matched — brilliant!' };
+    },
+    /* used by the hint line if a child stalls */
+    clue(){ return WHY[LEFT[sel || 0].key]; }
   };
 }
 

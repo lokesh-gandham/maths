@@ -1,6 +1,6 @@
 /* Read the six rod abacus — exercise styles */
 
-.page-r6a .bead{ width:1.05rem; height:1.05rem; margin-bottom:-.16rem; }
+.page-r6a .bead{ width:1.08rem; height:1.08rem; margin-bottom:-.1rem; }
 .page-r6a .abacus,
 .page-r6a .abacus-base{ width:98%; max-width:23rem; }
 .page-r6a .abacus-base .base-label{ font-size:.5rem; letter-spacing:.02em; }

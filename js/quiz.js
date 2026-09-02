@@ -70,6 +70,77 @@
     clearTimeout(popupRemoveTimer);
   }
 
+  /* ---------- CONFETTI ----------
+     One cannon used everywhere: a fixed layer over the page, pieces fired
+     out of a point in an upward fan, then tumbling down. Call it with the
+     element that earned it, or with nothing to fire from the middle. */
+  const CONFETTI_COLOURS = [
+    '#5CC8A5', '#EFC94C', '#7FB6E8', '#A991DE', '#F0A87E', '#E8899C', '#2FC79E'
+  ];
+
+  function confettiLayerEl(){
+    let layer = document.getElementById('quiz-confetti');
+    if(!layer){
+      layer = document.createElement('div');
+      layer.id = 'quiz-confetti';
+      layer.className = 'cft-layer';
+      layer.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(layer);
+    }
+    return layer;
+  }
+
+  function confetti(opts){
+    opts = opts || {};
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+
+    let x = opts.x, y = opts.y;
+    if(opts.from && opts.from.getBoundingClientRect){
+      const r = opts.from.getBoundingClientRect();
+      x = r.left + r.width / 2;
+      y = r.top + r.height / 2;
+    }
+    if(x === undefined) x = window.innerWidth / 2;
+    if(y === undefined) y = window.innerHeight * 0.42;
+
+    const count  = opts.count || 46;
+    const spread = opts.spread || Math.min(window.innerWidth, window.innerHeight) * 0.62;
+    const layer  = confettiLayerEl();
+    const frag   = document.createDocumentFragment();
+
+    for(let i = 0; i < count; i++){
+      /* fire into the upper half, wide to both sides */
+      const ang  = -Math.PI * (0.06 + Math.random() * 0.88);
+      const dist = spread * (0.35 + Math.random() * 0.8);
+      const bx   = Math.cos(ang) * dist;
+      const by   = Math.sin(ang) * dist * 0.78;
+      const fall = window.innerHeight * (0.5 + Math.random() * 0.6);
+      const size = 5 + Math.random() * 7;
+      const dur  = 1.5 + Math.random() * 1.1;
+
+      const s = document.createElement('span');
+      s.className = 'cft';
+      s.style.cssText = [
+        'left:' + x.toFixed(1) + 'px',
+        'top:' + y.toFixed(1) + 'px',
+        'width:' + size.toFixed(1) + 'px',
+        'height:' + (size * (Math.random() < .3 ? 1 : 1.7)).toFixed(1) + 'px',
+        'background:' + CONFETTI_COLOURS[i % CONFETTI_COLOURS.length],
+        'border-radius:' + (Math.random() < .3 ? '50%' : '2px'),
+        '--bx:' + bx.toFixed(1) + 'px',
+        '--by:' + by.toFixed(1) + 'px',
+        '--ex:' + (bx + (Math.random() * 2 - 1) * 60).toFixed(1) + 'px',
+        '--ey:' + (by + fall).toFixed(1) + 'px',
+        '--rot:' + Math.round(Math.random() * 900 - 450) + 'deg',
+        'animation-delay:' + (Math.random() * .12).toFixed(2) + 's',
+        'animation-duration:' + dur.toFixed(2) + 's'
+      ].join(';');
+      frag.appendChild(s);
+      setTimeout(function(){ s.remove(); }, (dur + .4) * 1000);
+    }
+    layer.appendChild(frag);
+  }
+
   function showPopout(type, msg, onClose){
     clearPopupTimers();
 
@@ -105,7 +176,7 @@
     overlay.classList.add('show');
     overlay.setAttribute('aria-hidden', 'false');
 
-    if(isOk) soundCorrect(); else soundWrong();
+    if(isOk){ soundCorrect(); confetti({ count:40 }); } else soundWrong();
 
     popupHideTimer = setTimeout(function(){
       overlay.classList.remove('show');
@@ -131,12 +202,6 @@
 
     overlay.innerHTML = `
       <section class="answer-popup congrats" role="status" aria-live="polite" aria-atomic="true">
-        <span class="confetti confetti-1"></span>
-        <span class="confetti confetti-2"></span>
-        <span class="confetti confetti-3"></span>
-        <span class="confetti confetti-4"></span>
-        <span class="confetti confetti-5"></span>
-        <span class="confetti confetti-6"></span>
         <div class="popup-body">
           <div class="popup-icon" aria-hidden="true">🎉</div>
           <div class="popup-label">Quiz Complete</div>
@@ -161,6 +226,8 @@
     overlay.setAttribute('aria-hidden', 'false');
 
     soundCongrats();
+    confetti({ count:80, spread:Math.min(window.innerWidth, window.innerHeight) * 0.85 });
+    setTimeout(function(){ confetti({ count:50 }); }, 420);
 
     document.getElementById('popup-again').onclick = function(){
       clearPopupTimers();
@@ -175,6 +242,7 @@
   }
 
   window.Quiz = {
+    confetti: confetti,
     soundCorrect: soundCorrect,
     soundWrong: soundWrong,
     soundCongrats: soundCongrats,

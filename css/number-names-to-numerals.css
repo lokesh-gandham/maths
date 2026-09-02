@@ -38,14 +38,7 @@
 }
 .nnn-key{
   height:2.3rem; font-size:1.2rem;
-  background:var(--sky-bg); border:2px solid var(--sky-line);
-  border-radius:var(--r-md); color:var(--sky-ink);
-  box-shadow:0 3px 0 var(--sky-line);
-  transition:transform .12s ease;
+  border-radius:var(--r-md);
+  --face:var(--sky-bg); --edge:var(--sky-line); color:var(--sky-ink);
 }
-.nnn-key:hover{ transform:translateY(-2px); }
-.nnn-key:active{ transform:translateY(1px); }
-.nnn-key.back{
-  background:var(--peach-bg); border-color:var(--peach-line); color:var(--peach-ink);
-  box-shadow:0 3px 0 var(--peach-line);
-}
+.nnn-key.back{ --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }

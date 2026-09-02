@@ -252,22 +252,60 @@ button.rod{ cursor:pointer; }
   display:flex; flex-direction:column-reverse; align-items:center;
   gap:0; padding-bottom:0;
 }
+/* the rod itself — a rounded wire so the beads look threaded onto it */
 .rod .stick::before{
   content:""; position:absolute; left:50%; top:0; bottom:-.3rem;
-  width:.16rem; transform:translateX(-50%);
-  background:#7A6650; border-radius:2px 2px 0 0;
+  width:.2rem; transform:translateX(-50%);
+  border-radius:.1rem .1rem 0 0;
+  background:linear-gradient(90deg, #6B5540 0%, #A98A78 38%, #C9B49B 50%, #8B7355 68%, #5E4A38 100%);
 }
-button.rod:hover .stick::before{ background:var(--mint-deep); }
+button.rod:hover .stick::before{
+  background:linear-gradient(90deg, #1F7A62 0%, #4FBFA0 45%, #7FD9C1 52%, #35A183 70%, #1B6B55 100%);
+}
 
-/* flat beads — three light colours cycling, no gradients */
+/* ---------- 3D BEADS ----------
+   Each bead is a lit sphere: a highlight up and to the left, a shaded
+   underside, a contact shadow below and a small specular glint.
+   The colour cycles through six so a full rod reads like a real abacus. */
 .bead{
   position:relative; z-index:1;
-  width:1.3rem; height:1.3rem; border-radius:50%;
-  background:var(--rose-bg); border:2px solid var(--rose-line);
-  margin-bottom:-.2rem;
+  width:1.32rem; height:1.32rem; border-radius:50%;
+  margin-bottom:-.12rem;
+  --bead:#EF5A5A;
+  background:
+    radial-gradient(circle at 30% 26%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.42) 14%, rgba(255,255,255,0) 40%),
+    radial-gradient(circle at 74% 80%, rgba(0,0,0,.34) 0%, rgba(0,0,0,.10) 42%, rgba(0,0,0,0) 62%),
+    radial-gradient(circle at 42% 38%, color-mix(in srgb, var(--bead) 78%, #fff) 0%, var(--bead) 52%, color-mix(in srgb, var(--bead) 68%, #000) 100%);
+  box-shadow:
+    inset 0 -.1rem .16rem rgba(0,0,0,.3),
+    inset 0 .09rem .14rem rgba(255,255,255,.5),
+    0 .07rem .14rem rgba(70,45,25,.32);
 }
-.bead:nth-child(3n+2){ background:var(--sun-bg); border-color:var(--sun-line); }
-.bead:nth-child(3n){ background:var(--sky-bg); border-color:var(--sky-line); }
+/* the glint */
+.bead::after{
+  content:""; position:absolute;
+  left:22%; top:15%; width:32%; height:24%;
+  border-radius:50%;
+  background:rgba(255,255,255,.9);
+  transform:rotate(-24deg);
+}
+.bead:nth-child(6n+1){ --bead:#EF5A5A; }   /* coral   */
+.bead:nth-child(6n+2){ --bead:#F5A62E; }   /* amber   */
+.bead:nth-child(6n+3){ --bead:#2FBFA4; }   /* teal    */
+.bead:nth-child(6n+4){ --bead:#4C9EE8; }   /* sky     */
+.bead:nth-child(6n+5){ --bead:#9B7BE0; }   /* violet  */
+.bead:nth-child(6n){   --bead:#EE6FA4; }   /* pink    */
+
+/* browsers without color-mix still get a solid, lit-looking bead */
+@supports not (background: color-mix(in srgb, red 50%, white)){
+  .bead{
+    background:
+      radial-gradient(circle at 30% 26%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.42) 14%, rgba(255,255,255,0) 40%),
+      radial-gradient(circle at 74% 80%, rgba(0,0,0,.34) 0%, rgba(0,0,0,0) 62%),
+      var(--bead);
+  }
+}
+
 .rod .val, .rod .name{ display:none; }
 
 .abacus-base{
@@ -276,6 +314,7 @@ button.rod:hover .stick::before{ background:var(--mint-deep); }
   background:var(--sand-bg); border:2px solid var(--sand-line);
   border-radius:var(--r-md); padding:.3rem .25rem;
   margin-top:0;
+  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.8), 0 .12rem .2rem rgba(122,102,80,.18);
 }
 .abacus-base .base-label{
   flex:1; text-align:center;
@@ -425,7 +464,7 @@ button.rod:hover .stick::before{ background:var(--mint-deep); }
 .popup-overlay.hide{ display:flex; animation:popupOverlayOut 300ms ease forwards; }
 
 .answer-popup{
-  position:relative; width:12rem; max-width:100%;
+  position:relative; z-index:2; width:12rem; max-width:100%;
   padding:1.1rem 1.1rem 1rem; overflow:hidden;
   text-align:center; background:var(--surface);
   border-radius:1.2rem;
@@ -476,18 +515,38 @@ button.rod:hover .stick::before{ background:var(--mint-deep); }
 .popup-overlay.show .popup-star:nth-child(2){ animation-delay:580ms; }
 .popup-overlay.show .popup-star:nth-child(3){ animation-delay:710ms; }
 
-.confetti{
-  position:absolute; top:-.8rem; z-index:2;
-  width:.4rem; height:.75rem; border-radius:2px;
-  opacity:0; pointer-events:none;
+/* ---------- CONFETTI ----------
+   A fixed layer over the whole page. Each piece is fired out of a point
+   (--bx/--by), then tumbles down past it (--ex/--ey). Sits just under the
+   popup card so the words stay readable. */
+.cft-layer{
+  position:fixed; inset:0;
+  overflow:hidden; pointer-events:none;
+  z-index:9998;
 }
-.popup-overlay.show .confetti{ animation:popupConfettiFall 1.5s ease-out both; }
-.confetti-1{ left:8%;  background:var(--mint-line);  animation-delay:100ms; }
-.confetti-2{ left:22%; background:var(--sun-line);   animation-delay:250ms; }
-.confetti-3{ left:38%; background:var(--sky-line);   animation-delay:70ms; }
-.confetti-4{ left:55%; background:var(--lilac-line); animation-delay:320ms; }
-.confetti-5{ left:70%; background:var(--peach-line); animation-delay:160ms; }
-.confetti-6{ left:87%; background:var(--rose-line);  animation-delay:280ms; }
+.cft{
+  position:absolute;
+  will-change:transform, opacity;
+  animation-name:cftBurst;
+  animation-timing-function:cubic-bezier(.15,.75,.35,1);
+  animation-fill-mode:both;
+}
+@keyframes cftBurst{
+  0%{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(.35) rotate(0deg);
+  }
+  45%{
+    opacity:1;
+    transform:translate(calc(-50% + var(--bx)), calc(-50% + var(--by)))
+              scale(1) rotate(calc(var(--rot) * .55));
+  }
+  100%{
+    opacity:0;
+    transform:translate(calc(-50% + var(--ex)), calc(-50% + var(--ey)))
+              scale(.9) rotate(var(--rot));
+  }
+}
 
 .popup-score{ font-size:.42rem; color:var(--ink-soft); margin-bottom:.15rem; }
 
@@ -535,21 +594,98 @@ button.rod:hover .stick::before{ background:var(--mint-deep); }
   70%{opacity:1;transform:translateY(-3px) rotate(8deg) scale(1.2)}
   100%{opacity:1;transform:translateY(0) rotate(0) scale(1)}
 }
-@keyframes popupConfettiFall{
-  0%{opacity:1;transform:translateY(-15px) rotate(0)}
-  100%{opacity:0;transform:translateY(250px) rotate(540deg)}
-}
 
 @media(prefers-reduced-motion:reduce){
   .popup-overlay.show .answer-popup,
   .popup-overlay.hide .answer-popup,
   .popup-overlay.show .popup-icon,
   .popup-overlay.show .popup-bar,
-  .popup-overlay.show .popup-star,
-  .popup-overlay.show .confetti{
+  .popup-overlay.show .popup-star{
     animation-duration:.01ms!important;
     animation-iteration-count:1!important;
+    opacity:1;
   }
-  .popup-overlay.show .popup-star,
-  .popup-overlay.show .confetti{ opacity:1; }
+  .cft-layer{ display:none; }
+}
+
+/* ============================================================
+   3D TAPPABLE SURFACES
+   One recipe for everything a child can tap: a light face, a solid
+   coloured lip underneath it, a hairline highlight along the top and
+   a soft shadow on the ground. Set --face and --edge; depth follows.
+   Declared last so it wins over the flat rules further up.
+   ============================================================ */
+.opt, .btn, a.btn, .numchip, .db-chip, .nnn-key, .ntr-key,
+.pp-chip, .pp-tile, .rba-opt, .form-chip, .eo-num, .eo-tool-btn,
+.rodbtn, .popup-actions .btn, .mtp-card{
+  --face:var(--surface);
+  --edge:var(--surface-line);
+  position:relative;
+  background:var(--face);
+  border:2px solid var(--edge);
+  box-shadow:
+    inset 0 .11rem 0 rgba(255,255,255,.95),
+    inset 0 -.24rem .3rem -.14rem rgba(90,70,50,.13),
+    0 .18rem 0 var(--edge),
+    0 .3rem .42rem rgba(96,74,52,.15);
+  transition:transform .12s ease, box-shadow .12s ease,
+             background .15s ease, border-color .15s ease;
+}
+.opt:hover:not(:disabled), .btn:hover:not(:disabled), a.btn:hover,
+.numchip:hover:not(:disabled), .db-chip:hover:not(:disabled),
+.nnn-key:hover:not(:disabled), .ntr-key:hover:not(:disabled),
+.pp-chip:hover:not(:disabled), .pp-tile:hover:not(:disabled),
+.rba-opt:hover:not(:disabled), .form-chip:hover:not(:disabled),
+.eo-num:hover, .eo-tool-btn:hover, .rodbtn:hover,
+.popup-actions .btn:hover, .mtp-card:hover{
+  transform:translateY(-.1rem);
+  box-shadow:
+    inset 0 .11rem 0 rgba(255,255,255,.95),
+    inset 0 -.24rem .3rem -.14rem rgba(90,70,50,.13),
+    0 .28rem 0 var(--edge),
+    0 .44rem .6rem rgba(96,74,52,.2);
+}
+/* pressed — the face sinks onto its own lip */
+.opt:active:not(:disabled), .btn:active:not(:disabled), a.btn:active,
+.numchip:active:not(:disabled), .db-chip:active:not(:disabled),
+.nnn-key:active, .ntr-key:active,
+.pp-chip:active:not(:disabled), .pp-tile:active,
+.rba-opt:active:not(:disabled), .form-chip:active:not(:disabled),
+.eo-num:active, .eo-tool-btn:active, .rodbtn:active,
+.popup-actions .btn:active, .mtp-card:active{
+  transform:translateY(.14rem);
+  box-shadow:
+    inset 0 .1rem 0 rgba(255,255,255,.8),
+    0 .04rem 0 var(--edge),
+    0 .08rem .14rem rgba(96,74,52,.16);
+}
+/* spent or locked — lay it flat on the page */
+.opt:disabled, .btn:disabled, .rba-opt:disabled,
+.numchip.used, .db-chip.used, .form-chip.used, .pp-chip.used{
+  transform:none;
+  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.65), 0 .05rem 0 var(--edge);
+}
+
+/* ---- the colours each surface wears ---- */
+.btn.check-btn, a.btn, .popup-actions .btn-again{
+  --face:#63D2B2; --edge:var(--mint-deep); color:#07402F;
+}
+.btn.check-btn:hover:not(:disabled){ --face:#79DCC0; }
+.btn.prev-btn, .btn.ghost, a.btn.ghost, .popup-actions .btn-menu{
+  --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink);
+}
+.btn.next-btn{ --face:var(--sky-bg); --edge:var(--sky-line); color:var(--sky-ink); }
+.numchip, .db-chip, .form-chip{ --face:var(--sky-bg); --edge:var(--sky-line); color:var(--sky-ink); }
+.rodbtn{ --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }
+.opt:hover:not(:disabled){ --face:var(--sky-bg); --edge:var(--sky-line); }
+.opt.sel{ --face:var(--mint-bg); --edge:var(--mint-line); color:var(--mint-ink); }
+.opt.right{ --face:var(--good-soft); --edge:var(--good); }
+.opt.wrong{ --face:var(--bad-soft); --edge:var(--bad); }
+
+/* ---- slots are holes, not buttons: press them into the page ---- */
+.slot, .db-slot, .nnn-slot, .form-slot, .rba-slot, .pp-cell, .ntr-tape{
+  box-shadow:inset 0 .12rem .22rem rgba(90,70,50,.09);
+}
+.ntr-stamp{
+  box-shadow:inset 0 .09rem 0 rgba(255,255,255,.9), 0 .12rem 0 var(--sky-line);
 }

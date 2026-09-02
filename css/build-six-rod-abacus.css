@@ -35,7 +35,7 @@
 .name-input:disabled{ opacity:.65; cursor:default; }
 
 /* six rods are narrow — let the beads shrink a little */
-.page-b6a .bead{ width:1.05rem; height:1.05rem; margin-bottom:-.16rem; }
+.page-b6a .bead{ width:1.08rem; height:1.08rem; margin-bottom:-.1rem; }
 .page-b6a .abacus,
 .page-b6a .abacus-base,
 .page-b6a .rodrow{ width:98%; max-width:23rem; }

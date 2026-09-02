@@ -6,6 +6,8 @@
    All drawn as inline SVG on a 160 x 70 canvas so they scale with rem.
    ================================================================== */
 const A='var(--mint-line)', AL='var(--sand-line)', W='var(--sun-line)', INK='var(--ink)', WH='#fff';
+/* same six bead colours the real abacus uses */
+const BEADS=['#EF5A5A','#F5A62E','#2FBFA4','#4C9EE8','#9B7BE0','#EE6FA4'];
 
 const svg = inner => `<svg viewBox="0 0 160 70" preserveAspectRatio="xMidYMid meet">${inner}</svg>`;
 
@@ -31,7 +33,7 @@ function abacus(counts,{names=null,target=null}={}){
     const x=left+span*i;
     s+=`<line x1="${x}" y1="${top}" x2="${x}" y2="${baseY}" stroke="${AL}" stroke-width="2"/>`;
     for(let b=0;b<c;b++){
-      s+=`<circle cx="${x}" cy="${baseY-4-b*7}" r="3.4" fill="${b%2?W:A}"/>`;
+      s+=`<circle cx="${x}" cy="${baseY-4-b*7}" r="3.4" fill="${BEADS[b%BEADS.length]}"/>`;
     }
   });
   s+=`<rect x="8" y="${baseY}" width="144" height="14" rx="5" fill="${WH}" stroke="${AL}" stroke-width="1.5"/>`;

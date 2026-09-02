@@ -29,15 +29,15 @@
 .ntr-key{
   position:relative;
   width:3.2rem; height:2.9rem; font-size:1.4rem;
-  background:var(--sky-bg); border:2px solid var(--sky-line);
-  border-radius:var(--r-md); color:var(--sky-ink);
-  box-shadow:0 3px 0 var(--sky-line);
-  transition:transform .13s ease;
+  border-radius:var(--r-md);
+  --face:var(--sky-bg); --edge:var(--sky-line); color:var(--sky-ink);
 }
-.ntr-key:hover{ transform:translateY(-2px); }
-.ntr-key:active{ transform:translateY(1px); }
 .ntr-worth{ position:absolute; right:.2rem; bottom:.1rem; font-size:.38rem; opacity:.8; }
-.ntr-key.back{
-  background:var(--peach-bg); border-color:var(--peach-line); color:var(--peach-ink);
-  box-shadow:0 3px 0 var(--peach-line);
-}
+.ntr-key.back{ --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }
+
+/* the letter stamps cycle colour so a long numeral is easy to read back */
+.ntr-stamp:nth-child(5n+1){ background:var(--sky-bg);   border-color:var(--sky-line);   color:var(--sky-ink); }
+.ntr-stamp:nth-child(5n+2){ background:var(--mint-bg);  border-color:var(--mint-line);  color:var(--mint-ink); }
+.ntr-stamp:nth-child(5n+3){ background:var(--lilac-bg); border-color:var(--lilac-line); color:var(--lilac-ink); }
+.ntr-stamp:nth-child(5n+4){ background:var(--peach-bg); border-color:var(--peach-line); color:var(--peach-ink); }
+.ntr-stamp:nth-child(5n){   background:var(--rose-bg);  border-color:var(--rose-line);  color:var(--rose-ink); }
