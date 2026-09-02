@@ -26,23 +26,33 @@ body{ overflow:hidden; background:var(--bg); }
   position:relative;
 }
 
-/* ---------- TOP BAR / HOME ---------- */
+/* ---------- TOP BAR / HOME ----------
+   A real row in the flow: Home hard left, title optically centred, the
+   counter hard right. Because it takes its own height the question card
+   no longer has to reserve a guessed gap for it. */
 .bar{
-  position:absolute; top:.45rem; left:0; right:0;
-  display:flex; align-items:center; gap:.4rem;
-  padding:0 .6rem; flex:none; z-index:10;
+  position:relative;
+  display:flex; align-items:center; justify-content:space-between; gap:.4rem;
+  padding:.4rem .7rem 0;
+  flex:none; z-index:10;
 }
 .bar-text{
-  position:absolute; left:50%; transform:translateX(-50%);
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  max-width:60%;
 }
 .bar-text .kicker{ display:none; }
 .bar-text h1{
-  font-size:.9rem; font-weight:400; margin:0; white-space:nowrap;
+  font-size:.72rem; font-weight:400; margin:0; white-space:nowrap;
   overflow:hidden; text-overflow:ellipsis;
-  padding:.2rem .7rem; border:2px solid #DE8A5C; border-radius:2rem;
+  padding:.22rem .8rem; border:2px solid #DE8A5C; border-radius:2rem;
   background:#A85A2E; color:#fff;
 }
-.count{ display:none; }
+.count{
+  flex:none; visibility:hidden;      /* holds the right side open */
+  font-size:.52rem; padding:.3rem .7rem;
+}
+.count::before{ content:"Home"; }
 .back{
   flex:none; display:flex; align-items:center; gap:.25rem;
   padding:.3rem .7rem; border-radius:2rem;
@@ -57,15 +67,16 @@ body{ overflow:hidden; background:var(--bg); }
 /* ---------- QUESTION CARD ---------- */
 .qcard{
   background:none; border:0;
-  padding:3.5rem .8rem .2rem;
+  padding:.35rem .8rem .2rem;
   flex:1 1 auto; min-height:0;
   display:flex; flex-direction:column;
 }
 
 /* prompt block sits at the top, the play area owns the rest */
 .prompt{
+  flex:none;
   font-size:30px; line-height:1.2; text-align:center;
-  margin:0; padding:.15rem 5.2rem 0;   /* clears the Home button on both sides */
+  margin:0; padding:.15rem 1rem 0;
   letter-spacing:-.005em;
 }
 @media (min-width:1600px){ .prompt{ font-size:40px; } }
@@ -326,7 +337,7 @@ button.rod:hover .stick::before{
   background:var(--sand-bg); border:2px solid var(--sand-line);
   border-radius:var(--r-md); padding:.3rem .25rem;
   margin-top:0;
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.8), 0 .12rem .2rem rgba(122,102,80,.18);
+  box-shadow:inset 0 .14rem .2rem -.12rem rgba(255,255,255,.85), 0 .12rem .2rem rgba(122,102,80,.18);
 }
 .abacus-base .base-label{
   flex:1; text-align:center;
@@ -482,8 +493,14 @@ button.rod:hover .stick::before{
 }
 .db-row.active{ background:var(--sand-bg); border-color:var(--sand-line); }
 .db-label{
-  min-width:4.6rem; text-align:right; font-size:.7rem;
+  display:flex; flex-direction:column; align-items:flex-end; gap:0;
+  min-width:5.2rem; text-align:right; font-size:.7rem;
   color:var(--ink-soft);
+}
+/* how many digits this row still needs — sits under the label, costs no row */
+.db-left{
+  font-size:.42rem; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--sand-ink);
 }
 .db-row.active .db-label{ color:var(--ink); }
 .db-slots{ display:flex; gap:.32rem; }
@@ -509,7 +526,18 @@ button.rod:hover .stick::before{
 }
 .db-chip:hover:not(:disabled){ transform:translateY(-2px); }
 .db-chip:active:not(:disabled){ transform:translateY(1px); }
-.db-chip.used{ opacity:.25; box-shadow:none; transform:none; cursor:default; }
+.db-chip.used{
+  position:relative;
+  opacity:.4; box-shadow:none; transform:none; cursor:default;
+  --face:var(--surface); --edge:var(--surface-line); color:var(--ink-soft);
+}
+/* a line through it says "spent in this row" more plainly than fading alone */
+.db-chip.used::after{
+  content:""; position:absolute; left:18%; right:18%; top:50%;
+  height:.1rem; border-radius:1rem;
+  background:var(--sand-ink);
+  transform:translateY(-50%) rotate(-18deg);
+}
 .db-undo{ margin-top:.1rem; font-size:.55rem; padding:.3rem 1.1rem; }
 
 /* ---------- NUMBER LINE WIDGET ---------- */
@@ -722,12 +750,16 @@ button.rod:hover .stick::before{
 .rodbtn, .popup-actions .btn, .mtp-card, .back, .tblock, .fib-tile{
   --face:var(--surface);
   --edge:var(--surface-line);
+  /* The top highlight is feathered, never a hard-edged bar. A solid inset
+     line stops abruptly part-way down the button and reads as a gap between
+     the fill and the border — which is exactly what it looked like. */
+  --gloss:rgba(255,255,255,.9);
   position:relative;
   background:var(--face);
   border:2px solid var(--edge);
   box-shadow:
-    inset 0 .11rem 0 rgba(255,255,255,.95),
-    inset 0 -.24rem .3rem -.14rem rgba(90,70,50,.13),
+    inset 0 .16rem .22rem -.14rem var(--gloss),
+    inset 0 -.24rem .3rem -.16rem rgba(90,70,50,.12),
     0 .18rem 0 var(--edge),
     0 .3rem .42rem rgba(96,74,52,.15);
   transition:transform .12s ease, box-shadow .12s ease,
@@ -743,8 +775,8 @@ button.rod:hover .stick::before{
 .fib-tile:hover:not(:disabled){
   transform:translateY(-.1rem);
   box-shadow:
-    inset 0 .11rem 0 rgba(255,255,255,.95),
-    inset 0 -.24rem .3rem -.14rem rgba(90,70,50,.13),
+    inset 0 .16rem .22rem -.14rem var(--gloss),
+    inset 0 -.24rem .3rem -.16rem rgba(90,70,50,.12),
     0 .28rem 0 var(--edge),
     0 .44rem .6rem rgba(96,74,52,.2);
 }
@@ -759,7 +791,7 @@ button.rod:hover .stick::before{
 .fib-tile:active:not(:disabled){
   transform:translateY(.14rem);
   box-shadow:
-    inset 0 .1rem 0 rgba(255,255,255,.8),
+    inset 0 .14rem .2rem -.14rem var(--gloss),
     0 .04rem 0 var(--edge),
     0 .08rem .14rem rgba(96,74,52,.16);
 }
@@ -767,7 +799,7 @@ button.rod:hover .stick::before{
 .opt:disabled, .btn:disabled, .rba-opt:disabled,
 .numchip.used, .db-chip.used, .form-chip.used, .pp-chip.used, .fib-tile.used{
   transform:none;
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.65), 0 .05rem 0 var(--edge);
+  box-shadow:inset 0 .12rem .18rem -.12rem var(--gloss), 0 .05rem 0 var(--edge);
 }
 
 /* ---- the colours each surface wears ---- */
@@ -777,8 +809,8 @@ button.rod:hover .stick::before{
 .tblock.u1000{   --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }
 .tblock.u10000{  --face:var(--rose-bg);  --edge:var(--rose-line);  color:var(--rose-ink); }
 .tblock.u100000{ --face:var(--lilac-bg); --edge:var(--lilac-line); color:var(--lilac-ink); }
-.back{ --face:#A85A2E; --edge:#DE8A5C; color:#fff; }
-.back:hover{ --face:#C06A35; }
+.back{ --face:#A85A2E; --edge:#C4703C; color:#fff; --gloss:rgba(255,255,255,.3); }
+.back:hover{ --face:#BB6634; }
 .back svg{ fill:#fff; }
 .btn.check-btn, a.btn, .popup-actions .btn-again{
   --face:#63D2B2; --edge:var(--mint-deep); color:#07402F;
@@ -800,5 +832,5 @@ button.rod:hover .stick::before{
   box-shadow:inset 0 .12rem .22rem rgba(90,70,50,.09);
 }
 .ntr-stamp{
-  box-shadow:inset 0 .09rem 0 rgba(255,255,255,.9), 0 .12rem 0 var(--sky-line);
+  box-shadow:inset 0 .13rem .18rem -.11rem rgba(255,255,255,.9), 0 .12rem 0 var(--sky-line);
 }

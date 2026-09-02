@@ -29,7 +29,8 @@ function formQ(digits, slots, lead){
   function build(stage, saved, locked, ready){
     const strip = document.createElement('div');
     strip.className = 'sag-lead';
-    strip.innerHTML = lead;
+    strip.innerHTML =
+      `<span class="sag-tag">Your digits</span><span class="sag-digits">${lead}</span>`;
     stage.appendChild(strip);
 
     builder = Quiz.digitBuilder(stage, {
@@ -39,7 +40,7 @@ function formQ(digits, slots, lead){
   }
 
   return {
-    prompt: 'Build the smallest and the greatest number.',
+    prompt: 'Build the smallest and the greatest number, <strong>using each digit only once</strong>.',
     hint: '',
     render(stage, ready, saved){ build(stage, saved, !!saved, ready); },
     renderLocked(stage, saved){
@@ -66,7 +67,7 @@ Quiz.start({
   kicker: 'Comparing and Arranging Numbers · Question 4',
   title: 'Smallest and greatest',
   questions: [
-    formQ([6, 3, 0, 1, 8, 4], 6, 'Use the digits <strong>6, 3, 0, 1, 8, 4</strong> once each.'),
-    formQ([3, 1, 2, 4, 7], 5, 'Use the digits <strong>3, 1, 2, 4, 7</strong> once each.')
+    formQ([6, 3, 0, 1, 8, 4], 6, '6 &nbsp;3 &nbsp;0 &nbsp;1 &nbsp;8 &nbsp;4'),
+    formQ([3, 1, 2, 4, 7], 5, '3 &nbsp;1 &nbsp;2 &nbsp;4 &nbsp;7')
   ]
 });

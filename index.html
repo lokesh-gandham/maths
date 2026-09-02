@@ -32,7 +32,7 @@
   background:var(--peach-bg); border:2px solid var(--peach-line);
   border-radius:var(--r-md);
   padding:.5rem .9rem; min-width:5.4rem; text-align:center;
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.9),
+  box-shadow:inset 0 0.15rem 0.20rem -0.13rem rgba(255,255,255,.9),
              0 .18rem 0 var(--peach-line),
              0 .3rem .42rem rgba(96,74,52,.14);
 }
@@ -54,14 +54,14 @@
   border:2px solid var(--surface-line);
   border-radius:var(--r-lg);
   overflow:hidden;
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.9),
+  box-shadow:inset 0 .15rem .2rem -.12rem rgba(255,255,255,.9),
              0 .2rem 0 var(--surface-line),
              0 .34rem .5rem rgba(96,74,52,.14);
   transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 .card:hover,.card:focus-within{
   border-color:#DE8A5C; transform:translateY(-.18rem);
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.9),
+  box-shadow:inset 0 0.15rem 0.20rem -0.13rem rgba(255,255,255,.9),
              0 .3rem 0 #DE8A5C,
              0 .5rem .8rem rgba(96,74,52,.2);
 }
@@ -92,7 +92,7 @@
   display:inline-flex; align-items:center; justify-content:center; gap:.3rem;
   width:100%; padding:.45rem .9rem; border-radius:2rem;
   border:2px solid #DE8A5C; background:#A85A2E; color:#fff;
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.55),
+  box-shadow:inset 0 0.15rem 0.20rem -0.13rem rgba(255,255,255,.55),
              inset 0 -.22rem .3rem -.14rem rgba(0,60,45,.22),
              0 .18rem 0 #DE8A5C,
              0 .3rem .42rem rgba(30,110,90,.28);
@@ -102,16 +102,16 @@
 .play.big svg{ width:.72rem; height:.72rem; fill:currentColor; }
 .play.big:hover{
   transform:translateY(-.1rem); background:#C06A35;
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.55),
+  box-shadow:inset 0 0.15rem 0.20rem -0.13rem rgba(255,255,255,.55),
              0 .28rem 0 #DE8A5C, 0 .44rem .6rem rgba(30,110,90,.32);
 }
 .play.big:active{
   transform:translateY(.14rem);
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.5), 0 .04rem 0 #DE8A5C;
+  box-shadow:inset 0 0.15rem 0.20rem -0.13rem rgba(255,255,255,.5), 0 .04rem 0 #DE8A5C;
 }
 .play.big[data-ready="0"]{
   background:var(--sand-bg); border-color:var(--sand-line); color:var(--sand-ink);
-  box-shadow:inset 0 .1rem 0 rgba(255,255,255,.8), 0 .18rem 0 var(--sand-line);
+  box-shadow:inset 0 .14rem .2rem -.12rem rgba(255,255,255,.8), 0 .18rem 0 var(--sand-line);
 }
 
 /* ---------- TOAST ---------- */

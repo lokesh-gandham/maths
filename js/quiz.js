@@ -409,7 +409,16 @@
 
       paint();
 
-      Quiz._finish = finish;
+      /* An activity that grades itself as it goes (the matching board) ends the
+         round without going through reveal(), so credit the current question
+         before showing the score — otherwise a perfect run reports 0. */
+      Quiz._finish = function(creditCurrent){
+        if(creditCurrent !== false && state.answeredResults[state.i] === null){
+          state.answeredResults[state.i] = { ok:true, msg:'' };
+          if(!state.triedWrong[state.i]) state.score++;
+        }
+        finish();
+      };
     },
 
     /* clickable abacus: click a rod to add a bead, right-click / long tap removes */
@@ -646,6 +655,7 @@
       function complete(){
         return rows.every(r => picks[r.key].length === slots);
       }
+      function picked(key){ return picks[key]; }
 
       function paint(){
         board.innerHTML = rows.map(r => {
@@ -657,8 +667,12 @@
             cells.push(`<span class="db-slot${on ? ' filled' : ''}${next ? ' next' : ''}"
               data-row="${r.key}" data-i="${i}">${on ? digits[p[i]] : ''}</span>`);
           }
+          const left = slots - p.length;
           return `<div class="db-row${active === r.key ? ' active' : ''}" data-row="${r.key}">
-                    <span class="db-label">${r.label}</span>
+                    <span class="db-label">
+                      ${r.label}
+                      ${active === r.key && left ? `<span class="db-left">${left} to place</span>` : ''}
+                    </span>
                     <span class="db-slots">${cells.join('')}</span>
                   </div>`;
         }).join('');
@@ -666,7 +680,8 @@
         const used = active ? picks[active] : [];
         chips.innerHTML = digits.map((d, i) => {
           const taken = used.indexOf(i) > -1;
-          return `<button class="db-chip${taken ? ' used' : ''}" data-i="${i}" ${taken ? 'disabled' : ''}>${d}</button>`;
+          return `<button class="db-chip${taken ? ' used' : ''}" data-i="${i}"
+                    ${taken ? 'disabled aria-label="' + d + ' is already used"' : ''}>${d}</button>`;
         }).join('');
 
         chips.style.display = locked || !active ? 'none' : 'flex';

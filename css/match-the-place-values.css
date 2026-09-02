@@ -5,9 +5,11 @@
    hope, the board takes the whole play area and the rows share it out, so
    a short laptop shrinks the rows instead of losing the last one. */
 
-/* pairs judge themselves, so there is nothing to press Check on */
-.page-match #q-primary{ display:none !important; }
-.page-match .qcard:not(.result) .actions{ margin-top:0; min-height:0; }
+/* Pairs judge themselves and the round ends on its own, so this page needs
+   no Check, no Prev and no Next — and no heading either. Dropping all four
+   hands the freed height straight to the cards. */
+.page-match .qcard:not(.result) .actions{ display:none !important; }
+.page-match .prompt{ display:none !important; }
 
 /* hide the sub-heading hint */
 .page-match #q-hint{ display:none !important; }
@@ -47,7 +49,7 @@
   z-index:1;
 }
 .mtp-label{ flex:1; text-align:center; }
-.mtp-num .mtp-label{ font-size:.8rem; letter-spacing:.06em; }
+.mtp-num .mtp-label{ font-size:1.1rem; letter-spacing:.06em; }
 
 /* row number — the "1)" of the worksheet */
 .mtp-no{
@@ -60,7 +62,7 @@
 
 /* the connector dot on each card's facing edge */
 .mtp-dot{
-  flex:none; width:.48rem; height:.48rem; border-radius:50%;
+  flex:none; width:.56rem; height:.56rem; border-radius:50%;
   background:#CFC6BB;
   box-shadow:0 0 0 .1rem var(--face);
   transition:background .15s ease;
@@ -86,6 +88,7 @@
 /* the number you are on right now */
 .mtp-card.sel{
   --face:#2FC79E; --edge:#1CA37F; color:#04352A;
+  --gloss:rgba(255,255,255,.28);
 }
 .mtp-card.sel .mtp-no{ background:rgba(255,255,255,.8); color:#04352A; }
 .mtp-card.sel .mtp-dot{ background:#04352A; box-shadow:0 0 0 .1rem #2FC79E; }
@@ -102,8 +105,8 @@
 /* the badge that says which number this belongs to */
 .mtp-badge{
   flex:none; display:grid; place-items:center;
-  width:1.15rem; height:1.15rem; border-radius:50%;
-  color:#fff; font-size:.5rem;
+  width:1.35rem; height:1.35rem; border-radius:50%;
+  color:#fff; font-size:.56rem;
   box-shadow:0 .06rem .12rem rgba(60,45,30,.28);
   animation:mtpBadgePop .34s cubic-bezier(.2,1.5,.4,1) both;
 }

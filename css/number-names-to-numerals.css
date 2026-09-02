@@ -2,7 +2,7 @@
 
 .nnn-card{
   max-width:26rem; text-align:center;
-  padding:.7rem 1.5rem; font-size:1.05rem; line-height:1.3;
+  padding:.55rem 1.4rem; font-size:1rem; line-height:1.3;
   background:var(--sun-bg); border:2px solid var(--sun-line);
   border-radius:var(--r-lg); color:var(--sun-ink);
 }
@@ -10,7 +10,7 @@
 
 .nnn-strip{
   display:flex; align-items:center; gap:.28rem;
-  margin-top:1.1rem;
+  margin-top:.7rem;
 }
 .nnn-slot{
   display:grid; place-items:center;
@@ -34,7 +34,7 @@
 
 .nnn-pad{
   display:grid; grid-template-columns:repeat(6,2.7rem);
-  gap:.4rem; justify-content:center; margin-top:1.1rem;
+  gap:.4rem; justify-content:center; margin-top:.7rem;
 }
 .nnn-key{
   height:2.3rem; font-size:1.2rem;

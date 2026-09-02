@@ -29,7 +29,7 @@ function pickSixQ(digits){
     const lead = document.createElement('div');
     lead.className = 'sdc-lead';
     lead.innerHTML =
-      `<span class="sdc-tag">Choose 6 of these 8</span>
+      `<span class="sdc-tag">Choose 6 of these 8 &middot; no repeats</span>
        <span class="sdc-digits">${digits.join('  ')}</span>`;
     stage.appendChild(lead);
 
@@ -40,7 +40,7 @@ function pickSixQ(digits){
   }
 
   return {
-    prompt: 'Form the smallest and the greatest 6 digit number.',
+    prompt: 'Form the smallest and the greatest 6 digit number, <strong>without repeating a digit</strong>.',
     hint: '',
     render(stage, ready, saved){ build(stage, saved, !!saved, ready); },
     renderLocked(stage, saved){
