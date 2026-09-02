@@ -26,7 +26,7 @@
   letter-spacing:.04em; font-weight:600;
 }
 
-.wnf-eq{ font-size:2rem; color:var(--ink); flex:none; }
+.wnf-eq{ font-size:2rem; color:var(--ink); flex:none; margin-right:2rem; }
 .wnf-entry{
   width:11rem; font-size:2.4rem; letter-spacing:.14em;
   padding:.35rem .6rem; flex:none;
