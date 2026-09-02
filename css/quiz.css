@@ -398,7 +398,7 @@ button.rod:hover .stick::before{
 }
 .tblock:active{ cursor:grabbing; }
 .tblock-unit{ font-size:.78rem; line-height:1.1; }
-.tblock-name{ font-size:.42rem; letter-spacing:.06em; opacity:.85; }
+.tblock-name{ font-size:.42rem; letter-spacing:.06em; }
 
 .tubes{
   display:flex; justify-content:center; align-items:stretch;
@@ -415,7 +415,7 @@ button.rod:hover .stick::before{
   display:flex; flex-direction:column-reverse; align-items:stretch;
   justify-content:flex-start;
   gap:.12rem; padding:.2rem;
-  border:2px dashed var(--sand-line); border-top:none;
+  border:2px solid var(--sand-line); border-top:none;
   border-radius:0 0 var(--r-md) var(--r-md);
   background:rgba(255,255,255,.6);
   overflow:hidden;
@@ -532,7 +532,7 @@ button.rod:hover .stick::before{
   display:flex; justify-content:space-between; align-items:center;
   margin-top:.9rem; font-size:.8rem; color:var(--ink);
 }
-.nl-mid{ font-size:.45rem; opacity:.7; letter-spacing:.08em; text-transform:uppercase; }
+.nl-mid{ font-size:.45rem; letter-spacing:.08em; text-transform:uppercase; }
 
 /* one pulse used by every "your turn here" slot on the site */
 @keyframes softPulse{

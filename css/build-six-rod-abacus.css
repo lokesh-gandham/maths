@@ -10,7 +10,7 @@
 }
 .target-row .lbl{
   font-size:.45rem; letter-spacing:.09em; text-transform:uppercase;
-  color:var(--ink-soft);
+  color:var(--ink); font-weight:600;
 }
 .target-row .num{ font-size:1.35rem; line-height:1.1; letter-spacing:.08em; }
 .target-row .target{
@@ -18,7 +18,7 @@
 }
 .target-row .target .num{ color:var(--sun-ink); }
 .target-row .built{
-  background:var(--surface); border:2px dashed var(--surface-line);
+  background:var(--surface); border:2px solid var(--surface-line);
 }
 .target-row .built .num{ color:var(--sky-ink); }
 
@@ -30,9 +30,9 @@
   border-radius:var(--r-md); outline:none; color:var(--ink);
   transition:border-color .15s ease;
 }
-.name-input::placeholder{ color:#9C9389; }
+.name-input::placeholder{ color:var(--ink); opacity:.45; }
 .name-input:focus{ border-color:var(--accent); }
-.name-input:disabled{ opacity:.65; cursor:default; }
+.name-input:disabled{ opacity:.85; cursor:default; }
 
 /* six rods are narrow — let the beads shrink a little */
 .page-b6a .bead{ width:1.08rem; height:1.08rem; margin-bottom:-.1rem; }
@@ -44,3 +44,9 @@
 /* six tubes are narrow — trim the labels a touch */
 .page-b6a .tube-name{ font-size:.4rem; }
 .page-b6a .tblock{ min-width:2.8rem; }
+
+/* Make tubes solid instead of dotted */
+.page-b6a .tube{
+  border:2px solid var(--surface-line); border-radius:var(--r-md);
+  background:var(--surface);
+}
