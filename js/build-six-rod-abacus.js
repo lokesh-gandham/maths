@@ -33,7 +33,7 @@ function buildAndNameQ(names, target, name){
     const wrap = document.createElement('div');
     wrap.className = 'inline-answer';
     wrap.innerHTML = `
-      <label>Number Name</label>
+      <label>Number name</label>
       <input type="text" class="name-input" value="${value}"
              placeholder="Write it in words" autocomplete="off" ${locked ? 'disabled' : ''}>`;
     stage.appendChild(wrap);

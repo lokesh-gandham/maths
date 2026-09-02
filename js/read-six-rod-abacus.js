@@ -25,7 +25,7 @@ function readQ(){
     rail.innerHTML = `
       <label>In numerals</label>
       <input type="text" inputmode="numeric" class="entry" value="${num}"
-             placeholder="? ? ? ? ? ?" autocomplete="off" ${locked ? 'disabled' : ''}>
+             placeholder="Type the number" autocomplete="off" ${locked ? 'disabled' : ''}>
       <label>In words</label>
       <input type="text" class="name-input" value="${word}"
              placeholder="Write it in words" autocomplete="off" ${locked ? 'disabled' : ''}>`;

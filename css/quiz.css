@@ -221,7 +221,7 @@ a.btn.ghost{
   grid-template-rows:auto minmax(0,1fr);
   column-gap:1.2rem;
   align-items:center; justify-items:center;
-  width:100%; max-width:44rem;
+  width:100%; max-width:52rem;
 }
 .stage:has(.abacus-wrap) > .readout,
 .stage:has(.abacus-wrap) > .target-row,
@@ -241,6 +241,11 @@ a.btn.ghost{
 .answer-rail .entry,
 .answer-rail .name-input{ width:100%; max-width:none; }
 .answer-rail .btn{ width:auto; align-self:center; }
+.answer-rail .prev-btn,
+.answer-rail .next-btn{ font-size:.65rem; padding:.4rem .8rem; }
+.answer-rail .nav-btns{
+  display:flex; flex-direction:row; gap:.6rem; width:100%; justify-content:center;
+}
 
 .abacus{
   display:flex; align-items:flex-end; justify-content:stretch;
@@ -362,8 +367,9 @@ button.rod:hover .stick::before{
   gap:.25rem; margin-top:.3rem; width:100%;
 }
 .inline-answer label{
-  font-size:.5rem; letter-spacing:.08em; text-transform:uppercase;
-  color:var(--ink-soft);
+  font-size:.72rem !important; letter-spacing:.02em !important;
+  color:var(--ink) !important; font-weight:600 !important;
+  text-transform:none !important;
 }
 .inline-answer .entry{
   width:8rem; text-align:center;
@@ -402,17 +408,20 @@ button.rod:hover .stick::before{
 
 .tubes{
   display:flex; justify-content:center; align-items:stretch;
-  gap:.45rem; width:100%; max-width:23rem;
-  flex:0 1 auto; min-height:0; max-height:11rem;
+  gap:.45rem; width:100%;
+  flex:0 1 auto; min-height:0;
 }
 .tube-col{
   flex:1 1 0; min-width:0;
   display:flex; flex-direction:column; align-items:stretch; gap:.2rem;
-  min-height:0;
+}
+.tube-col .tblock{
+  flex:none; margin:0 auto .1rem;
+  font-size:.78rem; padding:.3rem .5rem;
 }
 .tube{
-  flex:1 1 auto; min-height:3.4rem;
-  display:flex; flex-direction:column-reverse; align-items:stretch;
+  flex:1 1 auto; min-height:3.4rem; max-height:8rem;
+  display:flex; flex-direction:column-reverse; align-items:center;
   justify-content:flex-start;
   gap:.12rem; padding:.2rem;
   border:2px solid var(--sand-line); border-top:none;
@@ -421,14 +430,19 @@ button.rod:hover .stick::before{
   overflow:hidden;
   transition:background .15s ease, border-color .15s ease;
 }
+.tube-overflow{
+  display:block; font-size:.72rem; font-weight:600;
+  color:var(--ink); text-align:center;
+  padding:.1rem 0; margin-top:.1rem;
+}
 .tube.over{ border-color:var(--mint-line); background:var(--mint-bg); }
 .tube.reject{ border-color:var(--bad); background:var(--bad-soft); }
 
 .tchip{
   flex:none;
   display:grid; place-items:center;
-  height:1.05rem; border-radius:.22rem;
-  font-size:.42rem; letter-spacing:.02em;
+  min-width:3rem; height:1.05rem; border-radius:.22rem;
+  font-size:.78rem; font-weight:600; letter-spacing:.02em;
   cursor:pointer;
   border:1.5px solid; 
 }
@@ -439,8 +453,8 @@ button.rod:hover .stick::before{
   background:var(--sand-bg); border:2px solid var(--sand-line);
   border-radius:var(--r-sm);
 }
-.tube-name{ font-size:.46rem; letter-spacing:.04em; color:var(--ink); }
-.tube-count{ font-size:.62rem; color:var(--ink); }
+.tube-name{ font-size:.55rem; letter-spacing:.04em; color:var(--ink); font-weight:600; }
+.tube-count{ font-size:.75rem; color:var(--ink); font-weight:600; }
 
 /* one colour per place value — 100 always looks like 100 */
 .u1{      --face:var(--sky-bg);   --edge:var(--sky-line);   color:var(--sky-ink); }

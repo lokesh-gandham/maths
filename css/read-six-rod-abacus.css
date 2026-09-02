@@ -6,11 +6,17 @@
 .page-r6a .abacus-base .base-label{ font-size:.5rem; letter-spacing:.02em; }
 
 .r6a-answers{ gap:.2rem; }
-.r6a-answers label{ margin-top:.35rem; }
-.r6a-answers .entry{
-  width:100%; font-size:1.7rem; letter-spacing:.12em;
-  padding:.35rem .4rem;
+.r6a-answers label{
+  margin-top:.35rem;
+  font-size:.72rem !important; letter-spacing:.02em !important;
+  color:var(--ink) !important; font-weight:600 !important;
+  text-transform:none !important;
 }
+.r6a-answers .entry{
+  width:100%; font-size:.68rem; letter-spacing:.02em;
+  padding:.45rem .5rem;
+}
+.r6a-answers .entry::placeholder{ color:#9C9389; letter-spacing:.05em; }
 .r6a-answers .name-input{
   width:100%; text-align:center;
   font-size:.68rem; padding:.45rem .5rem;

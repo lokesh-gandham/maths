@@ -42,11 +42,24 @@
 .page-b6a .abacus-base .base-label{ font-size:.5rem; letter-spacing:.02em; }
 
 /* six tubes are narrow — trim the labels a touch */
-.page-b6a .tube-name{ font-size:.4rem; }
+.page-b6a .tube-name{ font-size:.55rem; font-weight:600; }
+.page-b6a .tube-count{ font-size:.72rem; font-weight:600; }
 .page-b6a .tblock{ min-width:2.8rem; }
 
 /* Make tubes solid instead of dotted */
 .page-b6a .tube{
   border:2px solid var(--surface-line); border-radius:var(--r-md);
   background:var(--surface);
+}
+/* Hide empty actions bar — buttons moved to answer rail */
+.page-b6a .qcard:not(.result) .actions{ display:none; }
+
+/* Number Name label — match name-input size */
+.page-b6a .inline-answer label,
+.page-b6a .answer-rail .inline-answer label{
+  font-size:.72rem !important;
+  letter-spacing:.02em !important;
+  color:var(--ink) !important;
+  font-weight:600 !important;
+  text-transform:capitalize !important;
 }

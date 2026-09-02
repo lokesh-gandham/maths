@@ -329,6 +329,11 @@
           els.stage.appendChild(rail);
           rail.appendChild(answer);
           rail.appendChild(els.primary);
+          const navWrap = document.createElement('div');
+          navWrap.className = 'nav-btns';
+          navWrap.appendChild(els.prev);
+          navWrap.appendChild(els.next);
+          rail.appendChild(navWrap);
         } else if(els.primary.parentElement !== els.actions){
           els.actions.insertBefore(els.primary, els.next);
         }
@@ -479,34 +484,37 @@
       const wrap = document.createElement('div');
       wrap.className = 'tubes-wrap';
 
-      let pal = null;
-      if(editable){
-        pal = document.createElement('div');
-        pal.className = 'tube-palette';
-        pal.innerHTML = names.map((nm, i) =>
-          `<button class="tblock u${unit(i)}" draggable="true" data-i="${i}"
-                   aria-label="Add one ${unit(i)} to the ${nm} tube">
-             <span class="tblock-unit">${unit(i)}</span>
-             <span class="tblock-name">${nm}</span>
-           </button>`).join('');
-        wrap.appendChild(pal);
-      }
-
       const row = document.createElement('div');
       row.className = 'tubes';
       wrap.appendChild(row);
 
       function draw(){
-        row.innerHTML = names.map((nm, i) => `
-          <div class="tube-col">
+        const MAX_VISIBLE = 5;
+        row.innerHTML = names.map((nm, i) => {
+          const total = c[i];
+          const overflow = Math.max(0, total - MAX_VISIBLE);
+          const visible = total - overflow;
+          const chips = `<span class="tchip">${unit(i)}</span>`.repeat(visible);
+          const badge = overflow > 0
+            ? `<span class="tube-overflow">+${overflow}</span>` : '';
+          const blockBtn = editable
+            ? `<button class="tblock u${unit(i)}" draggable="true" data-i="${i}"
+                       aria-label="Add one ${unit(i)} to the ${nm} tube">
+                 <span class="tblock-unit">${unit(i)}</span>
+                 <span class="tblock-name">${nm}</span>
+               </button>` : '';
+          return `<div class="tube-col">
+            ${blockBtn}
             <div class="tube u${unit(i)}" data-i="${i}">
-              ${`<span class="tchip">${unit(i)}</span>`.repeat(c[i])}
+              ${chips}
             </div>
+            ${badge}
             <div class="tube-foot">
               <span class="tube-name">${nm}</span>
-              <span class="tube-count">${c[i]}</span>
+              <span class="tube-count">${total}</span>
             </div>
-          </div>`).join('');
+          </div>`;
+        }).join('');
       }
 
       function bump(i, d){
@@ -520,11 +528,11 @@
       draw();
 
       if(editable){
-        pal.addEventListener('click', e => {
+        row.addEventListener('click', e => {
           const b = e.target.closest('.tblock');
           if(b) bump(+b.dataset.i, 1);
         });
-        pal.addEventListener('dragstart', e => {
+        row.addEventListener('dragstart', e => {
           const b = e.target.closest('.tblock');
           if(b) e.dataTransfer.setData('text/plain', b.dataset.i);
         });
