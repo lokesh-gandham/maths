@@ -13,6 +13,12 @@ var FIBQS = [
 
 function fibQ(){
   var entries = [];
+  var answered = 0;
+
+  function checkAllDone(){
+    return answered === FIBQS.length;
+  }
+
   return {
     prompt: 'Fill in the boxes.',
     hint: '',
@@ -41,10 +47,39 @@ function fibQ(){
         input.autocomplete = 'off';
         input.placeholder = '?';
         input.dataset.i = i;
-        input.addEventListener('input', function() {
-          var allFilled = entries.every(function(e) { return e.value.trim() !== ''; });
-          ready(allFilled);
+
+        input.addEventListener('blur', function() {
+          if(input.disabled) return;
+          var val = input.value.trim();
+          if(val === '') return;
+
+          var ok = val === item.answer;
+
+          if(ok){
+            input.classList.add('right');
+            input.disabled = true;
+            answered++;
+            Quiz.showPopout('correct', 'Correct!');
+            if(checkAllDone()){
+              setTimeout(function(){
+                var allOk = true;
+                FIBQS.forEach(function(q, idx){
+                  if(entries[idx].value.trim() !== q.answer) allOk = false;
+                });
+                ready(true);
+              }, 500);
+            }
+          } else {
+            input.classList.add('wrong');
+            Quiz.showPopout('wrong', 'Try again!');
+            setTimeout(function(){
+              input.classList.remove('wrong');
+              input.value = '';
+              input.focus();
+            }, 500);
+          }
         });
+
         entries.push(input);
         row.appendChild(input);
 
@@ -76,7 +111,7 @@ function fibQ(){
         delay: 0,
         msg: allOk
           ? 'All answers are correct!'
-          : correct + ' out of ' + FIBQS.length + ' correct. The answers are: ' + FIBQS.map(function(q){ return q.answer; }).join(', ') + '.'
+          : correct + ' out of ' + FIBQS.length + ' correct.'
       };
     }
   };
