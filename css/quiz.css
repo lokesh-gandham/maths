@@ -37,19 +37,19 @@ body{ overflow:hidden; background:var(--bg); }
 }
 .bar-text .kicker{ display:none; }
 .bar-text h1{
-  font-size:1.1rem; font-weight:400; margin:0; white-space:nowrap;
+  font-size:.9rem; font-weight:400; margin:0; white-space:nowrap;
   overflow:hidden; text-overflow:ellipsis;
-  padding:.3rem .9rem; border:2px solid #DE8A5C; border-radius:2rem;
+  padding:.2rem .7rem; border:2px solid #DE8A5C; border-radius:2rem;
   background:#A85A2E; color:#fff;
 }
 .count{ display:none; }
 .back{
-  flex:none; display:flex; align-items:center; gap:.32rem;
-  padding:.42rem .95rem; border-radius:2rem;
-  font-size:.62rem; letter-spacing:.02em;
+  flex:none; display:flex; align-items:center; gap:.25rem;
+  padding:.3rem .7rem; border-radius:2rem;
+  font-size:.52rem; letter-spacing:.02em;
   text-decoration:none;
 }
-.back svg{ width:.7rem; height:.7rem; fill:var(--mint-ink); }
+.back svg{ width:.55rem; height:.55rem; fill:#fff; }
 
 .track{ display:none; }
 .track span{ display:block; height:100%; width:0; background:var(--accent); }
@@ -777,9 +777,9 @@ button.rod:hover .stick::before{
 .tblock.u1000{   --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }
 .tblock.u10000{  --face:var(--rose-bg);  --edge:var(--rose-line);  color:var(--rose-ink); }
 .tblock.u100000{ --face:var(--lilac-bg); --edge:var(--lilac-line); color:var(--lilac-ink); }
-.back{ --face:var(--mint-bg); --edge:var(--mint-deep); color:var(--mint-ink); }
-.back:hover{ --face:#D2F2E7; }
-.back svg{ fill:var(--mint-ink); }
+.back{ --face:#A85A2E; --edge:#DE8A5C; color:#fff; }
+.back:hover{ --face:#C06A35; }
+.back svg{ fill:#fff; }
 .btn.check-btn, a.btn, .popup-actions .btn-again{
   --face:#63D2B2; --edge:var(--mint-deep); color:#07402F;
 }
