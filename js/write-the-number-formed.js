@@ -3,6 +3,12 @@
    The place-value parts arrive shuffled; rebuild the number.
    ============================================================ */
 const PLACES = { ones:1, tens:10, hundreds:100, thousands:1000 };
+const CUBE_COLORS = {
+  ones:     { face:'#5CC8A5', edge:'#3EA886' },
+  tens:     { face:'#7FB6E8', edge:'#5B9BD5' },
+  hundreds: { face:'#E8899C', edge:'#D46A80' },
+  thousands:{ face:'#A991DE', edge:'#8E72CC' }
+};
 
 /* parts: [count, place] pairs exactly in the order the book prints them */
 function formedQ(parts){
@@ -12,35 +18,51 @@ function formedQ(parts){
   function partsRow(stage){
     const row = document.createElement('div');
     row.className = 'wnf-parts';
-    row.innerHTML = parts.map(p =>
-      `<span class="wnf-part"><span class="wnf-count">${p[0]}</span>${p[1]}</span>`).join('');
-    stage.appendChild(row);
+    row.innerHTML = parts.map(p => {
+      const c = CUBE_COLORS[p[1]];
+      const cubes = Array.from({length: p[0]}, () =>
+        `<span class="wnf-cube" style="--face:${c.face};--edge:${c.edge}"></span>`
+      ).reverse().join('');
+      return `<span class="wnf-col">
+        <span class="wnf-stack">${cubes}</span>
+        <span class="wnf-label">${p[1]}</span>
+      </span>`;
+    }).join('');
+    return row;
   }
 
-  function answerBox(stage, value, locked){
+  function answerBox(value, locked){
     const wrap = document.createElement('div');
-    wrap.className = 'wnf-answer';
+    wrap.className = 'wnf-answer-wrap';
     wrap.innerHTML = `
       <span class="wnf-eq">=</span>
       <input type="text" inputmode="numeric" class="entry wnf-entry"
              value="${value}" placeholder="?" autocomplete="off" ${locked ? 'disabled' : ''}>`;
-    stage.appendChild(wrap);
-    return wrap.querySelector('.wnf-entry');
+    return wrap;
   }
 
   return {
     prompt: 'Write the number formed.',
     hint: 'Put every part in its own place, then read the whole number.',
     render(stage, ready, saved){
-      partsRow(stage);
-      field = answerBox(stage, saved || '', !!saved);
+      const row = document.createElement('div');
+      row.className = 'wnf-row';
+      row.appendChild(partsRow(stage));
+      const ans = answerBox(saved || '', !!saved);
+      row.appendChild(ans);
+      stage.appendChild(row);
+      field = ans.querySelector('.wnf-entry');
       if(saved) return;
       field.addEventListener('input', () => { if(field.value.trim()) ready(); });
       setTimeout(() => field.focus(), 30);
     },
     renderLocked(stage, saved){
-      partsRow(stage);
-      answerBox(stage, saved || answer, true);
+      const row = document.createElement('div');
+      row.className = 'wnf-row';
+      row.appendChild(partsRow(stage));
+      const ans = answerBox(saved || answer, true);
+      row.appendChild(ans);
+      stage.appendChild(row);
     },
     check(){
       const got = field.value.trim();
