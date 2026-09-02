@@ -84,6 +84,9 @@ body{ overflow:hidden; background:var(--bg); }
 .hint{
   display:none;
   max-width:32rem;
+  text-align:center;
+  margin:.25rem auto 0;
+  padding:0 1rem;
 }
 
 .qcard:not(.result) .actions{

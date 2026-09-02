@@ -323,8 +323,8 @@ const SECTIONS = [
        tags:['Before / After'], art:()=>roman(['LXXXIX','XC','XCI'],{hi:1})},
 
       {q:'4', id:'roman-to-number', ready:true, n:4, page:37,
-       title:'Roman to number',
-       desc:'Decode XXIII, LXIX, XLIX and LXXXVIII into digits.',
+       title:'Roman to Hindu Arabic',
+       desc:'Write XXIII, LXIX, XLIX and LXXXVIII in Hindu Arabic numerals.',
        tags:['Decode'], art:()=>convert('XLIX','49')},
 
       {q:'5', id:'number-to-roman', ready:true, n:6, page:37,

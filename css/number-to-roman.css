@@ -30,7 +30,7 @@
   position:relative;
   width:3.2rem; height:2.9rem; font-size:1.4rem;
   border-radius:var(--r-md);
-  --face:var(--sky-bg); --edge:var(--sky-line); color:var(--sky-ink);
+  --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink);
 }
 .ntr-worth{ position:absolute; right:.2rem; bottom:.1rem; font-size:.44rem; }
 .ntr-key.back{ --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }

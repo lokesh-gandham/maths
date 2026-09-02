@@ -49,7 +49,7 @@ function decodeQ(numeral){
   }
 
   return {
-    prompt: `What is <strong>${numeral}</strong> in numbers?`,
+    prompt: `Write <strong>${numeral}</strong> in Hindu Arabic numerals.`,
     hint: '',
     render(stage, ready, saved){
       field = board(stage, saved || '', !!saved);
@@ -71,6 +71,6 @@ function decodeQ(numeral){
 
 Quiz.start({
   kicker: 'Roman Numerals · Question 4',
-  title: 'Roman to number',
+  title: 'Roman to Hindu Arabic',
   questions: ['XXIII', 'LXIX', 'XLIX', 'LXXXVIII'].map(decodeQ)
 });

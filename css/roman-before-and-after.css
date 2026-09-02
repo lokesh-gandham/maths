@@ -15,8 +15,8 @@
   color:#9C9389;
 }
 .rba-slot.filled{
-  border-style:solid; border-color:var(--sky-line);
-  background:var(--sky-bg); color:var(--sky-ink);
+  border-style:solid; border-color:var(--lilac-line);
+  background:var(--lilac-bg); color:var(--lilac-ink);
 }
 .rba-arrow{ font-size:1rem; color:var(--ink); }
 .rba-now{
@@ -34,7 +34,7 @@
   min-width:5.4rem; padding:.4rem .8rem;
   font-size:1.15rem; letter-spacing:.1em;
   border-radius:var(--r-md);
-  --face:var(--sky-bg); --edge:var(--sky-line); color:var(--sky-ink);
+  --face:var(--lilac-bg); --edge:var(--lilac-line); color:var(--lilac-ink);
 }
 .rba-opt.sel{ --face:var(--mint-bg); --edge:var(--mint-line); color:var(--mint-ink); }
 .rba-opt.right{ --face:var(--good-soft); --edge:var(--good); color:var(--mint-ink); }
