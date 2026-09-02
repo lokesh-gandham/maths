@@ -28,11 +28,26 @@ body{ overflow:hidden; background:var(--bg); }
 
 /* ---------- TOP BAR / HOME ---------- */
 .bar{
-  position:absolute; top:.45rem; left:.6rem;
+  position:relative; top:0; left:0;
+  width:100%;
   display:flex; align-items:center; gap:.4rem;
-  padding:0; flex:none; z-index:10;
+  padding:.35rem .6rem; flex:none; z-index:10;
 }
-.bar-text, .count{ display:none; }
+.bar-text{
+  display:flex; flex-direction:column; align-items:center; flex:1 1 auto; min-width:0;
+}
+.bar-text .kicker{
+  font-size:.5rem; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink); margin-bottom:.04rem;
+}
+.bar-text h1{
+  font-size:.82rem; font-weight:600; margin:0; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:100%;
+}
+.count{
+  display:block; flex:none;
+  font-size:.6rem; color:var(--ink);
+}
 .back{
   flex:none; display:flex; align-items:center; gap:.32rem;
   padding:.42rem .95rem; border-radius:2rem;
@@ -54,10 +69,11 @@ body{ overflow:hidden; background:var(--bg); }
 
 /* prompt block sits at the top, the play area owns the rest */
 .prompt{
-  font-size:.92rem; line-height:1.2; text-align:center;
+  font-size:30px; line-height:1.2; text-align:center;
   margin:0; padding:.15rem 5.2rem 0;   /* clears the Home button on both sides */
   letter-spacing:-.005em;
 }
+@media (min-width:1600px){ .prompt{ font-size:40px; } }
 .prompt strong{ color:var(--accent); }
 .hint{
   display:inline-block; align-self:center;

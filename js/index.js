@@ -109,8 +109,8 @@ function boxes(txt='9'){
 function words(word,num){
   return svg(
     chip(10,4,140,26,word,{size:11})+
-    `<path d="M80 30 L80 42 M75 37 L80 42 L85 37" stroke="${A}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`+
-    chip(30,46,100,22,num,{fill:'var(--sun-bg)',stroke:W,size:13,dash:1})
+    `<path d="M80 30 L80 42 M75 37 L80 42 L85 37" stroke="var(--lilac-line)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`+
+    chip(30,46,100,22,num,{fill:'var(--rose-bg)',stroke:'var(--rose-line)',size:13,dash:1})
   );
 }
 
