@@ -96,8 +96,8 @@ function fibQ(item, idx){
   const blank = '<span class="fib-blank"></span>';
 
   return {
-    prompt: `Q${idx + 1}: ${item.before} ${blank}${item.after ? ' ' + item.after : ''}`,
-    hint: 'Tap the digits to build the answer. Tap a box to take a digit back.',
+    prompt: `Q${idx + 1}. ${item.before} ${blank}${item.after ? ' ' + item.after : ''}`,
+    hint: '',
     render(stage, ready, saved){ ready0 = ready; build(stage, saved, false); },
     renderLocked(stage, saved){
       const done = saved || answer.split('').map(ch => tray.indexOf(ch));

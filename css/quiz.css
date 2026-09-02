@@ -28,26 +28,21 @@ body{ overflow:hidden; background:var(--bg); }
 
 /* ---------- TOP BAR / HOME ---------- */
 .bar{
-  position:relative; top:0; left:0;
-  width:100%;
+  position:absolute; top:.45rem; left:0; right:0;
   display:flex; align-items:center; gap:.4rem;
-  padding:.35rem .6rem; flex:none; z-index:10;
+  padding:0 .6rem; flex:none; z-index:10;
 }
 .bar-text{
-  display:flex; flex-direction:column; align-items:center; flex:1 1 auto; min-width:0;
+  position:absolute; left:50%; transform:translateX(-50%);
 }
-.bar-text .kicker{
-  font-size:.5rem; letter-spacing:.06em; text-transform:uppercase;
-  color:var(--ink); margin-bottom:.04rem;
-}
+.bar-text .kicker{ display:none; }
 .bar-text h1{
-  font-size:.82rem; font-weight:600; margin:0; white-space:nowrap;
-  overflow:hidden; text-overflow:ellipsis; max-width:100%;
+  font-size:1.1rem; font-weight:400; margin:0; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+  padding:.3rem .9rem; border:2px solid #DE8A5C; border-radius:2rem;
+  background:#A85A2E; color:#fff;
 }
-.count{
-  display:block; flex:none;
-  font-size:.6rem; color:var(--ink);
-}
+.count{ display:none; }
 .back{
   flex:none; display:flex; align-items:center; gap:.32rem;
   padding:.42rem .95rem; border-radius:2rem;
