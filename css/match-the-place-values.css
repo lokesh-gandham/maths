@@ -10,10 +10,10 @@
 .mtp-board{
   position:relative;
   display:grid; grid-template-columns:1fr 1.32fr;
-  column-gap:4.4rem; row-gap:.26rem;
+  column-gap:3rem; row-gap:.5rem;
   width:100%; max-width:31rem;
 }
-.mtp-col{ display:flex; flex-direction:column; gap:.26rem; }
+.mtp-col{ display:flex; flex-direction:column; gap:.5rem; }
 
 /* the wires layer spans the whole board, gap included */
 .mtp-wires{
@@ -25,13 +25,13 @@
 
 .mtp-card{
   display:flex; align-items:center; gap:.45rem;
-  padding:.26rem .55rem; min-height:1.85rem;
-  font-size:.66rem; text-align:left; line-height:1.15;
+  padding:.3rem .5rem; min-height:1.85rem;
+  font-size:.75rem; text-align:left; line-height:1.15;
   border-radius:2rem;
   z-index:1;
 }
 .mtp-label{ flex:1; }
-.mtp-num .mtp-label{ font-size:1.05rem; letter-spacing:.06em; }
+.mtp-num .mtp-label{ font-size:.8rem; letter-spacing:.06em; }
 
 /* row number — the "1)" of the worksheet */
 .mtp-no{
@@ -119,5 +119,5 @@
 }
 
 @media(max-width:700px){
-  .mtp-board{ column-gap:2.2rem; }
+  .mtp-board{ column-gap:1.5rem; }
 }

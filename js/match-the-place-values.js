@@ -155,15 +155,13 @@ function matchQ(){
       if(!b || b.disabled || busy || sel === null) return;
       const j = +b.dataset.j;
 
-      if(RIGHT[j].key !== LEFT[sel].key){ shake(sel, j); return; }
+      if(RIGHT[j].key !== LEFT[sel].key){ shake(sel, j); Quiz.soundWrong(); return; }
 
       locked[sel] = j;
       sel = nextFree();
       paint();
-      requestAnimationFrame(() => {
-        const card = rightEl.querySelector(`.mtp-card[data-j="${j}"]`);
-        if(card) burst(card);
-      });
+      Quiz.soundCorrect();
+      requestAnimationFrame(() => { Quiz.confetti({ count: 44 }); });
 
       if(allDone()){
         busy = true;
