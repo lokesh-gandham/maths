@@ -41,6 +41,27 @@ function abacus(counts,{names=null,target=null}={}){
   return svg(s);
 }
 
+
+/* --- place value tubes: dashed columns holding stacked blocks --- */
+function tubesArt(counts, names){
+  const n = counts.length, left = 8, right = 152, w = (right - left) / n;
+  const FILL = ['#EDE7FB','#FBE1E8','#FCE7DC','#FDF3D2','#DFF5EE','#E2EFFB'];
+  const LINE = ['#A991DE','#E8899C','#F0A87E','#EFC94C','#5CC8A5','#7FB6E8'];
+  let s = '';
+  counts.forEach((c, i) => {
+    const x = left + w * i + 1.5, cw = w - 3;
+    const k = i % FILL.length;
+    s += `<rect x="${x}" y="4" width="${cw}" height="46" rx="3" fill="none"
+            stroke="${LINE[k]}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+    for(let b = 0; b < c; b++){
+      s += `<rect x="${x + 2}" y="${44 - b * 6.5}" width="${cw - 4}" height="5" rx="1.5"
+              fill="${FILL[k]}" stroke="${LINE[k]}" stroke-width=".8"/>`;
+    }
+    s += label(x + cw / 2, 60, names[i], 7);
+  });
+  return svg(s);
+}
+
 /* --- two numbers with a symbol box between them --- */
 function compare(a,b,sym='?'){
   return svg(
@@ -217,14 +238,14 @@ const SECTIONS = [
     code:'1.2', title:'Numbers up to Lakhs', pages:'Pages 19–20',
     items:[
       {q:'2', id:'build-six-rod-abacus', ready:true, n:2, page:19,
-       title:'Build 490306 and 85430',
-       desc:'Place beads across six rods, then write the number name.',
-       tags:['Abacus'], art:()=>abacus([0,0,0,0,0,0],{names:['L','TTh','Th','H','T','O'],target:'490306'})},
+       title:'Fill the place value tubes',
+       desc:'Drop blocks into the right tube to build 490306 and 85430, then write the number name.',
+       tags:['Place value'], art:()=>tubesArt([4,9,0,3,0,6],['L','TTh','Th','H','T','O'])},
 
       {q:'3', id:'read-six-rod-abacus', ready:true, n:1, page:19,
-       title:'Read the six rod abacus',
-       desc:'Count the beads and answer in numerals and in words.',
-       tags:['Abacus','Words'], art:()=>abacus([4,3,1,6,3,1],{names:['L','TTh','Th','H','T','O']})},
+       title:'Read the place value tubes',
+       desc:'Count the blocks in each tube and answer in numerals and in words.',
+       tags:['Place value','Words'], art:()=>tubesArt([4,3,1,6,3,1],['L','TTh','Th','H','T','O'])},
 
       {q:'4', id:'number-names-to-numerals', ready:true, n:3, page:19,
        title:'Number names to numerals',

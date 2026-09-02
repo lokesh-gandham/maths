@@ -206,8 +206,9 @@ a.btn.ghost{
   width:100%;
 }
 
-/* rods on the left, the answer rail on the right */
-.stage:has(.abacus-wrap){
+/* apparatus on the left, the answer rail on the right */
+.stage:has(.abacus-wrap),
+.stage:has(.tubes-wrap){
   display:grid;
   grid-template-columns:minmax(0,1fr) 14rem;
   grid-template-rows:auto minmax(0,1fr);
@@ -216,8 +217,11 @@ a.btn.ghost{
   width:100%; max-width:44rem;
 }
 .stage:has(.abacus-wrap) > .readout,
-.stage:has(.abacus-wrap) > .target-row{ grid-column:1; grid-row:1; }
-.stage:has(.abacus-wrap) > .abacus-wrap{
+.stage:has(.abacus-wrap) > .target-row,
+.stage:has(.tubes-wrap) > .readout,
+.stage:has(.tubes-wrap) > .target-row{ grid-column:1; grid-row:1; }
+.stage:has(.abacus-wrap) > .abacus-wrap,
+.stage:has(.tubes-wrap) > .tubes-wrap{
   grid-column:1; grid-row:2;
   align-self:stretch; justify-self:stretch; min-height:0;
 }
@@ -364,6 +368,87 @@ button.rod:hover .stick::before{
 .inline-answer .entry:focus{ border-color:var(--accent); }
 .inline-answer .entry.right{ border-color:var(--good); background:var(--good-soft); }
 .inline-answer .entry.wrong{ border-color:var(--bad); background:var(--bad-soft); }
+
+
+/* ---------- PLACE VALUE TUBES ----------
+   Six labelled tubes and a palette of blocks. One block colour per place,
+   so 100 always looks the same wherever it turns up. */
+.tubes-wrap{
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:.5rem;
+  flex:1 1 auto; min-height:0; width:100%;
+}
+
+.tube-palette{
+  display:flex; flex-wrap:wrap; gap:.35rem; justify-content:center;
+  flex:none;
+}
+.tblock{
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  min-width:3.1rem; padding:.24rem .45rem;
+  border-radius:var(--r-md);
+  cursor:grab;
+}
+.tblock:active{ cursor:grabbing; }
+.tblock-unit{ font-size:.78rem; line-height:1.1; }
+.tblock-name{ font-size:.42rem; letter-spacing:.06em; opacity:.85; }
+
+.tubes{
+  display:flex; justify-content:center; align-items:stretch;
+  gap:.45rem; width:100%; max-width:23rem;
+  flex:0 1 auto; min-height:0; max-height:11rem;
+}
+.tube-col{
+  flex:1 1 0; min-width:0;
+  display:flex; flex-direction:column; align-items:stretch; gap:.2rem;
+  min-height:0;
+}
+.tube{
+  flex:1 1 auto; min-height:3.4rem;
+  display:flex; flex-direction:column-reverse; align-items:stretch;
+  justify-content:flex-start;
+  gap:.12rem; padding:.2rem;
+  border:2px dashed var(--sand-line); border-top:none;
+  border-radius:0 0 var(--r-md) var(--r-md);
+  background:rgba(255,255,255,.6);
+  overflow:hidden;
+  transition:background .15s ease, border-color .15s ease;
+}
+.tube.over{ border-color:var(--mint-line); background:var(--mint-bg); }
+.tube.reject{ border-color:var(--bad); background:var(--bad-soft); }
+
+.tchip{
+  flex:none;
+  display:grid; place-items:center;
+  height:1.05rem; border-radius:.22rem;
+  font-size:.42rem; letter-spacing:.02em;
+  cursor:pointer;
+  border:1.5px solid; 
+}
+
+.tube-foot{
+  flex:none; display:flex; align-items:center; justify-content:space-between;
+  gap:.2rem; padding:.16rem .3rem;
+  background:var(--sand-bg); border:2px solid var(--sand-line);
+  border-radius:var(--r-sm);
+}
+.tube-name{ font-size:.46rem; letter-spacing:.04em; color:var(--ink); }
+.tube-count{ font-size:.62rem; color:var(--ink); }
+
+/* one colour per place value — 100 always looks like 100 */
+.u1{      --face:var(--sky-bg);   --edge:var(--sky-line);   color:var(--sky-ink); }
+.u10{     --face:var(--mint-bg);  --edge:var(--mint-line);  color:var(--mint-ink); }
+.u100{    --face:var(--sun-bg);   --edge:var(--sun-line);   color:var(--sun-ink); }
+.u1000{   --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }
+.u10000{  --face:var(--rose-bg);  --edge:var(--rose-line);  color:var(--rose-ink); }
+.u100000{ --face:var(--lilac-bg); --edge:var(--lilac-line); color:var(--lilac-ink); }
+.tube.u1{      border-color:var(--sky-line); }
+.tube.u10{     border-color:var(--mint-line); }
+.tube.u100{    border-color:var(--sun-line); }
+.tube.u1000{   border-color:var(--peach-line); }
+.tube.u10000{  border-color:var(--rose-line); }
+.tube.u100000{ border-color:var(--lilac-line); }
+.tube .tchip{ background:var(--face); border-color:var(--edge); color:inherit; }
 
 /* ---------- DIGIT BUILDER WIDGET ---------- */
 .db-wrap{ display:flex; flex-direction:column; align-items:center; gap:.45rem; }
@@ -613,7 +698,7 @@ button.rod:hover .stick::before{
    ============================================================ */
 .opt, .btn, a.btn, .numchip, .db-chip, .nnn-key, .ntr-key,
 .pp-chip, .pp-tile, .rba-opt, .form-chip, .eo-num, .eo-tool-btn,
-.rodbtn, .popup-actions .btn, .mtp-card, .back{
+.rodbtn, .popup-actions .btn, .mtp-card, .back, .tblock{
   --face:var(--surface);
   --edge:var(--surface-line);
   position:relative;
@@ -633,7 +718,7 @@ button.rod:hover .stick::before{
 .pp-chip:hover:not(:disabled), .pp-tile:hover:not(:disabled),
 .rba-opt:hover:not(:disabled), .form-chip:hover:not(:disabled),
 .eo-num:hover, .eo-tool-btn:hover, .rodbtn:hover,
-.popup-actions .btn:hover, .mtp-card:hover, .back:hover{
+.popup-actions .btn:hover, .mtp-card:hover, .back:hover, .tblock:hover{
   transform:translateY(-.1rem);
   box-shadow:
     inset 0 .11rem 0 rgba(255,255,255,.95),
@@ -648,7 +733,7 @@ button.rod:hover .stick::before{
 .pp-chip:active:not(:disabled), .pp-tile:active,
 .rba-opt:active:not(:disabled), .form-chip:active:not(:disabled),
 .eo-num:active, .eo-tool-btn:active, .rodbtn:active,
-.popup-actions .btn:active, .mtp-card:active, .back:active{
+.popup-actions .btn:active, .mtp-card:active, .back:active, .tblock:active{
   transform:translateY(.14rem);
   box-shadow:
     inset 0 .1rem 0 rgba(255,255,255,.8),
@@ -663,6 +748,12 @@ button.rod:hover .stick::before{
 }
 
 /* ---- the colours each surface wears ---- */
+.tblock.u1{      --face:var(--sky-bg);   --edge:var(--sky-line);   color:var(--sky-ink); }
+.tblock.u10{     --face:var(--mint-bg);  --edge:var(--mint-line);  color:var(--mint-ink); }
+.tblock.u100{    --face:var(--sun-bg);   --edge:var(--sun-line);   color:var(--sun-ink); }
+.tblock.u1000{   --face:var(--peach-bg); --edge:var(--peach-line); color:var(--peach-ink); }
+.tblock.u10000{  --face:var(--rose-bg);  --edge:var(--rose-line);  color:var(--rose-ink); }
+.tblock.u100000{ --face:var(--lilac-bg); --edge:var(--lilac-line); color:var(--lilac-ink); }
 .back{ --face:var(--mint-bg); --edge:var(--mint-deep); color:var(--mint-ink); }
 .back:hover{ --face:#D2F2E7; }
 .back svg{ fill:var(--mint-ink); }

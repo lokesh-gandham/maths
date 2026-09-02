@@ -317,11 +317,11 @@
         updateNav();
       }
 
-      /* On abacus questions the answer blank moves to the right of the rods,
-         with Check directly underneath it. Everything else keeps Check in the
-         bottom row between Prev and Next. */
+      /* On abacus and place-value-tube questions the answer blank moves to
+         the right of the apparatus, with Check directly underneath it.
+         Everything else keeps Check in the bottom row between Prev and Next. */
       function layoutStage(){
-        const abacus = els.stage.querySelector('.abacus-wrap');
+        const abacus = els.stage.querySelector('.abacus-wrap, .tubes-wrap');
         const answer = els.stage.querySelector('.inline-answer, .pair, .entry');
         if(abacus && answer){
           const rail = document.createElement('div');
@@ -460,6 +460,100 @@
         row.addEventListener('click', e => {
           const b = e.target.closest('.rodbtn');
           if(b) bump(+b.dataset.i, -1);
+        });
+      }
+
+      stage.appendChild(wrap);
+      return { value: () => c.join(''), counts: c };
+    },
+
+    /* Place-value tubes — a lab bench version of the abacus.
+       Drag (or just tap) a block from the palette into its own tube; tap a
+       block already in a tube to take it out again. Same contract as
+       Quiz.abacus: value() gives the digits the tubes are holding. */
+    tubes(stage, names, {counts = null, editable = true, onChange = null} = {}){
+      const n = names.length;
+      const unit = i => Math.pow(10, n - 1 - i);
+      const c = counts ? counts.slice() : names.map(() => 0);
+
+      const wrap = document.createElement('div');
+      wrap.className = 'tubes-wrap';
+
+      let pal = null;
+      if(editable){
+        pal = document.createElement('div');
+        pal.className = 'tube-palette';
+        pal.innerHTML = names.map((nm, i) =>
+          `<button class="tblock u${unit(i)}" draggable="true" data-i="${i}"
+                   aria-label="Add one ${unit(i)} to the ${nm} tube">
+             <span class="tblock-unit">${unit(i)}</span>
+             <span class="tblock-name">${nm}</span>
+           </button>`).join('');
+        wrap.appendChild(pal);
+      }
+
+      const row = document.createElement('div');
+      row.className = 'tubes';
+      wrap.appendChild(row);
+
+      function draw(){
+        row.innerHTML = names.map((nm, i) => `
+          <div class="tube-col">
+            <div class="tube u${unit(i)}" data-i="${i}">
+              ${`<span class="tchip">${unit(i)}</span>`.repeat(c[i])}
+            </div>
+            <div class="tube-foot">
+              <span class="tube-name">${nm}</span>
+              <span class="tube-count">${c[i]}</span>
+            </div>
+          </div>`).join('');
+      }
+
+      function bump(i, d){
+        const next = c[i] + d;
+        if(next < 0 || next > 9) return;
+        c[i] = next;
+        draw();
+        if(onChange) onChange(c.join(''));
+      }
+
+      draw();
+
+      if(editable){
+        pal.addEventListener('click', e => {
+          const b = e.target.closest('.tblock');
+          if(b) bump(+b.dataset.i, 1);
+        });
+        pal.addEventListener('dragstart', e => {
+          const b = e.target.closest('.tblock');
+          if(b) e.dataTransfer.setData('text/plain', b.dataset.i);
+        });
+
+        row.addEventListener('dragover', e => {
+          const t = e.target.closest('.tube');
+          if(!t) return;
+          e.preventDefault();
+          t.classList.add('over');
+        });
+        row.addEventListener('dragleave', e => {
+          const t = e.target.closest('.tube');
+          if(t) t.classList.remove('over');
+        });
+        row.addEventListener('drop', e => {
+          const t = e.target.closest('.tube');
+          if(!t) return;
+          e.preventDefault();
+          t.classList.remove('over');
+          /* a block only belongs in its own tube */
+          if(e.dataTransfer.getData('text/plain') === t.dataset.i) bump(+t.dataset.i, 1);
+          else t.classList.add('reject'), setTimeout(() => t.classList.remove('reject'), 400);
+        });
+
+        /* tap a block in a tube to take it back out */
+        row.addEventListener('click', e => {
+          const chip = e.target.closest('.tchip');
+          if(!chip) return;
+          bump(+chip.parentElement.dataset.i, -1);
         });
       }
 

@@ -1,5 +1,5 @@
 /* ============================================================
-   1.2 Q3 (page 19) — count the beads on the six rod abacus,
+   1.2 Q3 (page 19) — count the blocks in the place value tubes,
    then write the number in numerals AND in words.
    ============================================================ */
 const NAMES = ['L','TTh','Th','H','T','O'];
@@ -34,10 +34,10 @@ function readQ(){
   }
 
   return {
-    prompt: 'Count the beads and write the number — in numerals and in words.',
-    hint: 'Read the rods from the left: lakhs, ten thousands, thousands, hundreds, tens, ones.',
+    prompt: 'Count the blocks and write the number — in numerals and in words.',
+    hint: 'Read the tubes from the left: lakhs, ten thousands, thousands, hundreds, tens, ones.',
     render(stage, ready, saved){
-      Quiz.abacus(stage, NAMES, { counts: COUNTS, editable:false });
+      Quiz.tubes(stage, NAMES, { counts: COUNTS, editable:false });
       const vals = saved || { num:'', word:'' };
       [numField, wordField] = answers(stage, vals.num, vals.word, !!saved);
       if(saved) return;
@@ -49,7 +49,7 @@ function readQ(){
       setTimeout(() => numField.focus(), 30);
     },
     renderLocked(stage, saved){
-      Quiz.abacus(stage, NAMES, { counts: COUNTS, editable:false });
+      Quiz.tubes(stage, NAMES, { counts: COUNTS, editable:false });
       answers(stage, saved ? saved.num : NUMERALS, saved ? saved.word : WORDS, true);
     },
     check(){
@@ -71,6 +71,6 @@ function readQ(){
 
 Quiz.start({
   kicker: 'Numbers up to Lakhs · Question 3',
-  title: 'Read the six rod abacus',
+  title: 'Read the place value tubes',
   questions: [ readQ() ]
 });

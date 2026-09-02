@@ -40,3 +40,7 @@
 .page-b6a .abacus-base,
 .page-b6a .rodrow{ width:98%; max-width:23rem; }
 .page-b6a .abacus-base .base-label{ font-size:.5rem; letter-spacing:.02em; }
+
+/* six tubes are narrow — trim the labels a touch */
+.page-b6a .tube-name{ font-size:.4rem; }
+.page-b6a .tblock{ min-width:2.8rem; }

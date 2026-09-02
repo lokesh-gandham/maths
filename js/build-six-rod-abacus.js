@@ -1,6 +1,6 @@
 /* ============================================================
-   1.2 Q2 (page 19) — draw the beads for 490306 and 85430
-   on the abacus scale and write their number names.
+   1.2 Q2 (page 19) — build 490306 and 85430 in the place value
+   tubes, then write their number names.
    ============================================================ */
 
 /* Number names are typed by hand, so compare them loosely: case, commas,
@@ -41,12 +41,12 @@ function buildAndNameQ(names, target, name){
   }
 
   return {
-    prompt: 'Draw the beads for the number shown, then write its number name.',
-    hint: 'Tap a rod to drop a bead on it. Use &minus; underneath to take one off.',
+    prompt: 'Fill the tubes to make the number shown, then write its number name.',
+    hint: 'Drag a block into its own tube &mdash; or just tap it. Tap a block in a tube to take it out.',
     render(stage, ready, saved){
       const builtVal = saved ? saved.abacus : zeros;
       out = targetRow(stage, target, builtVal);
-      widget = Quiz.abacus(stage, names, {
+      widget = Quiz.tubes(stage, names, {
         counts: saved ? saved.abacus.split('').map(Number) : null,
         onChange: v => { out.set(v); ready(); }
       });
@@ -57,15 +57,15 @@ function buildAndNameQ(names, target, name){
     renderLocked(stage, saved){
       const abacusVal = saved ? saved.abacus : target.padStart(names.length, '0');
       out = targetRow(stage, target, abacusVal);
-      Quiz.abacus(stage, names, { counts: abacusVal.split('').map(Number), editable:false });
+      Quiz.tubes(stage, names, { counts: abacusVal.split('').map(Number), editable:false });
       nameBox(stage, saved ? saved.name : name, true);
     },
     check(){
       const got = widget.value();
-      if(+got !== +target) return { ok:false, msg:`Build ${target} on the abacus first.` };
+      if(+got !== +target) return { ok:false, msg:`Fill the tubes to make ${target} first.` };
 
       const nameOk = tidyName(nameField.value) === tidyName(name);
-      if(!nameOk) return { ok:false, msg:`The abacus is correct. The number name is "${name}".` };
+      if(!nameOk) return { ok:false, msg:`The tubes are correct. The number name is "${name}".` };
 
       return { ok:true, answer:{ abacus:got, name:nameField.value.trim() },
                msg:`Correct — ${target} is ${name}.` };
@@ -75,7 +75,7 @@ function buildAndNameQ(names, target, name){
 
 Quiz.start({
   kicker: 'Numbers up to Lakhs · Question 2',
-  title: 'Build it on the abacus',
+  title: 'Fill the place value tubes',
   questions: [
     buildAndNameQ(['L','TTh','Th','H','T','O'], '490306',
       'Four lakh ninety thousand three hundred six'),
