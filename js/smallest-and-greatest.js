@@ -40,7 +40,7 @@ function formQ(digits, slots, lead){
 
   return {
     prompt: 'Build the smallest and the greatest number.',
-    hint: 'Every digit may be used only once in each row. A number never starts with 0.',
+    hint: '',
     render(stage, ready, saved){ build(stage, saved, !!saved, ready); },
     renderLocked(stage, saved){
       const done = saved || {

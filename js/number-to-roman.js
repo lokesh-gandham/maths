@@ -71,7 +71,7 @@ function encodeQ(n){
 
   return {
     prompt: `Write <strong>${n}</strong> in Roman numerals.`,
-    hint: 'Build from the biggest letter down. Four of a kind is never allowed — use the subtract trick.',
+    hint: '',
     render(stage, ready, saved){ ready0 = ready; build(stage, saved, !!saved); },
     renderLocked(stage, saved){ build(stage, saved || answer, true); },
     check(){

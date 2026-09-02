@@ -22,7 +22,7 @@
   var correctCount = 0;
 
   function init() {
-    prompt.innerHTML = 'Circle the even numbers and cross out the odd numbers.<small>Choose a marking tool, then select each number.</small>';
+    prompt.innerHTML = 'Circle the even numbers and cross out the odd numbers.';
     buildToolSelector();
     buildBoard();
   }
@@ -30,11 +30,6 @@
   function buildToolSelector() {
     var section = document.createElement('div');
     section.className = 'eo-tool-section';
-
-    var heading = document.createElement('p');
-    heading.className = 'eo-tool-heading';
-    heading.textContent = 'Choose your marking tool';
-    section.appendChild(heading);
 
     var selector = document.createElement('div');
     selector.className = 'eo-tool-selector';

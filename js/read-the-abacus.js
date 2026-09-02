@@ -9,7 +9,7 @@ function readQ(counts){
   let field;
   return {
     prompt: `How many beads are on the abacus? Write the number.`,
-    hint: 'Read the rods from the left: thousands, hundreds, tens, ones.',
+    hint: '',
     render(stage, ready, saved){
       Quiz.abacus(stage, NAMES, { counts, editable:false });
 

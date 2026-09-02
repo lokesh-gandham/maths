@@ -42,7 +42,7 @@ function buildAndNameQ(names, target, name){
 
   return {
     prompt: 'Fill the tubes to make the number shown, then write its number name.',
-    hint: 'Drag a block into its own tube &mdash; or just tap it. Tap a block in a tube to take it out.',
+    hint: '',
     render(stage, ready, saved){
       const builtVal = saved ? saved.abacus : zeros;
       out = targetRow(stage, target, builtVal);

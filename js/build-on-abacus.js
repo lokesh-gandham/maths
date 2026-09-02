@@ -21,7 +21,7 @@ function buildAndNameQ(target, choices, correct){
   let widget, out, nameField;
   return {
     prompt: 'Build the number shown, then write its name in words.',
-    hint: 'Tap a rod to drop a bead on it. Use &minus; underneath to take one off.',
+    hint: '',
     render(stage, ready, saved){
       /* The number to build is on screen at all times, next to a live
          read-out of what the child has built, so the question text never

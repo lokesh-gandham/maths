@@ -41,7 +41,7 @@ function pickSixQ(digits){
 
   return {
     prompt: 'Form the smallest and the greatest 6 digit number.',
-    hint: 'Two digits will be left out. For the smallest, leave out the big ones.',
+    hint: '',
     render(stage, ready, saved){ build(stage, saved, !!saved, ready); },
     renderLocked(stage, saved){
       const done = saved || {

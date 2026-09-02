@@ -36,7 +36,7 @@ function trainQ(n){
 
   return {
     prompt: 'Write the number just before and just after.',
-    hint: 'One less goes in front, one more comes behind.',
+    hint: '',
     render(stage, ready, saved){
       build(stage, saved, !!saved);
       if(saved) return;

@@ -70,7 +70,7 @@ function nameQ(words, digits){
 
   return {
     prompt: 'Tap the digits to write this number name in numerals.',
-    hint: 'The commas of the Indian system appear on their own — just place the digits.',
+    hint: '',
     render(stage, ready, saved){
       ready0 = ready;
       board(stage, saved || '', !!saved);

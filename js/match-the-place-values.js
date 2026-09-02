@@ -179,7 +179,7 @@ function matchQ(){
 
   return {
     prompt: 'Match every number with the place value that belongs to it.',
-    hint: 'Tap the number that is lit, then tap its partner on the right.',
+    hint: '',
     render(stage, ready, saved){ ready0 = ready; build(stage, saved, !!saved); },
     renderLocked(stage, saved){
       const done = saved || (function(){

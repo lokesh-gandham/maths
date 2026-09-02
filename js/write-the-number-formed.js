@@ -43,7 +43,7 @@ function formedQ(parts){
 
   return {
     prompt: 'Write the number formed.',
-    hint: 'Put every part in its own place, then read the whole number.',
+    hint: '',
     render(stage, ready, saved){
       const row = document.createElement('div');
       row.className = 'wnf-row';

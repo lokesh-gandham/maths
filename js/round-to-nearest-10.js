@@ -17,7 +17,7 @@ function roundQ(n){
 
   return {
     prompt: `Round <strong>${n}</strong> off to the nearest 10.`,
-    hint: 'Look at the ones digit: 5 or more jumps up, less than 5 stays down.',
+    hint: '',
     render(stage, ready, saved){
       board(stage);
       opts = Quiz.options(stage, [String(lo), String(hi)], () => ready(), { cls:'round', saved });

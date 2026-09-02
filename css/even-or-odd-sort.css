@@ -12,12 +12,6 @@
 .eo-tool-section{
   text-align:center; margin-bottom:.5rem;
 }
-.eo-tool-heading{
-  margin:0 0 .4rem;
-  font-size:.45rem;
-  text-transform:uppercase; letter-spacing:.06em;
-  color:var(--ink);
-}
 .eo-tool-selector{
   display:flex; gap:.6rem; justify-content:center;
 }

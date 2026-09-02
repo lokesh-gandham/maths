@@ -41,7 +41,7 @@ function romanCompare(left, right){
 
   return {
     prompt: 'Which symbol goes in the middle?',
-    hint: 'Work out what each numeral is worth, then compare the two amounts.',
+    hint: '',
     render(stage, ready, saved){
       board(stage);
       opts = Quiz.options(stage, SYMS, i => {

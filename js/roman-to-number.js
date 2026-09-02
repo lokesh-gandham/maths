@@ -50,7 +50,7 @@ function decodeQ(numeral){
 
   return {
     prompt: `What is <strong>${numeral}</strong> in numbers?`,
-    hint: 'A smaller letter in front of a bigger one means take it away.',
+    hint: '',
     render(stage, ready, saved){
       field = board(stage, saved || '', !!saved);
       if(saved) return;

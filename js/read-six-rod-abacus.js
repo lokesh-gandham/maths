@@ -35,7 +35,7 @@ function readQ(){
 
   return {
     prompt: 'Count the blocks and write the number — in numerals and in words.',
-    hint: 'Read the tubes from the left: lakhs, ten thousands, thousands, hundreds, tens, ones.',
+    hint: '',
     render(stage, ready, saved){
       Quiz.tubes(stage, NAMES, { counts: COUNTS, editable:false });
       const vals = saved || { num:'', word:'' };

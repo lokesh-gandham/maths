@@ -156,7 +156,7 @@ function periodsQ(chunks){
 
   return {
     prompt: 'Drop each part into the right period.',
-    hint: 'Tap a period box, then tap the number that lives there.',
+    hint: '',
     render(stage, ready, saved){ ready0 = ready; build(stage, saved, !!saved); },
     renderLocked(stage, saved){
       build(stage, saved || { Lakhs:answerOf('Lakhs'), Thousands:answerOf('Thousands'), Ones:answerOf('Ones') }, true);

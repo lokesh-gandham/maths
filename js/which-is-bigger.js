@@ -22,7 +22,7 @@ function bigger(a, b){
 
   return {
     prompt: 'Which symbol goes in the middle?',
-    hint: 'The crocodile always opens its mouth towards the bigger number.',
+    hint: '',
     render(stage, ready, saved){
       croc = document.createElement('div');
       croc.className = 'croc';
